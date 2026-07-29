@@ -25,6 +25,13 @@ const app = express();
 connectDB();
 
 // ====================
+// Middleware
+// ====================
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// ====================
 // CORS Configuration
 // ====================
 
@@ -46,10 +53,6 @@ app.use(
   })
 );
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 // ====================
 // Routes
 // ====================
@@ -64,7 +67,10 @@ app.use("/api/stats", statsRoutes);
 app.use("/api/worker-dashboard", workerDashboardRoutes);
 app.use("/api/admin", adminRoutes);
 
+// ====================
 // Home Route
+// ====================
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -72,15 +78,21 @@ app.get("/", (req, res) => {
   });
 });
 
-// 404 Route
-app.use("*", (req, res) => {
+// ====================
+// 404 Route (Express 5 Compatible)
+// ====================
+
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: "API Route Not Found",
   });
 });
 
+// ====================
 // Global Error Handler
+// ====================
+
 app.use((err, req, res, next) => {
   console.error(err);
 
@@ -90,7 +102,9 @@ app.use((err, req, res, next) => {
   });
 });
 
+// ====================
 // Start Server
+// ====================
 
 const PORT = process.env.PORT || 5000;
 
