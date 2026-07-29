@@ -2,11 +2,14 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// ==============================
 // Register User
+// ==============================
 const register = async (req, res) => {
   try {
     const { name, email, phone, password, role } = req.body;
 
+    // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email }, { phone }],
     });
@@ -18,8 +21,10 @@ const register = async (req, res) => {
       });
     }
 
+    // Hash Password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create User
     const user = await User.create({
       name,
       email,
@@ -28,14 +33,17 @@ const register = async (req, res) => {
       role,
     });
 
+    // Remove password before sending response
+    const { password: _, ...userData } = user.toObject();
+
     res.status(201).json({
       success: true,
       message: "User Registered Successfully",
-      user,
+      user: userData,
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Register Error:", error);
 
     res.status(500).json({
       success: false,
@@ -44,11 +52,14 @@ const register = async (req, res) => {
   }
 };
 
+// ==============================
 // Login User
+// ==============================
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Find User
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -58,6 +69,7 @@ const login = async (req, res) => {
       });
     }
 
+    // Compare Password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -67,26 +79,30 @@ const login = async (req, res) => {
       });
     }
 
+    // Generate JWT Token
     const token = jwt.sign(
       {
         id: user._id,
         role: user.role,
       },
-      "rozgaarsetu_secret_key",
+      process.env.JWT_SECRET || "rozgaarsetu_secret_key",
       {
         expiresIn: "7d",
       }
     );
 
+    // Remove password before sending response
+    const { password: _, ...userData } = user.toObject();
+
     res.status(200).json({
       success: true,
       message: "Login Successful",
       token,
-      user,
+      user: userData,
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Login Error:", error);
 
     res.status(500).json({
       success: false,
