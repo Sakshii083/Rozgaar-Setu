@@ -16,21 +16,20 @@ function WorkerRegister() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (
-      !formData.fullName ||
-      !formData.phone ||
-      !formData.city ||
-      !formData.area ||
+      !formData.fullName.trim() ||
+      !formData.phone.trim() ||
+      !formData.city.trim() ||
+      !formData.area.trim() ||
       !formData.wage
     ) {
       alert("Please fill all required fields.");
@@ -40,20 +39,16 @@ function WorkerRegister() {
     try {
       setLoading(true);
 
-      const response = await API.post(
-        "/workers/register",
-        {
-          ...formData,
-          wage: Number(formData.wage),
-        }
-      );
+      const response = await API.post("/workers/register", {
+        ...formData,
+        wage: Number(formData.wage),
+      });
 
       alert(
-        response.data.message ||
+        response.data?.message ||
           "Worker Registered Successfully!"
       );
 
-      // Clear form after successful registration
       setFormData({
         fullName: "",
         phone: "",
@@ -65,13 +60,12 @@ function WorkerRegister() {
         wage: "",
       });
     } catch (error) {
-      console.error("Worker Registration Error:", error);
+      console.error("Worker registration error:", error);
 
-      const message =
+      alert(
         error.response?.data?.message ||
-        "Worker registration failed. Please try again.";
-
-      alert(message);
+          "Worker registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -79,13 +73,12 @@ function WorkerRegister() {
 
   return (
     <div className="min-h-screen bg-slate-100 py-10 px-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
-
-        <h1 className="text-3xl font-bold text-center text-blue-600">
+      <div className="mx-auto max-w-2xl rounded-xl bg-white p-8 shadow-lg">
+        <h1 className="text-center text-3xl font-bold text-blue-600">
           Skilled Worker Registration
         </h1>
 
-        <p className="text-center text-gray-500 mt-2">
+        <p className="mt-2 text-center text-gray-500">
           Register yourself and start receiving job opportunities.
         </p>
 
@@ -93,8 +86,6 @@ function WorkerRegister() {
           onSubmit={handleSubmit}
           className="mt-8 space-y-5"
         >
-
-          {/* Full Name */}
           <div>
             <label className="font-medium">
               Full Name *
@@ -106,11 +97,10 @@ function WorkerRegister() {
               value={formData.fullName}
               onChange={handleChange}
               placeholder="Enter your full name"
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             />
           </div>
 
-          {/* Phone */}
           <div>
             <label className="font-medium">
               Phone Number *
@@ -122,11 +112,10 @@ function WorkerRegister() {
               value={formData.phone}
               onChange={handleChange}
               placeholder="9876543210"
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             />
           </div>
 
-          {/* Skill */}
           <div>
             <label className="font-medium">
               Skill *
@@ -136,7 +125,7 @@ function WorkerRegister() {
               name="skill"
               value={formData.skill}
               onChange={handleChange}
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             >
               <option>Plumber</option>
               <option>Electrician</option>
@@ -149,7 +138,6 @@ function WorkerRegister() {
             </select>
           </div>
 
-          {/* Experience */}
           <div>
             <label className="font-medium">
               Experience *
@@ -159,7 +147,7 @@ function WorkerRegister() {
               name="experience"
               value={formData.experience}
               onChange={handleChange}
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             >
               <option>0 - 1 Year</option>
               <option>2 - 5 Years</option>
@@ -168,7 +156,6 @@ function WorkerRegister() {
             </select>
           </div>
 
-          {/* City */}
           <div>
             <label className="font-medium">
               City *
@@ -180,11 +167,10 @@ function WorkerRegister() {
               value={formData.city}
               onChange={handleChange}
               placeholder="Enter your city"
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             />
           </div>
 
-          {/* Area */}
           <div>
             <label className="font-medium">
               Area *
@@ -196,11 +182,10 @@ function WorkerRegister() {
               value={formData.area}
               onChange={handleChange}
               placeholder="Enter your area"
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             />
           </div>
 
-          {/* Availability */}
           <div>
             <label className="font-medium">
               Availability *
@@ -210,7 +195,7 @@ function WorkerRegister() {
               name="availability"
               value={formData.availability}
               onChange={handleChange}
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             >
               <option>Available Today</option>
               <option>Busy</option>
@@ -218,7 +203,6 @@ function WorkerRegister() {
             </select>
           </div>
 
-          {/* Wage */}
           <div>
             <label className="font-medium">
               Expected Daily Wage (₹) *
@@ -231,23 +215,21 @@ function WorkerRegister() {
               onChange={handleChange}
               placeholder="800"
               min="1"
-              className="w-full mt-2 border rounded-lg p-3"
+              className="mt-2 w-full rounded-lg border p-3"
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+            className="w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
           >
             {loading ? "Registering..." : "Register"}
           </button>
-
         </form>
       </div>
     </div>
   );
 }
 
-export default WorkerRegister;s
+export default WorkerRegister;
