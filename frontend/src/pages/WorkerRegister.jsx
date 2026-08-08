@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/axios";
 
 function WorkerRegister() {
   const [formData, setFormData] = useState({
@@ -13,32 +13,69 @@ function WorkerRegister() {
     wage: "",
   });
 
-  function handleChange(e) {
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-  }
+  };
 
-  async function handleSubmit(e) {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const response = await axios.post(
-      "http://localhost:5000/api/workers/register",
-      formData
-    );
+    // Basic validation
+    if (
+      !formData.fullName ||
+      !formData.phone ||
+      !formData.city ||
+      !formData.area ||
+      !formData.wage
+    ) {
+      alert("Please fill all required fields.");
+      return;
+    }
 
-    alert(response.data.message);
+    try {
+      setLoading(true);
 
-    console.log(response.data);
+      const response = await API.post(
+        "/workers/register",
+        {
+          ...formData,
+          wage: Number(formData.wage),
+        }
+      );
 
-  } catch (error) {
-    console.error(error);
+      alert(
+        response.data.message ||
+          "Worker Registered Successfully!"
+      );
 
-    alert("Something went wrong");
-  }
-}
+      // Clear form after successful registration
+      setFormData({
+        fullName: "",
+        phone: "",
+        skill: "Plumber",
+        experience: "0 - 1 Year",
+        city: "",
+        area: "",
+        availability: "Available Today",
+        wage: "",
+      });
+    } catch (error) {
+      console.error("Worker Registration Error:", error);
+
+      const message =
+        error.response?.data?.message ||
+        "Worker registration failed. Please try again.";
+
+      alert(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-100 py-10 px-4">
@@ -52,10 +89,17 @@ function WorkerRegister() {
           Register yourself and start receiving job opportunities.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8 space-y-5"
+        >
 
+          {/* Full Name */}
           <div>
-            <label className="font-medium">Full Name</label>
+            <label className="font-medium">
+              Full Name *
+            </label>
+
             <input
               type="text"
               name="fullName"
@@ -66,8 +110,12 @@ function WorkerRegister() {
             />
           </div>
 
+          {/* Phone */}
           <div>
-            <label className="font-medium">Phone Number</label>
+            <label className="font-medium">
+              Phone Number *
+            </label>
+
             <input
               type="tel"
               name="phone"
@@ -78,8 +126,12 @@ function WorkerRegister() {
             />
           </div>
 
+          {/* Skill */}
           <div>
-            <label className="font-medium">Skill</label>
+            <label className="font-medium">
+              Skill *
+            </label>
+
             <select
               name="skill"
               value={formData.skill}
@@ -97,8 +149,12 @@ function WorkerRegister() {
             </select>
           </div>
 
+          {/* Experience */}
           <div>
-            <label className="font-medium">Experience</label>
+            <label className="font-medium">
+              Experience *
+            </label>
+
             <select
               name="experience"
               value={formData.experience}
@@ -112,8 +168,12 @@ function WorkerRegister() {
             </select>
           </div>
 
+          {/* City */}
           <div>
-            <label className="font-medium">City</label>
+            <label className="font-medium">
+              City *
+            </label>
+
             <input
               type="text"
               name="city"
@@ -124,8 +184,12 @@ function WorkerRegister() {
             />
           </div>
 
+          {/* Area */}
           <div>
-            <label className="font-medium">Area</label>
+            <label className="font-medium">
+              Area *
+            </label>
+
             <input
               type="text"
               name="area"
@@ -136,8 +200,12 @@ function WorkerRegister() {
             />
           </div>
 
+          {/* Availability */}
           <div>
-            <label className="font-medium">Availability</label>
+            <label className="font-medium">
+              Availability *
+            </label>
+
             <select
               name="availability"
               value={formData.availability}
@@ -150,30 +218,36 @@ function WorkerRegister() {
             </select>
           </div>
 
+          {/* Wage */}
           <div>
-            <label className="font-medium">Expected Daily Wage (₹)</label>
+            <label className="font-medium">
+              Expected Daily Wage (₹) *
+            </label>
+
             <input
               type="number"
               name="wage"
               value={formData.wage}
               onChange={handleChange}
               placeholder="800"
+              min="1"
               className="w-full mt-2 border rounded-lg p-3"
             />
           </div>
 
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
+            disabled={loading}
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
 
         </form>
-
       </div>
     </div>
   );
 }
 
-export default WorkerRegister;
+export default WorkerRegister;s
