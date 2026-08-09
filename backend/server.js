@@ -18,18 +18,14 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const statsRoutes = require("./routes/statsRoutes");
 const workerDashboardRoutes = require("./routes/workerDashboardRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-
+const aiRoutes = require("./routes/aiRoutes");
 const app = express();
 
+// ====================
 // Connect Database
+// ====================
+
 connectDB();
-
-// ====================
-// Middleware
-// ====================
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // ====================
 // CORS Configuration
@@ -37,21 +33,51 @@ app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://rozgaar-setu-frontend.onrender.com",
   process.env.FRONTEND_URL,
-];
+].filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS Not Allowed"));
+      // Allow requests from tools such as Postman
+      if (!origin) {
+        return callback(null, true);
       }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("CORS blocked:", origin);
+
+      return callback(new Error("CORS Not Allowed"));
     },
+
     credentials: true,
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS",
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+    ],
   })
 );
+
+// ====================
+// Middleware
+// ====================
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ====================
 // Routes
@@ -66,7 +92,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/worker-dashboard", workerDashboardRoutes);
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/ai", aiRoutes);
 // ====================
 // Home Route
 // ====================
@@ -79,7 +105,7 @@ app.get("/", (req, res) => {
 });
 
 // ====================
-// 404 Route (Express 5 Compatible)
+// 404 Route
 // ====================
 
 app.use((req, res) => {
@@ -94,7 +120,7 @@ app.use((req, res) => {
 // ====================
 
 app.use((err, req, res, next) => {
-  console.error(err);
+  console.error("Server Error:", err);
 
   res.status(err.status || 500).json({
     success: false,
