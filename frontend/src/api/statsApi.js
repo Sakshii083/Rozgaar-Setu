@@ -1,7 +1,5 @@
-import axios from "axios";
-
-const API = "http://localhost:5000/api/stats";
+import API from "./axios";
 
 export const getStats = async () => {
-  return await axios.get(API);
+  return await API.get("/stats");
 };

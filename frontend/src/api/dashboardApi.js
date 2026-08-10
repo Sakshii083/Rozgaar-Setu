@@ -1,11 +1,5 @@
-import axios from "axios";
-
-const API = "http://localhost:5000/api/dashboard";
+import API from "./axios";
 
 export const getEmployerStats = async () => {
-  return await axios.get(`${API}/employer`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+  return await API.get("/dashboard/employer");
 };
