@@ -32,7 +32,6 @@ connectDB();
 // ====================
 
 const allowedOrigins = [
-  "http://localhost:5173",
   "https://rozgaar-setu-frontend.onrender.com",
   process.env.FRONTEND_URL,
 ].filter(Boolean);
