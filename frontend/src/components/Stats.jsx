@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { getStats } from "../api/statsApi";
+import { useLanguage } from "../context/LanguageContext";
 
 function Stats() {
+  const { t } = useLanguage();
+
   const [stats, setStats] = useState({
     workers: 0,
     jobs: 0,
@@ -28,10 +31,10 @@ function Stats() {
 
   if (loading) {
     return (
-      <section className="bg-blue-600 text-white py-16">
-        <div className="max-w-7xl mx-auto text-center">
+      <section className="bg-blue-600 py-16 text-white">
+        <div className="mx-auto max-w-7xl text-center">
           <h2 className="text-2xl font-semibold">
-            Loading statistics...
+            {t("stats.loading")}
           </h2>
         </div>
       </section>
@@ -41,34 +44,48 @@ function Stats() {
   const statsData = [
     {
       number: stats.workers,
-      title: "Workers",
+      title: t("stats.workers"),
+      icon: "👷",
     },
     {
       number: stats.jobs,
-      title: "Jobs",
+      title: t("stats.jobs"),
+      icon: "💼",
     },
     {
       number: stats.employers,
-      title: "Employers",
+      title: t("stats.employers"),
+      icon: "🏢",
     },
     {
       number: stats.cities,
-      title: "Cities",
+      title: t("stats.cities"),
+      icon: "📍",
     },
   ];
 
   return (
-    <section className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="bg-gradient-to-r from-blue-600 to-indigo-600 py-16 text-white">
+      <div className="mx-auto max-w-7xl px-6">
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
+        <div className="mb-10 text-center">
+          <h2 className="text-3xl font-bold md:text-4xl">
+            {t("stats.title")}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-10 text-center md:grid-cols-4">
 
           {statsData.map((stat) => (
             <div
               key={stat.title}
-              className="hover:scale-105 transition-transform duration-300"
+              className="transition-transform duration-300 hover:scale-105"
             >
-              <h2 className="text-5xl font-bold">
+              <div className="text-3xl">
+                {stat.icon}
+              </div>
+
+              <h2 className="mt-2 text-5xl font-bold">
                 {stat.number}
               </h2>
 

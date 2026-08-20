@@ -7,9 +7,11 @@ import DashboardCharts from "../components/DashboardCharts";
 import Loader from "../components/Loader";
 
 import { getEmployerStats } from "../api/dashboardApi";
+import { useLanguage } from "../context/LanguageContext";
 
 function EmployerDashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const { t } = useLanguage();
 
   const [loading, setLoading] = useState(true);
 
@@ -45,64 +47,74 @@ function EmployerDashboard() {
 
   const successRate =
     stats.applications > 0
-      ? Math.round((stats.accepted / stats.applications) * 100)
+      ? Math.round(
+          (stats.accepted / stats.applications) * 100
+        )
       : 0;
 
   return (
     <DashboardLayout>
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-600 rounded-2xl shadow-lg p-8 text-white mb-8">
+
+      {/* WELCOME */}
+
+      <div className="mb-8 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-600 p-8 text-white shadow-lg">
+
         <h1 className="text-4xl font-bold">
-          Welcome, {user?.name} 👋
+          {t("employerDashboard.welcome")},{" "}
+          {user?.name} 👋
         </h1>
 
         <p className="mt-3 text-blue-100">
-          Manage your jobs, review applications and hire skilled workers.
+          {t("employerDashboard.welcomeDescription")}
         </p>
 
-        <div className="flex flex-wrap gap-4 mt-8">
+        <div className="mt-8 flex flex-wrap gap-4">
+
           <Link
             to="/post-job"
-            className="bg-white text-blue-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition"
+            className="rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-gray-100"
           >
-            + Post New Job
+            ➕ {t("employerDashboard.postNewJob")}
           </Link>
 
           <Link
             to="/applications"
-            className="bg-blue-800 hover:bg-blue-900 px-6 py-3 rounded-xl font-semibold transition"
+            className="rounded-xl bg-blue-800 px-6 py-3 font-semibold transition hover:bg-blue-900"
           >
-            View Applications
+            📋 {t("employerDashboard.viewApplications")}
           </Link>
+
         </div>
+
       </div>
 
-      {/* Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+      {/* STATISTICS */}
+
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
 
         <DashboardCard
-          title="Jobs Posted"
+          title={t("employerDashboard.jobsPosted")}
           value={stats.jobsPosted}
           icon="💼"
           color="text-blue-600"
         />
 
         <DashboardCard
-          title="Applications"
+          title={t("employerDashboard.applications")}
           value={stats.applications}
           icon="📄"
           color="text-green-600"
         />
 
         <DashboardCard
-          title="Accepted"
+          title={t("employerDashboard.accepted")}
           value={stats.accepted}
           icon="✅"
           color="text-purple-600"
         />
 
         <DashboardCard
-          title="Rejected"
+          title={t("employerDashboard.rejected")}
           value={stats.rejected}
           icon="❌"
           color="text-red-600"
@@ -110,144 +122,185 @@ function EmployerDashboard() {
 
       </div>
 
-      {/* Dashboard Analytics */}
+      {/* ANALYTICS */}
+
       <div className="mb-8">
         <DashboardCharts stats={stats} />
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
+      {/* QUICK ACTIONS */}
+
+      <div className="mb-8 grid gap-6 md:grid-cols-2">
 
         <Link
           to="/post-job"
-          className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition"
+          className="rounded-2xl bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
         >
-          <div className="text-5xl mb-4">➕</div>
+
+          <div className="mb-4 text-5xl">
+            ➕
+          </div>
 
           <h2 className="text-2xl font-bold">
-            Post a New Job
+            {t("employerDashboard.postJobTitle")}
           </h2>
 
-          <p className="text-gray-500 mt-3">
-            Create and publish a new job for workers.
+          <p className="mt-3 text-gray-500">
+            {t("employerDashboard.postJobDescription")}
           </p>
+
         </Link>
 
         <Link
           to="/applications"
-          className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition"
+          className="rounded-2xl bg-white p-8 shadow-lg transition hover:-translate-y-1 hover:shadow-xl"
         >
-          <div className="text-5xl mb-4">📋</div>
+
+          <div className="mb-4 text-5xl">
+            📋
+          </div>
 
           <h2 className="text-2xl font-bold">
-            Manage Applications
+            {t("employerDashboard.manageApplications")}
           </h2>
 
-          <p className="text-gray-500 mt-3">
-            Review, accept or reject worker applications.
+          <p className="mt-3 text-gray-500">
+            {t(
+              "employerDashboard.manageApplicationsDescription"
+            )}
           </p>
+
         </Link>
 
       </div>
 
-      {/* Hiring Summary */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+      {/* HIRING SUMMARY */}
 
-        <h2 className="text-2xl font-bold mb-6">
-          Hiring Summary
+      <div className="mb-8 rounded-2xl bg-white p-8 shadow-lg">
+
+        <h2 className="mb-6 text-2xl font-bold">
+          {t("employerDashboard.hiringSummary")}
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
 
-          <div className="border rounded-xl p-6 text-center">
+          <div className="rounded-xl border p-6 text-center">
+
             <h3 className="text-lg font-semibold text-gray-600">
-              Jobs Posted
+              {t("employerDashboard.jobsPosted")}
             </h3>
 
-            <p className="text-5xl font-bold text-blue-600 mt-4">
+            <p className="mt-4 text-5xl font-bold text-blue-600">
               {stats.jobsPosted}
             </p>
+
           </div>
 
-          <div className="border rounded-xl p-6 text-center">
+          <div className="rounded-xl border p-6 text-center">
+
             <h3 className="text-lg font-semibold text-gray-600">
-              Applications
+              {t("employerDashboard.applications")}
             </h3>
 
-            <p className="text-5xl font-bold text-green-600 mt-4">
+            <p className="mt-4 text-5xl font-bold text-green-600">
               {stats.applications}
             </p>
+
           </div>
 
-          <div className="border rounded-xl p-6 text-center">
+          <div className="rounded-xl border p-6 text-center">
+
             <h3 className="text-lg font-semibold text-gray-600">
-              Success Rate
+              {t("employerDashboard.successRate")}
             </h3>
 
-            <p className="text-5xl font-bold text-purple-600 mt-4">
+            <p className="mt-4 text-5xl font-bold text-purple-600">
               {successRate}%
             </p>
+
           </div>
 
         </div>
 
       </div>
 
-      {/* Recent Activity */}
-      <div className="bg-white rounded-2xl shadow-lg p-8">
+      {/* RECENT ACTIVITY */}
 
-        <h2 className="text-2xl font-bold mb-6">
-          Recent Activity
+      <div className="rounded-2xl bg-white p-8 shadow-lg">
+
+        <h2 className="mb-6 text-2xl font-bold">
+          {t("employerDashboard.recentActivity")}
         </h2>
 
         <div className="space-y-5">
 
-          <div className="flex justify-between items-center border-b pb-4">
+          <div className="flex items-center justify-between border-b pb-4">
+
             <div>
+
               <h3 className="font-semibold">
-                💼 Jobs Posted
+                💼 {t("employerDashboard.jobsPosted")}
               </h3>
 
               <p className="text-gray-500">
-                {stats.jobsPosted} active job posts
+                {stats.jobsPosted}{" "}
+                {t("employerDashboard.activeJobPosts")}
               </p>
+
             </div>
 
-            <span className="text-blue-600 font-semibold">
-              Live
+            <span className="font-semibold text-blue-600">
+              {t("employerDashboard.live")}
             </span>
+
           </div>
 
-          <div className="flex justify-between items-center border-b pb-4">
+          <div className="flex items-center justify-between border-b pb-4">
+
             <div>
+
               <h3 className="font-semibold">
-                📄 Applications Received
+                📄{" "}
+                {t("employerDashboard.applicationsReceived")}
               </h3>
 
               <p className="text-gray-500">
-                {stats.applications} total applications
+                {stats.applications}{" "}
+                {t("employerDashboard.totalApplications")}
               </p>
+
             </div>
 
-            <span className="text-green-600 font-semibold">
-              Updated
+            <span className="font-semibold text-green-600">
+              {t("employerDashboard.updated")}
             </span>
+
           </div>
 
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
+
             <div>
+
               <h3 className="font-semibold">
-                ✅ Hiring Progress
+                ✅{" "}
+                {t("employerDashboard.hiringProgress")}
               </h3>
 
               <p className="text-gray-500">
-                {stats.accepted} Accepted • {stats.rejected} Rejected
+                {stats.accepted}{" "}
+                {t("employerDashboard.accepted")}{" "}
+                •{" "}
+                {stats.rejected}{" "}
+                {t("employerDashboard.rejected")}
               </p>
+
             </div>
 
-            <span className="text-purple-600 font-semibold">
-              {successRate}% Success
+            <span className="font-semibold text-purple-600">
+              {successRate}%{" "}
+              {t("employerDashboard.success")}
             </span>
+
           </div>
 
         </div>

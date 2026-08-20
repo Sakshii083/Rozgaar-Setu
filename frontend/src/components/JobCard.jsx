@@ -1,27 +1,32 @@
 import { applyJob } from "../api/applicationApi";
+import { useLanguage } from "../context/LanguageContext";
 
 function JobCard({ job }) {
+  const { t } = useLanguage();
 
   const handleApply = async () => {
     try {
       const res = await applyJob(job._id);
 
-      alert(res.data.message);
+      alert(
+        res.data.message ||
+          t("workerDashboard.applicationSubmitted")
+      );
 
     } catch (error) {
 
       alert(
         error.response?.data?.message ||
-        "Something went wrong"
+          t("workerDashboard.applyError")
       );
 
     }
   };
 
   return (
-    <div className="border rounded-xl p-6 shadow hover:shadow-lg transition">
+    <div className="rounded-xl border bg-white p-6 shadow transition hover:shadow-lg">
 
-      <div className="flex justify-between">
+      <div className="flex justify-between gap-4">
 
         <div>
 
@@ -29,13 +34,13 @@ function JobCard({ job }) {
             {job.title}
           </h2>
 
-          <p className="text-gray-500 mt-1">
+          <p className="mt-1 text-gray-500">
             📍 {job.city}
           </p>
 
         </div>
 
-        <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full h-fit">
+        <span className="h-fit rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
           {job.jobType}
         </span>
 
@@ -45,12 +50,12 @@ function JobCard({ job }) {
         {job.description}
       </p>
 
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      <div className="mt-6 grid grid-cols-2 gap-6">
 
         <div>
 
           <p className="text-sm text-gray-500">
-            Skill
+            {t("jobs.skill")}
           </p>
 
           <p className="font-semibold">
@@ -62,7 +67,7 @@ function JobCard({ job }) {
         <div>
 
           <p className="text-sm text-gray-500">
-            Salary
+            {t("jobs.salary")}
           </p>
 
           <p className="font-semibold text-green-700">
@@ -73,25 +78,27 @@ function JobCard({ job }) {
 
       </div>
 
-      <div className="mt-6 flex justify-between items-center">
+      <div className="mt-6 flex items-center justify-between gap-4">
 
         <div>
 
           <p className="text-sm text-gray-500">
-            Employer
+            {t("jobs.employer")}
           </p>
 
           <p className="font-semibold">
-            {job.employer?.name}
+            {job.employer?.name ||
+              t("jobs.notAvailable")}
           </p>
 
         </div>
 
         <button
+          type="button"
           onClick={handleApply}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+          className="rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition hover:bg-blue-700"
         >
-          Apply
+          {t("jobs.applyNow")}
         </button>
 
       </div>

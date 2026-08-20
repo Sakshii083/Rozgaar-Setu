@@ -1,55 +1,69 @@
+import { useLanguage } from "../context/LanguageContext";
+
 function HowItWorks() {
+  const { t } = useLanguage();
+
   const steps = [
     {
       number: "1",
-      title: "Choose Your Role",
-      description:
-        "Register as a Skilled Worker, Professional, or Employer.",
+      icon: "👤",
+      title: t("howItWorks.step1Title"),
+      description: t("howItWorks.step1Description"),
     },
     {
       number: "2",
-      title: "Create Your Profile",
-      description:
-        "Add your skills, experience, location, or company details.",
+      icon: "🔎",
+      title: t("howItWorks.step2Title"),
+      description: t("howItWorks.step2Description"),
     },
     {
       number: "3",
-      title: "Connect & Grow",
-      description:
-        "Employers hire talent, workers find jobs, and professionals use AI tools.",
+      icon: "🤝",
+      title: t("howItWorks.step3Title"),
+      description: t("howItWorks.step3Description"),
     },
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="bg-white py-20">
+      <div className="mx-auto max-w-7xl px-6">
 
-        <h2 className="text-4xl font-bold text-center">
-          How Rozgaar Setu Works
-        </h2>
+        <div className="text-center">
 
-        <p className="text-center text-gray-600 mt-4">
-          Get started in just three simple steps.
-        </p>
+          <h2 className="text-4xl font-bold text-slate-900">
+            {t("howItWorks.title")}
+          </h2>
 
-        <div className="grid md:grid-cols-3 gap-8 mt-14">
+          <p className="mt-4 text-gray-600">
+            {t("howItWorks.description")}
+          </p>
+
+        </div>
+
+        <div className="mt-14 grid gap-8 md:grid-cols-3">
 
           {steps.map((step) => (
             <div
               key={step.number}
-              className="text-center p-8 rounded-xl shadow hover:shadow-lg transition"
+              className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
-                {step.number}
+
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl text-white shadow-lg shadow-blue-200">
+                {step.icon}
               </div>
 
-              <h3 className="text-2xl font-semibold mt-6">
+              <div className="mx-auto mt-3 text-sm font-bold text-blue-600">
+                {t("howItWorks.step")} {step.number}
+              </div>
+
+              <h3 className="mt-4 text-2xl font-semibold text-slate-900">
                 {step.title}
               </h3>
 
-              <p className="text-gray-600 mt-4">
+              <p className="mt-4 leading-7 text-gray-600">
                 {step.description}
               </p>
+
             </div>
           ))}
 

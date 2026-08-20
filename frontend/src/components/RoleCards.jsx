@@ -1,65 +1,69 @@
 import { Link } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 
 function RoleCards() {
+  const { t } = useLanguage();
+
   const roles = [
     {
-      title: "Skilled Worker",
+      key: "worker",
       icon: "👷",
-      description:
-        "Find nearby work as a plumber, electrician, carpenter, painter, driver and more.",
       link: "/worker-register",
     },
     {
-      title: "Professional Job Seeker",
+      key: "professional",
       icon: "👨‍🎓",
-      description:
-        "Apply for internships, part-time and full-time jobs with AI career support.",
       link: "/register",
     },
     {
-      title: "Employer",
+      key: "employer",
       icon: "🏢",
-      description:
-        "Hire skilled workers and professionals quickly from one platform.",
       link: "/register",
     },
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <h2 className="text-4xl font-bold text-center">
-          Choose Your Role
+    <section className="bg-white py-20">
+      <div className="mx-auto max-w-7xl px-6">
+
+        <h2 className="text-center text-4xl font-bold text-slate-900">
+          {t("roles.sectionTitle")}
         </h2>
 
-        <p className="text-center text-gray-600 mt-4">
-          Rozgaar Setu is built for everyone.
+        <p className="mt-4 text-center text-gray-600">
+          {t("roles.sectionDescription")}
         </p>
 
-        <div className="grid md:grid-cols-3 gap-8 mt-12">
+        <div className="mt-12 grid gap-8 md:grid-cols-3">
+
           {roles.map((role) => (
             <div
-              key={role.title}
-              className="rounded-2xl border p-8 shadow-sm hover:shadow-xl transition duration-300"
+              key={role.key}
+              className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="text-5xl">{role.icon}</div>
 
-              <h3 className="text-2xl font-bold mt-5">
-                {role.title}
+              <div className="text-5xl">
+                {role.icon}
+              </div>
+
+              <h3 className="mt-5 text-2xl font-bold text-slate-900">
+                {t(`roles.${role.key}.title`)}
               </h3>
 
-              <p className="mt-4 text-gray-600">
-                {role.description}
+              <p className="mt-4 leading-7 text-gray-600">
+                {t(`roles.${role.key}.description`)}
               </p>
 
               <Link
                 to={role.link}
-                className="inline-block mt-6 bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700"
+                className="mt-6 inline-block rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white transition hover:bg-blue-700"
               >
-                Continue
+                {t("roles.continue")}
               </Link>
+
             </div>
           ))}
+
         </div>
       </div>
     </section>

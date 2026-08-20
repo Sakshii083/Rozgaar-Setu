@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { getJobs } from "../api/jobApi";
 import { applyJob } from "../api/applicationApi";
+import { useLanguage } from "../context/LanguageContext";
 
 function Jobs() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [applyingJob, setApplyingJob] = useState(null);
 
   useEffect(() => {
     fetchJobs();
@@ -16,10 +20,12 @@ function Jobs() {
   const fetchJobs = async () => {
     try {
       const res = await getJobs();
-      setJobs(res.data.jobs);
+
+      setJobs(res.data.jobs || []);
     } catch (error) {
-      console.error(error);
-      alert("Failed to load jobs");
+      console.error("Failed to load jobs:", error);
+
+      alert(t("jobs.loadError"));
     } finally {
       setLoading(false);
     }
@@ -28,100 +34,222 @@ function Jobs() {
   const handleApply = async (jobId) => {
     const token = localStorage.getItem("token");
 
+    // User is not logged in
     if (!token) {
-      alert("Please login first.");
+      alert(t("jobs.loginFirst"));
+
       navigate("/login");
+
       return;
     }
 
     try {
+      // Prevent multiple clicks
+      setApplyingJob(jobId);
+
       await applyJob(jobId);
-      alert("✅ Application submitted successfully!");
+
+      alert(t("jobs.applicationSuccess"));
     } catch (error) {
+      console.error("Application failed:", error);
+
       alert(
         error.response?.data?.message ||
-          "Failed to apply for this job."
+          t("jobs.applicationError")
       );
+    } finally {
+      setApplyingJob(null);
     }
   };
 
+  // =========================
+  // LOADING
+  // =========================
+
   if (loading) {
     return (
-      <div className="text-center mt-20 text-2xl font-semibold">
-        Loading Jobs...
+      <div className="min-h-screen bg-gray-100 px-5 py-20 text-center">
+
+        <div className="mx-auto max-w-7xl">
+
+          <div className="text-5xl">
+            💼
+          </div>
+
+          <h2 className="mt-4 text-2xl font-semibold text-slate-800">
+            {t("jobs.loading")}
+          </h2>
+
+        </div>
+
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-5">
+    <div className="min-h-screen bg-gray-100 px-5 py-10">
 
-      <h1 className="text-4xl font-bold text-center text-blue-700 mb-10">
-        Available Jobs
-      </h1>
+      <div className="mx-auto max-w-7xl">
 
-      {jobs.length === 0 ? (
-        <div className="text-center text-gray-500 text-xl">
-          No Jobs Available
+        {/* =========================
+            HEADER
+        ========================== */}
+
+        <div className="mb-10 text-center">
+
+          <span className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
+            💼 {t("jobs.badge")}
+          </span>
+
+          <h1 className="mt-4 text-4xl font-bold text-blue-700">
+            {t("jobs.title")}
+          </h1>
+
+          <p className="mt-3 text-gray-600">
+            {t("jobs.description")}
+          </p>
+
         </div>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {jobs.map((job) => (
-            <div
-              key={job._id}
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition"
-            >
-              <h2 className="text-2xl font-bold text-blue-600">
-                {job.title}
-              </h2>
+        {/* =========================
+            NO JOBS
+        ========================== */}
 
-              <p className="mt-3 text-gray-700">
-                {job.description}
-              </p>
+        {jobs.length === 0 ? (
 
-              <div className="mt-5 space-y-2 text-gray-700">
+          <div className="rounded-2xl bg-white p-12 text-center shadow-lg">
 
-                <p>
-                  <strong>Skill:</strong> {job.skill}
-                </p>
+            <div className="text-5xl">
+              🔍
+            </div>
 
-                <p>
-                  <strong>City:</strong> {job.city}
-                </p>
+            <h2 className="mt-4 text-xl font-semibold text-gray-700">
+              {t("jobs.noJobs")}
+            </h2>
 
-                <p>
-                  <strong>Salary:</strong> ₹{job.salary}
-                </p>
+            <p className="mt-2 text-gray-500">
+              {t("jobs.noJobsDescription")}
+            </p>
 
-                <p>
-                  <strong>Job Type:</strong> {job.jobType}
-                </p>
+          </div>
 
-                <p>
-                  <strong>Employer:</strong>{" "}
-                  {job.employer?.name || "N/A"}
-                </p>
+        ) : (
 
-                <p>
-                  <strong>Phone:</strong>{" "}
-                  {job.employer?.phone || "N/A"}
-                </p>
+          /* =========================
+             JOB GRID
+          ========================== */
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+            {jobs.map((job) => (
+
+              <div
+                key={job._id}
+                className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+
+                {/* =========================
+                    JOB TITLE
+                ========================== */}
+
+                <div>
+
+                  <h2 className="text-2xl font-bold text-blue-600">
+                    {job.title}
+                  </h2>
+
+                  <p className="mt-3 leading-7 text-gray-700">
+                    {job.description}
+                  </p>
+
+                </div>
+
+                {/* =========================
+                    JOB DETAILS
+                ========================== */}
+
+                <div className="mt-6 space-y-3 text-gray-700">
+
+                  <p>
+                    <strong>
+                      🛠️ {t("jobs.skill")}:
+                    </strong>{" "}
+                    {job.skill ||
+                      t("jobs.notAvailable")}
+                  </p>
+
+                  <p>
+                    <strong>
+                      📍 {t("jobs.city")}:
+                    </strong>{" "}
+                    {job.city ||
+                      t("jobs.notAvailable")}
+                  </p>
+
+                  <p>
+                    <strong>
+                      💰 {t("jobs.salary")}:
+                    </strong>{" "}
+                    ₹{job.salary ||
+                      t("jobs.notAvailable")}
+                  </p>
+
+                  <p>
+                    <strong>
+                      💼 {t("jobs.jobType")}:
+                    </strong>{" "}
+                    {job.jobType ||
+                      t("jobs.notAvailable")}
+                  </p>
+
+                  <p>
+                    <strong>
+                      👤 {t("jobs.employer")}:
+                    </strong>{" "}
+                    {job.employer?.name ||
+                      t("jobs.notAvailable")}
+                  </p>
+
+                  <p>
+                    <strong>
+                      📞 {t("jobs.phone")}:
+                    </strong>{" "}
+                    {job.employer?.phone ||
+                      t("jobs.notAvailable")}
+                  </p>
+
+                </div>
+
+                {/* =========================
+                    APPLY BUTTON
+                ========================== */}
+
+                <button
+                  type="button"
+                  onClick={() => handleApply(job._id)}
+                  disabled={applyingJob === job._id}
+                  className={`mt-7 w-full rounded-xl py-3 font-semibold text-white shadow-md transition ${
+                    applyingJob === job._id
+                      ? "cursor-not-allowed bg-gray-400"
+                      : "bg-green-600 hover:bg-green-700 hover:shadow-lg"
+                  }`}
+                >
+
+                  {applyingJob === job._id
+                    ? `⏳ ${t("jobs.applying")}`
+                    : `✅ ${t("jobs.applyNow")}`}
+
+                </button>
 
               </div>
 
-              <button
-                onClick={() => handleApply(job._id)}
-                className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold"
-              >
-                Apply Now
-              </button>
+            ))}
 
-            </div>
-          ))}
+          </div>
 
-        </div>
-      )}
+        )}
+
+      </div>
 
     </div>
   );

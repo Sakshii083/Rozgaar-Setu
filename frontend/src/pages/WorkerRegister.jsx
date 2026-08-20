@@ -1,7 +1,10 @@
 import { useState } from "react";
 import API from "../api/axios";
+import { useLanguage } from "../context/LanguageContext";
 
 function WorkerRegister() {
+  const { t } = useLanguage();
+
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -32,7 +35,7 @@ function WorkerRegister() {
       !formData.area.trim() ||
       !formData.wage
     ) {
-      alert("Please fill all required fields.");
+      alert(t("workerRegister.fillFields"));
       return;
     }
 
@@ -46,7 +49,7 @@ function WorkerRegister() {
 
       alert(
         response.data?.message ||
-          "Worker Registered Successfully!"
+          t("workerRegister.success")
       );
 
       setFormData({
@@ -60,11 +63,14 @@ function WorkerRegister() {
         wage: "",
       });
     } catch (error) {
-      console.error("Worker registration error:", error);
+      console.error(
+        "Worker registration error:",
+        error
+      );
 
       alert(
         error.response?.data?.message ||
-          "Worker registration failed. Please try again."
+          t("workerRegister.error")
       );
     } finally {
       setLoading(false);
@@ -72,23 +78,38 @@ function WorkerRegister() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 py-10 px-4">
-      <div className="mx-auto max-w-2xl rounded-xl bg-white p-8 shadow-lg">
-        <h1 className="text-center text-3xl font-bold text-blue-600">
-          Skilled Worker Registration
-        </h1>
+    <div className="min-h-screen bg-slate-100 px-4 py-10">
 
-        <p className="mt-2 text-center text-gray-500">
-          Register yourself and start receiving job opportunities.
-        </p>
+      <div className="mx-auto max-w-2xl rounded-2xl bg-white p-8 shadow-lg">
+
+        {/* HEADER */}
+
+        <div className="text-center">
+
+          <div className="text-5xl">
+            👷
+          </div>
+
+          <h1 className="mt-3 text-3xl font-bold text-blue-600">
+            {t("workerRegister.title")}
+          </h1>
+
+          <p className="mt-2 text-gray-500">
+            {t("workerRegister.subtitle")}
+          </p>
+
+        </div>
 
         <form
           onSubmit={handleSubmit}
           className="mt-8 space-y-5"
         >
+
+          {/* FULL NAME */}
+
           <div>
-            <label className="font-medium">
-              Full Name *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.fullName")} *
             </label>
 
             <input
@@ -96,14 +117,18 @@ function WorkerRegister() {
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
-              placeholder="Enter your full name"
-              className="mt-2 w-full rounded-lg border p-3"
+              placeholder={t(
+                "workerRegister.fullNamePlaceholder"
+              )}
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
+          {/* PHONE */}
+
           <div>
-            <label className="font-medium">
-              Phone Number *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.phone")} *
             </label>
 
             <input
@@ -112,53 +137,93 @@ function WorkerRegister() {
               value={formData.phone}
               onChange={handleChange}
               placeholder="9876543210"
-              className="mt-2 w-full rounded-lg border p-3"
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
+          {/* SKILL */}
+
           <div>
-            <label className="font-medium">
-              Skill *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.skill")} *
             </label>
 
             <select
               name="skill"
               value={formData.skill}
               onChange={handleChange}
-              className="mt-2 w-full rounded-lg border p-3"
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             >
-              <option>Plumber</option>
-              <option>Electrician</option>
-              <option>Carpenter</option>
-              <option>Painter</option>
-              <option>Mason</option>
-              <option>Driver</option>
-              <option>Tailor</option>
-              <option>Housekeeper</option>
+              <option value="Plumber">
+                {t("skills.plumber")}
+              </option>
+
+              <option value="Electrician">
+                {t("skills.electrician")}
+              </option>
+
+              <option value="Carpenter">
+                {t("skills.carpenter")}
+              </option>
+
+              <option value="Painter">
+                {t("skills.painter")}
+              </option>
+
+              <option value="Mason">
+                {t("skills.mason")}
+              </option>
+
+              <option value="Driver">
+                {t("skills.driver")}
+              </option>
+
+              <option value="Tailor">
+                {t("skills.tailor")}
+              </option>
+
+              <option value="Housekeeper">
+                {t("skills.housekeeper")}
+              </option>
             </select>
           </div>
 
+          {/* EXPERIENCE */}
+
           <div>
-            <label className="font-medium">
-              Experience *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.experience")} *
             </label>
 
             <select
               name="experience"
               value={formData.experience}
               onChange={handleChange}
-              className="mt-2 w-full rounded-lg border p-3"
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             >
-              <option>0 - 1 Year</option>
-              <option>2 - 5 Years</option>
-              <option>5 - 10 Years</option>
-              <option>10+ Years</option>
+              <option value="0 - 1 Year">
+                {t("experience.zeroOne")}
+              </option>
+
+              <option value="2 - 5 Years">
+                {t("experience.twoFive")}
+              </option>
+
+              <option value="5 - 10 Years">
+                {t("experience.fiveTen")}
+              </option>
+
+              <option value="10+ Years">
+                {t("experience.tenPlus")}
+              </option>
             </select>
           </div>
 
+          {/* CITY */}
+
           <div>
-            <label className="font-medium">
-              City *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.city")} *
             </label>
 
             <input
@@ -166,14 +231,18 @@ function WorkerRegister() {
               name="city"
               value={formData.city}
               onChange={handleChange}
-              placeholder="Enter your city"
-              className="mt-2 w-full rounded-lg border p-3"
+              placeholder={t(
+                "workerRegister.cityPlaceholder"
+              )}
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
+          {/* AREA */}
+
           <div>
-            <label className="font-medium">
-              Area *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.area")} *
             </label>
 
             <input
@@ -181,31 +250,45 @@ function WorkerRegister() {
               name="area"
               value={formData.area}
               onChange={handleChange}
-              placeholder="Enter your area"
-              className="mt-2 w-full rounded-lg border p-3"
+              placeholder={t(
+                "workerRegister.areaPlaceholder"
+              )}
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
+          {/* AVAILABILITY */}
+
           <div>
-            <label className="font-medium">
-              Availability *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.availability")} *
             </label>
 
             <select
               name="availability"
               value={formData.availability}
               onChange={handleChange}
-              className="mt-2 w-full rounded-lg border p-3"
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             >
-              <option>Available Today</option>
-              <option>Busy</option>
-              <option>Unavailable</option>
+              <option value="Available Today">
+                {t("availability.today")}
+              </option>
+
+              <option value="Busy">
+                {t("availability.busy")}
+              </option>
+
+              <option value="Unavailable">
+                {t("availability.unavailable")}
+              </option>
             </select>
           </div>
 
+          {/* WAGE */}
+
           <div>
-            <label className="font-medium">
-              Expected Daily Wage (₹) *
+            <label className="font-medium text-gray-700">
+              {t("workerRegister.wage")} *
             </label>
 
             <input
@@ -215,18 +298,28 @@ function WorkerRegister() {
               onChange={handleChange}
               placeholder="800"
               min="1"
-              className="mt-2 w-full rounded-lg border p-3"
+              className="mt-2 w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
           </div>
+
+          {/* SUBMIT */}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 py-3 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+            className={`w-full rounded-xl py-3 font-semibold text-white transition ${
+              loading
+                ? "cursor-not-allowed bg-gray-400"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            {loading ? "Registering..." : "Register"}
+            {loading
+              ? `⏳ ${t("workerRegister.registering")}`
+              : `🚀 ${t("workerRegister.register")}`}
           </button>
+
         </form>
+
       </div>
     </div>
   );

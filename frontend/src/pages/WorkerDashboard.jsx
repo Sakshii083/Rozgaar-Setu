@@ -12,8 +12,11 @@ import { getJobs } from "../api/jobApi";
 import { getWorkerStats } from "../api/workerDashboardApi";
 import { getWorkerApplications } from "../api/applicationApi";
 
+import { useLanguage } from "../context/LanguageContext";
+
 function WorkerDashboard() {
   const user = JSON.parse(localStorage.getItem("user"));
+  const { t } = useLanguage();
 
   const [jobs, setJobs] = useState([]);
   const [applications, setApplications] = useState([]);
@@ -33,17 +36,20 @@ function WorkerDashboard() {
 
   const fetchData = async () => {
     try {
-      const [jobsRes, statsRes, applicationsRes] = await Promise.all([
-        getJobs(),
-        getWorkerStats(),
-        getWorkerApplications(),
-      ]);
+      const [jobsRes, statsRes, applicationsRes] =
+        await Promise.all([
+          getJobs(),
+          getWorkerStats(),
+          getWorkerApplications(),
+        ]);
 
       setJobs(jobsRes.data.jobs || []);
       setStats(statsRes.data);
 
       if (applicationsRes.data.applications) {
-        setApplications(applicationsRes.data.applications);
+        setApplications(
+          applicationsRes.data.applications
+        );
       } else {
         setApplications(applicationsRes.data);
       }
@@ -56,9 +62,15 @@ function WorkerDashboard() {
 
   const filteredJobs = jobs.filter(
     (job) =>
-      job.title.toLowerCase().includes(search.toLowerCase()) ||
-      job.city.toLowerCase().includes(search.toLowerCase()) ||
-      job.skill.toLowerCase().includes(search.toLowerCase())
+      job.title
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      job.city
+        .toLowerCase()
+        .includes(search.toLowerCase()) ||
+      job.skill
+        .toLowerCase()
+        .includes(search.toLowerCase())
   );
 
   if (loading) {
@@ -71,211 +83,338 @@ function WorkerDashboard() {
 
   return (
     <DashboardLayout>
-      {/* Welcome */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl shadow-lg p-8 mb-8">
+
+      {/* WELCOME */}
+
+      <div className="mb-8 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white shadow-lg">
+
         <h1 className="text-4xl font-bold">
-          Welcome, {user?.name} 👋
+          {t("workerDashboard.welcome")},{" "}
+          {user?.name} 👋
         </h1>
 
         <p className="mt-2 text-blue-100">
-          Find jobs near you and keep your profile updated.
+          {t("workerDashboard.welcomeDescription")}
         </p>
 
         <Link
           to="/edit-profile"
-          className="inline-block mt-6 bg-white text-blue-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition"
+          className="mt-6 inline-block rounded-xl bg-white px-6 py-3 font-semibold text-blue-700 transition hover:bg-gray-100"
         >
-          Edit Profile
+          {t("workerDashboard.editProfile")}
         </Link>
+
       </div>
 
-      {/* Dashboard Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+      {/* DASHBOARD CARDS */}
+
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+
         <DashboardCard
-          title="Available Jobs"
+          title={t("workerDashboard.availableJobs")}
           value={stats.availableJobs}
           icon="💼"
           color="text-blue-600"
         />
 
         <DashboardCard
-          title="Applications"
+          title={t("workerDashboard.applications")}
           value={stats.applications}
           icon="📄"
           color="text-green-600"
         />
 
         <DashboardCard
-          title="Accepted"
+          title={t("workerDashboard.accepted")}
           value={stats.accepted}
           icon="✅"
           color="text-purple-600"
         />
 
         <DashboardCard
-          title="Pending"
+          title={t("workerDashboard.pending")}
           value={stats.pending}
           icon="⏳"
           color="text-orange-600"
         />
+
       </div>
 
-      {/* Charts */}
+      {/* CHARTS */}
+
       <DashboardCharts stats={stats} />
 
-      {/* Profile */}
-      <div className="bg-white rounded-2xl shadow-md p-8 mb-8">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">
-          My Profile
+      {/* PROFILE */}
+
+      <div className="mb-8 rounded-2xl bg-white p-8 shadow-md">
+
+        <h2 className="mb-6 text-2xl font-bold text-gray-800">
+          {t("workerDashboard.myProfile")}
         </h2>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="border rounded-xl p-5">
-            <p className="text-gray-500">Email</p>
-            <h3 className="font-semibold">{user?.email}</h3>
-          </div>
+        <div className="grid gap-6 md:grid-cols-2">
 
-          <div className="border rounded-xl p-5">
-            <p className="text-gray-500">Phone</p>
-            <h3 className="font-semibold">{user?.phone}</h3>
-          </div>
+          <div className="rounded-xl border p-5">
+            <p className="text-gray-500">
+              {t("workerDashboard.email")}
+            </p>
 
-          <div className="border rounded-xl p-5">
-            <p className="text-gray-500">City</p>
             <h3 className="font-semibold">
-              {user?.city || "Not Added"}
+              {user?.email ||
+                t("workerDashboard.notAdded")}
             </h3>
           </div>
 
-          <div className="border rounded-xl p-5">
-            <p className="text-gray-500">Skill</p>
+          <div className="rounded-xl border p-5">
+            <p className="text-gray-500">
+              {t("workerDashboard.phone")}
+            </p>
+
             <h3 className="font-semibold">
-              {user?.skill || "Not Added"}
+              {user?.phone ||
+                t("workerDashboard.notAdded")}
             </h3>
           </div>
 
-          <div className="border rounded-xl p-5">
-            <p className="text-gray-500">Experience</p>
+          <div className="rounded-xl border p-5">
+            <p className="text-gray-500">
+              {t("workerDashboard.city")}
+            </p>
+
             <h3 className="font-semibold">
-              {user?.experience || 0} Years
+              {user?.city ||
+                t("workerDashboard.notAdded")}
             </h3>
           </div>
 
-          <div className="border rounded-xl p-5">
-            <p className="text-gray-500">Daily Wage</p>
+          <div className="rounded-xl border p-5">
+            <p className="text-gray-500">
+              {t("workerDashboard.skill")}
+            </p>
+
+            <h3 className="font-semibold">
+              {user?.skill ||
+                t("workerDashboard.notAdded")}
+            </h3>
+          </div>
+
+          <div className="rounded-xl border p-5">
+            <p className="text-gray-500">
+              {t("workerDashboard.experience")}
+            </p>
+
+            <h3 className="font-semibold">
+              {user?.experience || 0}{" "}
+              {t("workerDashboard.years")}
+            </h3>
+          </div>
+
+          <div className="rounded-xl border p-5">
+            <p className="text-gray-500">
+              {t("workerDashboard.dailyWage")}
+            </p>
+
             <h3 className="font-semibold">
               ₹ {user?.dailyWage || 0}
             </h3>
           </div>
 
-          <div className="md:col-span-2 border rounded-xl p-5">
-            <p className="text-gray-500">About Me</p>
+          <div className="rounded-xl border p-5 md:col-span-2">
+
+            <p className="text-gray-500">
+              {t("workerDashboard.aboutMe")}
+            </p>
 
             <p className="mt-2">
-              {user?.about || "No description added yet."}
+              {user?.about ||
+                t("workerDashboard.noDescription")}
             </p>
+
           </div>
+
         </div>
+
       </div>
 
-      {/* Search */}
+      {/* SEARCH */}
+
       <div className="mb-6">
+
         <SearchBar
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search jobs by title, city or skill..."
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          placeholder={t(
+            "workerDashboard.searchPlaceholder"
+          )}
         />
+
       </div>
 
-      {/* Available Jobs */}
-      <div className="bg-white rounded-2xl shadow-md p-8">
-        <div className="flex justify-between items-center mb-6">
+      {/* AVAILABLE JOBS */}
+
+      <div className="rounded-2xl bg-white p-8 shadow-md">
+
+        <div className="mb-6 flex items-center justify-between">
+
           <h2 className="text-2xl font-bold">
-            Available Jobs
+            {t("workerDashboard.availableJobs")}
           </h2>
 
-          <span className="bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-semibold">
-            {filteredJobs.length} Jobs
+          <span className="rounded-full bg-blue-100 px-4 py-2 font-semibold text-blue-700">
+            {filteredJobs.length}{" "}
+            {t("workerDashboard.jobs")}
           </span>
+
         </div>
 
         {filteredJobs.length === 0 ? (
-          <div className="text-center py-16">
-            <h3 className="text-xl text-gray-500">
-              No matching jobs found.
+
+          <div className="py-16 text-center">
+
+            <div className="text-5xl">
+              🔍
+            </div>
+
+            <h3 className="mt-4 text-xl text-gray-500">
+              {t("workerDashboard.noMatchingJobs")}
             </h3>
+
           </div>
+
         ) : (
+
           <div className="space-y-6">
+
             {filteredJobs.map((job) => (
               <JobCard
                 key={job._id}
                 job={job}
               />
             ))}
+
           </div>
+
         )}
+
       </div>
 
-      {/* My Applications */}
-      <div className="bg-white rounded-2xl shadow-md p-8 mt-8">
-        <div className="flex justify-between items-center mb-6">
+      {/* MY APPLICATIONS */}
+
+      <div className="mt-8 rounded-2xl bg-white p-8 shadow-md">
+
+        <div className="mb-6 flex items-center justify-between">
+
           <h2 className="text-2xl font-bold">
-            My Applications
+            {t("workerDashboard.myApplications")}
           </h2>
 
-          <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full font-semibold">
-            {applications.length} Applications
+          <span className="rounded-full bg-green-100 px-4 py-2 font-semibold text-green-700">
+            {applications.length}{" "}
+            {t("workerDashboard.applications")}
           </span>
+
         </div>
 
         {applications.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            You haven't applied for any jobs yet.
+
+          <div className="py-12 text-center text-gray-500">
+
+            <div className="text-4xl">
+              📭
+            </div>
+
+            <p className="mt-3">
+              {t(
+                "workerDashboard.noApplications"
+              )}
+            </p>
+
           </div>
+
         ) : (
+
           <div className="space-y-4">
-            {applications.map((application) => (
-              <div
-                key={application._id}
-                className="border rounded-xl p-5 flex flex-col md:flex-row md:justify-between md:items-center"
-              >
-                <div>
-                  <h3 className="text-xl font-bold">
-                    {application.job?.title}
-                  </h3>
 
-                  <p className="text-gray-600">
-                    📍 {application.job?.city}
-                  </p>
+            {applications.map(
+              (application) => (
 
-                  <p className="text-gray-600">
-                    ₹ {application.job?.salary}
-                  </p>
+                <div
+                  key={application._id}
+                  className="flex flex-col rounded-xl border p-5 md:flex-row md:items-center md:justify-between"
+                >
 
-                  <p className="text-gray-600">
-                    Employer: {application.employer?.name}
-                  </p>
+                  <div>
+
+                    <h3 className="text-xl font-bold">
+                      {application.job?.title}
+                    </h3>
+
+                    <p className="text-gray-600">
+                      📍{" "}
+                      {application.job?.city}
+                    </p>
+
+                    <p className="text-gray-600">
+                      ₹{" "}
+                      {application.job?.salary}
+                    </p>
+
+                    <p className="text-gray-600">
+                      {t(
+                        "workerDashboard.employer"
+                      )}
+                      :{" "}
+                      {application.employer?.name ||
+                        t(
+                          "workerDashboard.notAvailable"
+                        )}
+                    </p>
+
+                  </div>
+
+                  <div className="mt-4 md:mt-0">
+
+                    <span
+                      className={`rounded-full px-5 py-2 font-semibold ${
+                        application.status ===
+                        "Accepted"
+                          ? "bg-green-100 text-green-700"
+                          : application.status ===
+                            "Rejected"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {application.status ===
+                      "Accepted"
+                        ? t(
+                            "workerDashboard.accepted"
+                          )
+                        : application.status ===
+                          "Rejected"
+                        ? t(
+                            "workerDashboard.rejected"
+                          )
+                        : t(
+                            "workerDashboard.pending"
+                          )}
+                    </span>
+
+                  </div>
+
                 </div>
 
-                <div className="mt-4 md:mt-0">
-                  <span
-                    className={`px-5 py-2 rounded-full font-semibold ${
-                      application.status === "Accepted"
-                        ? "bg-green-100 text-green-700"
-                        : application.status === "Rejected"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {application.status}
-                  </span>
-                </div>
-              </div>
-            ))}
+              )
+            )}
+
           </div>
+
         )}
+
       </div>
+
     </DashboardLayout>
   );
 }

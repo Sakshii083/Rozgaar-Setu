@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { applyJob } from "../api/applicationApi";
 import { calculateJobMatch } from "../utils/jobMatcher";
+import { useLanguage } from "../context/LanguageContext";
 
 function AIFeatures() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -43,7 +45,7 @@ function AIFeatures() {
 
       alert(
         error.response?.data?.message ||
-          "Unable to process your request with AI."
+          t("ai.processingError")
       );
     } finally {
       setProcessing(false);
@@ -60,9 +62,7 @@ function AIFeatures() {
       window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert(
-        "Speech recognition is not supported in this browser. Please use Google Chrome."
-      );
+      alert(t("ai.browserNotSupported"));
       return;
     }
 
@@ -97,13 +97,9 @@ function AIFeatures() {
       setIsListening(false);
 
       if (event.error === "not-allowed") {
-        alert(
-          "Microphone permission was denied. Please allow microphone access and try again."
-        );
+        alert(t("ai.microphoneDenied"));
       } else {
-        alert(
-          "Unable to capture your voice. Please try again."
-        );
+        alert(t("ai.voiceError"));
       }
     };
 
@@ -120,7 +116,7 @@ function AIFeatures() {
 
   const findMatchingJobs = async () => {
     if (!aiResult) {
-      alert("Please speak your requirement first.");
+      alert(t("ai.speakRequirement"));
       return;
     }
 
@@ -163,9 +159,7 @@ function AIFeatures() {
       setMatchingJobs(rankedJobs);
 
       if (rankedJobs.length === 0) {
-        setMatchError(
-          "No matching jobs found yet. Try another skill or location."
-        );
+        setMatchError(t("ai.noMatchingJobs"));
       }
     } catch (error) {
       console.error(
@@ -175,7 +169,7 @@ function AIFeatures() {
 
       setMatchError(
         error.response?.data?.message ||
-          "Unable to load available jobs."
+          t("ai.jobsLoadError")
       );
     } finally {
       setFindingJobs(false);
@@ -191,9 +185,7 @@ function AIFeatures() {
       localStorage.getItem("token");
 
     if (!token) {
-      alert(
-        "Please login first to apply for this job."
-      );
+      alert(t("ai.loginToApply"));
 
       navigate("/login");
       return;
@@ -202,9 +194,7 @@ function AIFeatures() {
     try {
       await applyJob(jobId);
 
-      alert(
-        "✅ Application submitted successfully!"
-      );
+      alert(t("ai.applicationSuccess"));
     } catch (error) {
       console.error(
         "Application error:",
@@ -213,7 +203,7 @@ function AIFeatures() {
 
       alert(
         error.response?.data?.message ||
-          "Failed to apply for this job."
+          t("ai.applicationError")
       );
     }
   };
@@ -226,38 +216,29 @@ function AIFeatures() {
     <section className="bg-blue-50 px-6 py-20">
       <div className="mx-auto max-w-6xl">
 
-        {/* =================================================
-            HEADER
-        ================================================= */}
+        {/* HEADER */}
 
         <div className="text-center">
 
           <span className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-            AI-Powered Employment
+            {t("ai.badge")}
           </span>
 
           <h2 className="mt-5 text-4xl font-bold text-gray-900">
-            Meet Rozgaar Saathi 🤖
+            {t("ai.title")} 🤖
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-gray-600">
-            Tell us naturally what kind of work
-            you are looking for. Rozgaar Saathi
-            understands your requirements and
-            finds relevant jobs for you.
+            {t("ai.description")}
           </p>
 
         </div>
 
-        {/* =================================================
-            MAIN CARD
-        ================================================= */}
+        {/* MAIN CARD */}
 
         <div className="mx-auto mt-12 max-w-4xl rounded-3xl bg-white p-8 shadow-xl">
 
-          {/* =================================================
-              VOICE SECTION
-          ================================================= */}
+          {/* VOICE SECTION */}
 
           <div className="text-center">
 
@@ -273,19 +254,17 @@ function AIFeatures() {
 
             <h3 className="mt-6 text-2xl font-bold text-gray-900">
               {isListening
-                ? "I'm listening..."
-                : "Tell Rozgaar Saathi what you need"}
+                ? t("ai.listening")
+                : t("ai.tellSaathi")}
             </h3>
 
             <p className="mx-auto mt-3 max-w-xl text-gray-500">
-              Try saying:
+              {t("ai.trySaying")}
             </p>
 
             <div className="mx-auto mt-3 max-w-xl rounded-xl bg-gray-50 p-4 text-gray-700">
               <p className="italic">
-                "I am an electrician with 4 years
-                of experience looking for work in
-                Pune and I expect 900 rupees per day."
+                "{t("ai.example")}"
               </p>
             </div>
 
@@ -302,23 +281,21 @@ function AIFeatures() {
               }`}
             >
               {isListening
-                ? "🎙️ Listening..."
+                ? `🎙️ ${t("ai.listeningButton")}`
                 : processing
-                ? "🤖 Processing..."
-                : "🎙️ Start Speaking"}
+                ? `🤖 ${t("ai.processing")}`
+                : `🎙️ ${t("ai.startSpeaking")}`}
             </button>
 
           </div>
 
-          {/* =================================================
-              TRANSCRIPT
-          ================================================= */}
+          {/* TRANSCRIPT */}
 
           {transcript && (
             <div className="mt-10">
 
               <h4 className="text-lg font-bold text-gray-900">
-                What I heard
+                {t("ai.whatIHeard")}
               </h4>
 
               <div className="mt-3 rounded-xl border bg-gray-50 p-5">
@@ -330,9 +307,7 @@ function AIFeatures() {
             </div>
           )}
 
-          {/* =================================================
-              PROCESSING
-          ================================================= */}
+          {/* PROCESSING */}
 
           {processing && (
             <div className="mt-6 rounded-xl border border-yellow-200 bg-yellow-50 p-5">
@@ -346,13 +321,11 @@ function AIFeatures() {
                 <div>
 
                   <p className="font-semibold text-yellow-800">
-                    Rozgaar Saathi is understanding
-                    your request...
+                    {t("ai.understanding")}
                   </p>
 
                   <p className="mt-1 text-sm text-yellow-700">
-                    Extracting skills, experience,
-                    location and employment requirements.
+                    {t("ai.extracting")}
                   </p>
 
                 </div>
@@ -362,9 +335,7 @@ function AIFeatures() {
             </div>
           )}
 
-          {/* =================================================
-              AI RESULT
-          ================================================= */}
+          {/* AI RESULT */}
 
           {aiResult && !processing && (
             <div className="mt-8 rounded-2xl border border-blue-200 bg-blue-50 p-6">
@@ -378,122 +349,118 @@ function AIFeatures() {
                 <div>
 
                   <h4 className="text-xl font-bold text-blue-700">
-                    AI Understanding
+                    {t("ai.understandingTitle")}
                   </h4>
 
                   <p className="text-sm text-blue-600">
-                    Here's what Rozgaar Saathi understood.
+                    {t("ai.understoodDescription")}
                   </p>
 
                 </div>
 
               </div>
 
-              {/* =================================================
-                  EXTRACTED DATA
-              ================================================= */}
+              {/* EXTRACTED DATA */}
 
               <div className="mt-6 grid gap-4 md:grid-cols-2">
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    Intent
+                    {t("ai.intent")}
                   </p>
 
                   <p className="mt-1 font-semibold capitalize text-gray-900">
                     {aiResult.intent ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    Skill
+                    {t("ai.skill")}
                   </p>
 
                   <p className="mt-1 font-semibold text-gray-900">
                     {aiResult.skill ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    Experience
+                    {t("ai.experience")}
                   </p>
 
                   <p className="mt-1 font-semibold text-gray-900">
                     {aiResult.experience ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    City
+                    {t("ai.city")}
                   </p>
 
                   <p className="mt-1 font-semibold text-gray-900">
                     {aiResult.city ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    Area
+                    {t("ai.area")}
                   </p>
 
                   <p className="mt-1 font-semibold text-gray-900">
                     {aiResult.area ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    Expected Wage
+                    {t("ai.expectedWage")}
                   </p>
 
                   <p className="mt-1 font-semibold text-gray-900">
                     {aiResult.wage ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    Job Type
+                    {t("ai.jobType")}
                   </p>
 
                   <p className="mt-1 font-semibold text-gray-900">
                     {aiResult.jobType ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
                 <div className="rounded-xl bg-white p-4 shadow-sm">
                   <p className="text-sm text-gray-500">
-                    Availability
+                    {t("ai.availability")}
                   </p>
 
                   <p className="mt-1 font-semibold text-gray-900">
                     {aiResult.availability ||
-                      "Not detected"}
+                      t("ai.notDetected")}
                   </p>
                 </div>
 
               </div>
 
-              {/* =================================================
-                  DESCRIPTION
-              ================================================= */}
+              {/* DESCRIPTION */}
 
               {aiResult.description && (
                 <div className="mt-4 rounded-xl bg-white p-4 shadow-sm">
 
                   <p className="text-sm text-gray-500">
-                    Description
+                    {t("ai.descriptionLabel")}
                   </p>
 
                   <p className="mt-1 text-gray-900">
@@ -503,9 +470,7 @@ function AIFeatures() {
                 </div>
               )}
 
-              {/* =================================================
-                  ALWAYS SHOW FIND MATCHING JOBS
-              ================================================= */}
+              {/* FIND JOBS */}
 
               <div className="mt-6">
 
@@ -520,8 +485,8 @@ function AIFeatures() {
                   }`}
                 >
                   {findingJobs
-                    ? "🔎 Finding matching jobs..."
-                    : "🔎 Find Matching Jobs"}
+                    ? `🔎 ${t("ai.findingJobs")}`
+                    : `🔎 ${t("ai.findMatchingJobs")}`}
                 </button>
 
               </div>
@@ -529,9 +494,7 @@ function AIFeatures() {
             </div>
           )}
 
-          {/* =================================================
-              FINDING JOBS
-          ================================================= */}
+          {/* FINDING JOBS */}
 
           {findingJobs && (
             <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-5">
@@ -545,12 +508,11 @@ function AIFeatures() {
                 <div>
 
                   <p className="font-semibold text-green-800">
-                    Finding jobs for you...
+                    {t("ai.findingJobsTitle")}
                   </p>
 
                   <p className="mt-1 text-sm text-green-700">
-                    Comparing your requirements
-                    with available jobs.
+                    {t("ai.comparingRequirements")}
                   </p>
 
                 </div>
@@ -560,9 +522,7 @@ function AIFeatures() {
             </div>
           )}
 
-          {/* =================================================
-              MATCH ERROR / NO JOBS
-          ================================================= */}
+          {/* MATCH ERROR */}
 
           {!findingJobs &&
             matchError && (
@@ -577,16 +537,13 @@ function AIFeatures() {
                 </p>
 
                 <p className="mt-2 text-sm text-orange-700">
-                  Make sure there are jobs available
-                  in the Jobs section.
+                  {t("ai.makeSureJobs")}
                 </p>
 
               </div>
             )}
 
-          {/* =================================================
-              MATCHING JOBS
-          ================================================= */}
+          {/* MATCHING JOBS */}
 
           {matchingJobs.length > 0 && (
             <div className="mt-10">
@@ -594,12 +551,11 @@ function AIFeatures() {
               <div className="mb-6">
 
                 <h3 className="text-2xl font-bold text-gray-900">
-                  🔎 Jobs Matching Your Requirements
+                  🔎 {t("ai.matchingJobsTitle")}
                 </h3>
 
                 <p className="mt-2 text-gray-600">
-                  These jobs are ranked according
-                  to your requirements.
+                  {t("ai.matchingJobsDescription")}
                 </p>
 
               </div>
@@ -656,7 +612,7 @@ function AIFeatures() {
                               <div className="mt-4">
 
                                 <p className="text-sm font-semibold text-gray-700">
-                                  Why this matches:
+                                  {t("ai.whyMatches")}
                                 </p>
 
                                 <div className="mt-2 space-y-1">
@@ -684,7 +640,7 @@ function AIFeatures() {
                         <div className="flex min-w-[170px] flex-col items-start justify-between md:items-end">
 
                           <div className="rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-700">
-                            ⭐ {job.matchScore}% Match
+                            ⭐ {job.matchScore}% {t("ai.match")}
                           </div>
 
                           <button
@@ -696,7 +652,7 @@ function AIFeatures() {
                             }
                             className="mt-4 w-full rounded-lg bg-green-600 px-5 py-3 font-semibold text-white transition hover:bg-green-700 md:w-auto"
                           >
-                            Apply Now
+                            {t("ai.applyNow")}
                           </button>
 
                         </div>
@@ -713,7 +669,6 @@ function AIFeatures() {
           )}
 
         </div>
-
       </div>
     </section>
   );

@@ -5,8 +5,11 @@ import {
 } from "../api/applicationApi";
 
 import DashboardLayout from "../layouts/DashboardLayout";
+import { useLanguage } from "../context/LanguageContext";
 
 function Applications() {
+  const { t } = useLanguage();
+
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +19,7 @@ function Applications() {
       setApplications(res.data.applications || []);
     } catch (error) {
       console.error(error);
-      alert("Failed to load applications");
+      alert(t("applications.loadError"));
     } finally {
       setLoading(false);
     }
@@ -30,20 +33,28 @@ function Applications() {
     try {
       await updateApplicationStatus(id, status);
 
-      alert(`Application ${status}`);
+      if (status === "Accepted") {
+        alert(t("applications.acceptedSuccess"));
+      } else {
+        alert(t("applications.rejectedSuccess"));
+      }
 
       fetchApplications();
     } catch (error) {
       console.error(error);
-      alert("Failed to update application");
+      alert(t("applications.updateError"));
     }
   };
 
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="text-center text-2xl font-semibold mt-20">
-          Loading Applications...
+        <div className="mt-20 text-center">
+          <div className="text-4xl">📋</div>
+
+          <h2 className="mt-4 text-2xl font-semibold text-slate-800">
+            {t("applications.loading")}
+          </h2>
         </div>
       </DashboardLayout>
     );
@@ -51,116 +62,228 @@ function Applications() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
 
-        <h1 className="text-4xl font-bold text-blue-700 mb-8">
-          Job Applications
-        </h1>
+        {/* PAGE HEADER */}
+
+        <div className="mb-8">
+
+          <span className="inline-block rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
+            📋 {t("applications.badge")}
+          </span>
+
+          <h1 className="mt-4 text-4xl font-bold text-blue-700">
+            {t("applications.title")}
+          </h1>
+
+          <p className="mt-2 text-gray-600">
+            {t("applications.description")}
+          </p>
+
+        </div>
+
+        {/* NO APPLICATIONS */}
 
         {applications.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-10 text-center">
-            <h2 className="text-xl text-gray-500">
-              No Applications Found
+          <div className="rounded-2xl bg-white p-10 text-center shadow-lg">
+
+            <div className="text-5xl">
+              📭
+            </div>
+
+            <h2 className="mt-4 text-xl font-semibold text-gray-500">
+              {t("applications.noApplications")}
             </h2>
+
+            <p className="mt-2 text-gray-400">
+              {t("applications.noApplicationsDescription")}
+            </p>
+
           </div>
         ) : (
+
+          /* APPLICATION LIST */
+
           <div className="space-y-6">
+
             {applications.map((application) => (
+
               <div
                 key={application._id}
-                className="bg-white rounded-xl shadow-lg p-6"
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg transition hover:shadow-xl"
               >
-                <div className="grid md:grid-cols-2 gap-8">
 
-                  {/* Worker Details */}
+                <div className="grid gap-8 md:grid-cols-2">
+
+                  {/* WORKER DETAILS */}
+
                   <div>
-                    <h2 className="text-2xl font-bold text-blue-700">
-                      {application.worker?.name}
-                    </h2>
 
-                    <p className="mt-3">
-                      📧 {application.worker?.email}
-                    </p>
+                    <div className="flex items-center gap-3">
 
-                    <p>
-                      📞 {application.worker?.phone || "N/A"}
-                    </p>
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-xl">
+                        👤
+                      </div>
 
-                    <p>
-                      🏙️ {application.worker?.city || "N/A"}
-                    </p>
+                      <div>
+                        <h2 className="text-2xl font-bold text-blue-700">
+                          {application.worker?.name ||
+                            t("applications.notAvailable")}
+                        </h2>
 
-                    <p>
-                      🛠️ {application.worker?.skill || "N/A"}
-                    </p>
+                        <p className="text-sm text-gray-500">
+                          {t("applications.applicant")}
+                        </p>
+                      </div>
+
+                    </div>
+
+                    <div className="mt-5 space-y-2 text-gray-700">
+
+                      <p>
+                        📧{" "}
+                        <strong>
+                          {t("applications.email")}:
+                        </strong>{" "}
+                        {application.worker?.email ||
+                          t("applications.notAvailable")}
+                      </p>
+
+                      <p>
+                        📞{" "}
+                        <strong>
+                          {t("applications.phone")}:
+                        </strong>{" "}
+                        {application.worker?.phone ||
+                          t("applications.notAvailable")}
+                      </p>
+
+                      <p>
+                        🏙️{" "}
+                        <strong>
+                          {t("applications.city")}:
+                        </strong>{" "}
+                        {application.worker?.city ||
+                          t("applications.notAvailable")}
+                      </p>
+
+                      <p>
+                        🛠️{" "}
+                        <strong>
+                          {t("applications.skill")}:
+                        </strong>{" "}
+                        {application.worker?.skill ||
+                          t("applications.notAvailable")}
+                      </p>
+
+                    </div>
+
                   </div>
 
-                  {/* Job Details */}
+                  {/* JOB DETAILS */}
+
                   <div>
-                    <p>
-                      <strong>Job Title:</strong>{" "}
-                      {application.job?.title}
-                    </p>
 
-                    <p>
-                      <strong>Location:</strong>{" "}
-                      {application.job?.city}
-                    </p>
+                    <h3 className="mb-4 text-lg font-bold text-slate-800">
+                      💼 {t("applications.jobDetails")}
+                    </h3>
 
-                    <p>
-                      <strong>Salary:</strong> ₹
-                      {application.job?.salary}
-                    </p>
+                    <div className="space-y-3 text-gray-700">
 
-                    <p className="mt-4">
-                      <strong>Status:</strong>{" "}
-                      <span
-                        className={`font-bold ${
-                          application.status === "Accepted"
-                            ? "text-green-600"
+                      <p>
+                        <strong>
+                          {t("applications.jobTitle")}:
+                        </strong>{" "}
+                        {application.job?.title ||
+                          t("applications.notAvailable")}
+                      </p>
+
+                      <p>
+                        <strong>
+                          {t("applications.location")}:
+                        </strong>{" "}
+                        {application.job?.city ||
+                          t("applications.notAvailable")}
+                      </p>
+
+                      <p>
+                        <strong>
+                          {t("applications.salary")}:
+                        </strong>{" "}
+                        ₹{application.job?.salary ||
+                          t("applications.notAvailable")}
+                      </p>
+
+                      <p className="pt-2">
+
+                        <strong>
+                          {t("applications.status")}:
+                        </strong>{" "}
+
+                        <span
+                          className={`ml-2 rounded-full px-3 py-1 text-sm font-bold ${
+                            application.status === "Accepted"
+                              ? "bg-green-100 text-green-700"
+                              : application.status === "Rejected"
+                              ? "bg-red-100 text-red-700"
+                              : "bg-yellow-100 text-yellow-700"
+                          }`}
+                        >
+                          {application.status === "Accepted"
+                            ? t("applications.accepted")
                             : application.status === "Rejected"
-                            ? "text-red-600"
-                            : "text-yellow-600"
-                        }`}
-                      >
-                        {application.status}
-                      </span>
-                    </p>
+                            ? t("applications.rejected")
+                            : t("applications.pending")}
+                        </span>
+
+                      </p>
+
+                    </div>
+
                   </div>
 
                 </div>
 
+                {/* ACTION BUTTONS */}
+
                 {application.status === "Pending" && (
-                  <div className="flex gap-4 mt-6">
+
+                  <div className="mt-7 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row">
 
                     <button
+                      type="button"
                       onClick={() =>
                         handleStatusUpdate(
                           application._id,
                           "Accepted"
                         )
                       }
-                      className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition"
+                      className="rounded-xl bg-green-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-green-700"
                     >
-                      Accept
+                      ✅ {t("applications.accept")}
                     </button>
 
                     <button
+                      type="button"
                       onClick={() =>
                         handleStatusUpdate(
                           application._id,
                           "Rejected"
                         )
                       }
-                      className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition"
+                      className="rounded-xl bg-red-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-red-700"
                     >
-                      Reject
+                      ❌ {t("applications.reject")}
                     </button>
 
                   </div>
+
                 )}
+
               </div>
+
             ))}
+
           </div>
         )}
 
