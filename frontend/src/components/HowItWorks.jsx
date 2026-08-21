@@ -25,44 +25,56 @@ function HowItWorks() {
   ];
 
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white py-8 md:py-10">
       <div className="mx-auto max-w-7xl px-6">
+
+        {/* HEADER */}
 
         <div className="text-center">
 
-          <h2 className="text-4xl font-bold text-slate-900">
+          <h2 className="text-3xl font-bold text-slate-900">
             {t("howItWorks.title")}
           </h2>
 
-          <p className="mt-4 text-gray-600">
+          <p className="mt-2 text-sm text-gray-600">
             {t("howItWorks.description")}
           </p>
 
         </div>
 
-        <div className="mt-14 grid gap-8 md:grid-cols-3">
+        {/* STEPS */}
+
+        <div className="mt-7 grid gap-4 md:grid-cols-3">
 
           {steps.map((step) => (
             <div
               key={step.number}
-              className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
             >
 
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl text-white shadow-lg shadow-blue-200">
+              {/* ICON */}
+
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-600 text-2xl text-white shadow-md">
                 {step.icon}
               </div>
 
-              <div className="mx-auto mt-3 text-sm font-bold text-blue-600">
-                {t("howItWorks.step")} {step.number}
+              {/* CONTENT */}
+
+              <div className="min-w-0">
+
+                <p className="text-xs font-bold text-blue-600">
+                  {t("howItWorks.step")} {step.number}
+                </p>
+
+                <h3 className="mt-1 text-lg font-bold text-slate-900">
+                  {step.title}
+                </h3>
+
+                <p className="mt-1 line-clamp-2 text-xs leading-5 text-gray-600">
+                  {step.description}
+                </p>
+
               </div>
-
-              <h3 className="mt-4 text-2xl font-semibold text-slate-900">
-                {step.title}
-              </h3>
-
-              <p className="mt-4 leading-7 text-gray-600">
-                {step.description}
-              </p>
 
             </div>
           ))}

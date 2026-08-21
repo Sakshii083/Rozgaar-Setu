@@ -31,9 +31,9 @@ function Stats() {
 
   if (loading) {
     return (
-      <section className="bg-blue-600 py-16 text-white">
+      <section className="bg-blue-600 py-6 text-white">
         <div className="mx-auto max-w-7xl text-center">
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-lg font-semibold">
             {t("stats.loading")}
           </h2>
         </div>
@@ -65,31 +65,31 @@ function Stats() {
   ];
 
   return (
-    <section className="bg-gradient-to-r from-blue-600 to-indigo-600 py-16 text-white">
+    <section className="bg-gradient-to-r from-blue-600 to-indigo-600 py-8 text-white">
       <div className="mx-auto max-w-7xl px-6">
 
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold md:text-4xl">
+        <div className="mb-5 text-center">
+          <h2 className="text-2xl font-bold md:text-3xl">
             {t("stats.title")}
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-10 text-center md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 
           {statsData.map((stat) => (
             <div
               key={stat.title}
-              className="transition-transform duration-300 hover:scale-105"
+              className="rounded-xl bg-white/10 p-4 text-center backdrop-blur-sm transition hover:bg-white/20"
             >
-              <div className="text-3xl">
+              <div className="text-2xl">
                 {stat.icon}
               </div>
 
-              <h2 className="mt-2 text-5xl font-bold">
+              <h2 className="mt-1 text-3xl font-bold">
                 {stat.number}
               </h2>
 
-              <p className="mt-3 text-lg">
+              <p className="mt-1 text-sm font-medium text-blue-50">
                 {stat.title}
               </p>
             </div>
