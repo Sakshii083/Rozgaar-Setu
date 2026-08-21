@@ -877,6 +877,13 @@ admin: {
   live: "లైవ్",
   updated: "నవీకరించబడింది",
 },
+dashboard: {
+  dashboard: "డాష్‌బోర్డ్",
+  editProfile: "ప్రొఫైల్ మార్చండి",
+  jobs: "ఉద్యోగాలు",
+  applications: "దరఖాస్తులు",
+  logout: "లాగ్ అవుట్",
+},
 };
 
 export default te;

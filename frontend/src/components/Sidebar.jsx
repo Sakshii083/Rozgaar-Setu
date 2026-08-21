@@ -1,8 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLanguage } from "../context/LanguageContext";
 
 function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { t } = useLanguage();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -11,44 +14,54 @@ function Sidebar() {
     navigate("/login");
   };
 
+  const dashboardPath =
+    user?.role === "employer"
+      ? "/employer"
+      : user?.role === "admin"
+      ? "/admin"
+      : "/worker";
+
   const menu = [
     {
-      name: "Dashboard",
-      path: user?.role === "employer" ? "/employer" : "/worker",
+      name: t("dashboard.dashboard"),
+      path: dashboardPath,
       icon: "🏠",
     },
     {
-      name: "Edit Profile",
+      name: t("dashboard.editProfile"),
       path: "/edit-profile",
       icon: "👤",
     },
     {
-      name: "Jobs",
+      name: t("dashboard.jobs"),
       path: "/jobs",
       icon: "💼",
     },
     {
-      name: "Applications",
+      name: t("dashboard.applications"),
       path: "/applications",
       icon: "📄",
     },
   ];
 
   return (
-    <div className="w-64 bg-blue-700 text-white min-h-screen p-6">
+    <div className="min-h-screen w-64 bg-blue-700 p-6 text-white">
 
-      <h1 className="text-3xl font-bold mb-10">
+      {/* LOGO */}
+
+      <h1 className="mb-10 text-3xl font-bold">
         Rozgaar Setu
       </h1>
+
+      {/* MENU */}
 
       <nav className="space-y-3">
 
         {menu.map((item) => (
-
           <Link
-            key={item.name}
+            key={item.path}
             to={item.path}
-            className={`block px-4 py-3 rounded-lg transition ${
+            className={`block rounded-lg px-4 py-3 transition ${
               location.pathname === item.path
                 ? "bg-white text-blue-700"
                 : "hover:bg-blue-600"
@@ -56,16 +69,17 @@ function Sidebar() {
           >
             {item.icon} {item.name}
           </Link>
-
         ))}
 
       </nav>
 
+      {/* LOGOUT */}
+
       <button
         onClick={logout}
-        className="mt-12 bg-red-500 hover:bg-red-600 px-5 py-3 rounded-lg w-full"
+        className="mt-12 w-full rounded-lg bg-red-500 px-5 py-3 transition hover:bg-red-600"
       >
-        Logout
+        🚪 {t("dashboard.logout")}
       </button>
 
     </div>

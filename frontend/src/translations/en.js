@@ -871,6 +871,13 @@ admin: {
   live: "Live",
   updated: "Updated",
 },
+dashboard: {
+  dashboard: "Dashboard",
+  editProfile: "Edit Profile",
+  jobs: "Jobs",
+  applications: "Applications",
+  logout: "Logout",
+},
 };
 
 export default en;

@@ -837,6 +837,13 @@ admin: {
   live: "लाइव",
   updated: "अपडेट किया गया",
 },
+dashboard: {
+  dashboard: "डैशबोर्ड",
+  editProfile: "प्रोफ़ाइल संपादित करें",
+  jobs: "नौकरियां",
+  applications: "आवेदन",
+  logout: "लॉग आउट",
+},
 };
 
 export default hi;

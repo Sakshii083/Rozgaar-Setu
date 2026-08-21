@@ -874,6 +874,13 @@ admin: {
   live: "लाइव्ह",
   updated: "अपडेट केले",
 },
+dashboard: {
+  dashboard: "डॅशबोर्ड",
+  editProfile: "प्रोफाइल संपादित करा",
+  jobs: "नोकऱ्या",
+  applications: "अर्ज",
+  logout: "लॉग आउट",
+},
 };
 
 export default mr;

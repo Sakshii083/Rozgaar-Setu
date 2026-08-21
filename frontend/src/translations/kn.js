@@ -874,6 +874,13 @@ admin: {
   live: "ಲೈವ್",
   updated: "ನವೀಕರಿಸಲಾಗಿದೆ",
 },
+dashboard: {
+  dashboard: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+  editProfile: "ಪ್ರೊಫೈಲ್ ಸಂಪಾದಿಸಿ",
+  jobs: "ಉದ್ಯೋಗಗಳು",
+  applications: "ಅರ್ಜಿಗಳು",
+  logout: "ಲಾಗ್ ಔಟ್",
+},
 };
 
 export default kn;
