@@ -120,6 +120,7 @@ function Hero() {
 
       {/* Background */}
       <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100 opacity-50 blur-3xl" />
+
       <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-blue-50 opacity-60 blur-3xl" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-6 lg:grid-cols-[0.85fr_1.15fr]">
@@ -164,9 +165,17 @@ function Hero() {
           </div>
 
           <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
-            <span>✓ {t("hero.skillBased")}</span>
-            <span>✓ {t("hero.localOpportunities")}</span>
-            <span>✓ {t("hero.simpleHiring")}</span>
+            <span>
+              ✓ {t("hero.skillBased")}
+            </span>
+
+            <span>
+              ✓ {t("hero.localOpportunities")}
+            </span>
+
+            <span>
+              ✓ {t("hero.simpleHiring")}
+            </span>
           </div>
 
         </div>
@@ -180,6 +189,7 @@ function Hero() {
           <div className="flex items-center justify-between">
 
             <div>
+
               <h2 className="text-xl font-bold text-slate-900">
                 {t("hero.searchTitle")}
               </h2>
@@ -187,6 +197,7 @@ function Hero() {
               <p className="mt-0.5 text-xs text-slate-500">
                 {t("hero.searchDescription")}
               </p>
+
             </div>
 
             <div className="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-bold text-green-700">
@@ -221,7 +232,9 @@ function Hero() {
                   <button
                     key={item.name}
                     type="button"
-                    onClick={() => handleSkillSelect(item.name)}
+                    onClick={() =>
+                      handleSkillSelect(item.name)
+                    }
                     className={`rounded-xl border p-2 text-left transition ${
                       selected
                         ? "border-blue-500 bg-blue-50 ring-1 ring-blue-100"
@@ -328,14 +341,17 @@ function Hero() {
                   <button
                     key={item.name}
                     type="button"
-                    onClick={() => handleCitySelect(item.name)}
+                    onClick={() =>
+                      handleCitySelect(item.name)
+                    }
                     className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                       selected
                         ? "border-blue-600 bg-blue-600 text-white"
                         : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50"
                     }`}
                   >
-                    {item.icon} {t(`hero.cities.${item.key}`)}
+                    {item.icon}{" "}
+                    {t(`hero.cities.${item.key}`)}
                   </button>
                 );
               })}
@@ -384,8 +400,13 @@ function Hero() {
               </p>
 
               <p className="text-sm font-bold text-slate-900">
-                {selectedSkillIcon} {selectedSkillLabel}
-                <span className="mx-1 text-slate-300">•</span>
+                {selectedSkillIcon}{" "}
+                {selectedSkillLabel}
+
+                <span className="mx-1 text-slate-300">
+                  •
+                </span>
+
                 📍 {selectedCityLabel}
               </p>
 
@@ -397,7 +418,7 @@ function Hero() {
 
           </div>
 
-          {/* SEARCH */}
+          {/* SEARCH BUTTON */}
 
           <button
             onClick={handleSearch}
@@ -414,11 +435,15 @@ function Hero() {
           {searched && (
             <div className="mt-4">
 
+              {/* NO WORKERS */}
+
               {workers.length === 0 ? (
 
                 <div className="rounded-xl bg-slate-50 p-4 text-center">
 
-                  <div className="text-xl">🔍</div>
+                  <div className="text-xl">
+                    🔍
+                  </div>
 
                   <p className="mt-1 text-sm font-semibold text-slate-700">
                     {t("hero.noWorkers")}
@@ -434,10 +459,13 @@ function Hero() {
 
                 <div>
 
+                  {/* RESULT HEADER */}
+
                   <div className="mb-2 flex items-center justify-between">
 
                     <p className="text-sm font-bold text-slate-900">
-                      {workers.length} {t("hero.workersFound")}
+                      {workers.length}{" "}
+                      {t("hero.workersFound")}
                     </p>
 
                     <span className="rounded-full bg-green-100 px-2 py-1 text-[10px] font-bold text-green-700">
@@ -446,57 +474,132 @@ function Hero() {
 
                   </div>
 
-                  <div className="space-y-2">
+                  {/* WORKER CARDS */}
+
+                  <div className="space-y-3">
 
                     {workers.slice(0, 2).map((worker) => (
 
                       <div
                         key={worker._id}
-                        className="rounded-xl bg-slate-50 p-3"
+                        className="rounded-xl border border-slate-200 bg-slate-50 p-4"
                       >
 
-                        <div className="flex items-center justify-between">
+                        {/* WORKER HEADER */}
 
-                          <div>
+                        <div className="flex items-start justify-between gap-3">
 
-                            <h3 className="text-sm font-bold text-slate-900">
-                              {worker.fullName}
+                          <div className="min-w-0">
+
+                            <h3 className="text-base font-bold text-slate-900">
+                              👤 {worker.fullName || "Worker"}
                             </h3>
 
-                            <p className="text-xs font-medium text-blue-600">
-                              {worker.skill}
+                            <p className="text-xs font-semibold text-blue-600">
+                              🛠️ {worker.skill || "N/A"}
                             </p>
 
                             <p className="text-[11px] text-slate-500">
-                              📍 {worker.area}, {worker.city}
+                              📍{" "}
+                              {worker.area || "N/A"},{" "}
+                              {worker.city || "N/A"}
                             </p>
 
                           </div>
 
                           <span
-                            className={`rounded-full px-2 py-1 text-[10px] font-bold ${
+                            className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-bold ${
                               worker.availability ===
                               "Available Today"
                                 ? "bg-green-100 text-green-700"
                                 : "bg-yellow-100 text-yellow-700"
                             }`}
                           >
-                            {worker.availability}
+                            {worker.availability ||
+                              "N/A"}
                           </span>
 
                         </div>
 
-                        <div className="mt-2 flex justify-between border-t border-slate-200 pt-2 text-xs">
+                        {/* WORKER DETAILS */}
 
-                          <span className="text-slate-500">
-                            {worker.experience}
-                          </span>
+                        <div className="mt-3 grid grid-cols-2 gap-3 border-t border-slate-200 pt-3">
 
-                          <strong>
-                            ₹{worker.wage}/day
-                          </strong>
+                          <div>
+                            <p className="text-[10px] text-slate-400">
+                              Experience
+                            </p>
+
+                            <p className="text-xs font-semibold text-slate-700">
+                              {worker.experience ||
+                                "N/A"}
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="text-[10px] text-slate-400">
+                              Expected Wage
+                            </p>
+
+                            <p className="text-xs font-semibold text-green-700">
+                              ₹{worker.wage || "N/A"}/day
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="text-[10px] text-slate-400">
+                              Phone
+                            </p>
+
+                            <p className="truncate text-xs font-semibold text-slate-700">
+                              {worker.phone ||
+                                "Not Available"}
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="text-[10px] text-slate-400">
+                              Email
+                            </p>
+
+                            <p className="truncate text-xs font-semibold text-slate-700">
+                              {worker.email ||
+                                "Not Available"}
+                            </p>
+                          </div>
 
                         </div>
+
+                        {/* CONTACT BUTTONS */}
+
+                        {worker.phone && (
+
+                          <div className="mt-3 flex gap-2">
+
+                            <a
+                              href={`tel:${worker.phone}`}
+                              className="flex-1 rounded-lg bg-green-600 px-3 py-2 text-center text-xs font-bold text-white transition hover:bg-green-700"
+                            >
+                              📞 Call
+                            </a>
+
+                            <a
+                              href={`https://wa.me/91${String(
+                                worker.phone
+                              ).replace(
+                                /\D/g,
+                                ""
+                              )}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex-1 rounded-lg bg-green-500 px-3 py-2 text-center text-xs font-bold text-white transition hover:bg-green-600"
+                            >
+                              💬 WhatsApp
+                            </a>
+
+                          </div>
+
+                        )}
 
                       </div>
 
@@ -504,13 +607,17 @@ function Hero() {
 
                   </div>
 
+                  {/* VIEW ALL */}
+
                   {workers.length > 2 && (
+
                     <button
                       onClick={() => navigate("/workers")}
-                      className="mt-2 w-full rounded-lg border border-blue-200 py-2 text-xs font-semibold text-blue-600 hover:bg-blue-50"
+                      className="mt-3 w-full rounded-lg border border-blue-200 py-2 text-xs font-semibold text-blue-600 transition hover:bg-blue-50"
                     >
                       {t("hero.viewAll")} ({workers.length})
                     </button>
+
                   )}
 
                 </div>
@@ -521,7 +628,9 @@ function Hero() {
           )}
 
         </div>
+
       </div>
+
     </section>
   );
 }
