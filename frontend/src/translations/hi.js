@@ -802,6 +802,41 @@ workerDashboard: {
 
   loading: "लोड हो रहा है...",
 },
+admin: {
+  welcome: "स्वागत है एडमिन",
+  description:
+    "पूरे Rozgaar Setu प्लेटफॉर्म की निगरानी एक ही जगह से करें।",
+
+  workers: "कामगार",
+  employers: "नियोक्ता",
+  jobs: "नौकरियां",
+  applications: "आवेदन",
+
+  platformSummary: "प्लेटफॉर्म का सारांश",
+
+  totalWorkers: "कुल कामगार",
+  totalEmployers: "कुल नियोक्ता",
+  activeJobs: "सक्रिय नौकरियां",
+  totalApplications: "कुल आवेदन",
+
+  systemOverview: "सिस्टम का विवरण",
+
+  registeredWorkers: "पंजीकृत कामगार",
+  workersRegistered: "कामगार पंजीकृत हैं",
+
+  registeredEmployers: "पंजीकृत नियोक्ता",
+  employersRegistered: "नियोक्ता पंजीकृत हैं",
+
+  jobsPosted: "पोस्ट की गई नौकरियां",
+  jobsAvailable: "नौकरियां उपलब्ध हैं",
+
+  applicationsTitle: "आवेदन",
+  applicationsSubmitted: "आवेदन जमा किए गए हैं",
+
+  active: "सक्रिय",
+  live: "लाइव",
+  updated: "अपडेट किया गया",
+},
 };
 
 export default hi;

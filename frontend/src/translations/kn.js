@@ -839,6 +839,41 @@ employerDashboard: {
   updated: "ನವೀಕರಿಸಲಾಗಿದೆ",
   success: "ಯಶಸ್ಸು",
 },
+admin: {
+  welcome: "ನಿರ್ವಾಹಕರಿಗೆ ಸ್ವಾಗತ",
+  description:
+    "ಸಂಪೂರ್ಣ Rozgaar Setu ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಅನ್ನು ಒಂದೇ ಸ್ಥಳದಿಂದ ನಿರ್ವಹಿಸಿ.",
+
+  workers: "ಕೆಲಸಗಾರರು",
+  employers: "ಉದ್ಯೋಗದಾತರು",
+  jobs: "ಉದ್ಯೋಗಗಳು",
+  applications: "ಅರ್ಜಿಗಳು",
+
+  platformSummary: "ಪ್ಲಾಟ್‌ಫಾರ್ಮ್ ಸಾರಾಂಶ",
+
+  totalWorkers: "ಒಟ್ಟು ಕೆಲಸಗಾರರು",
+  totalEmployers: "ಒಟ್ಟು ಉದ್ಯೋಗದಾತರು",
+  activeJobs: "ಸಕ್ರಿಯ ಉದ್ಯೋಗಗಳು",
+  totalApplications: "ಒಟ್ಟು ಅರ್ಜಿಗಳು",
+
+  systemOverview: "ಸಿಸ್ಟಮ್ ಅವಲೋಕನ",
+
+  registeredWorkers: "ನೋಂದಾಯಿತ ಕೆಲಸಗಾರರು",
+  workersRegistered: "ಕೆಲಸಗಾರರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ",
+
+  registeredEmployers: "ನೋಂದಾಯಿತ ಉದ್ಯೋಗದಾತರು",
+  employersRegistered: "ಉದ್ಯೋಗದಾತರು ನೋಂದಾಯಿಸಿಕೊಂಡಿದ್ದಾರೆ",
+
+  jobsPosted: "ಪೋಸ್ಟ್ ಮಾಡಿದ ಉದ್ಯೋಗಗಳು",
+  jobsAvailable: "ಉದ್ಯೋಗಗಳು ಲಭ್ಯವಿವೆ",
+
+  applicationsTitle: "ಅರ್ಜಿಗಳು",
+  applicationsSubmitted: "ಅರ್ಜಿಗಳನ್ನು ಸಲ್ಲಿಸಲಾಗಿದೆ",
+
+  active: "ಸಕ್ರಿಯ",
+  live: "ಲೈವ್",
+  updated: "ನವೀಕರಿಸಲಾಗಿದೆ",
+},
 };
 
 export default kn;

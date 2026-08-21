@@ -839,6 +839,41 @@ employerDashboard: {
   updated: "अपडेट केले",
   success: "यश",
 },
+admin: {
+  welcome: "ॲडमिनचे स्वागत आहे",
+  description:
+    "संपूर्ण Rozgaar Setu प्लॅटफॉर्मचे एका ठिकाणाहून निरीक्षण करा.",
+
+  workers: "कामगार",
+  employers: "नियोक्ते",
+  jobs: "नोकऱ्या",
+  applications: "अर्ज",
+
+  platformSummary: "प्लॅटफॉर्मचा सारांश",
+
+  totalWorkers: "एकूण कामगार",
+  totalEmployers: "एकूण नियोक्ते",
+  activeJobs: "सक्रिय नोकऱ्या",
+  totalApplications: "एकूण अर्ज",
+
+  systemOverview: "सिस्टमचा आढावा",
+
+  registeredWorkers: "नोंदणीकृत कामगार",
+  workersRegistered: "कामगार नोंदणीकृत आहेत",
+
+  registeredEmployers: "नोंदणीकृत नियोक्ते",
+  employersRegistered: "नियोक्ते नोंदणीकृत आहेत",
+
+  jobsPosted: "पोस्ट केलेल्या नोकऱ्या",
+  jobsAvailable: "नोकऱ्या उपलब्ध आहेत",
+
+  applicationsTitle: "अर्ज",
+  applicationsSubmitted: "अर्ज सादर केले आहेत",
+
+  active: "सक्रिय",
+  live: "लाइव्ह",
+  updated: "अपडेट केले",
+},
 };
 
 export default mr;

@@ -836,41 +836,40 @@ employerDashboard: {
   updated: "Updated",
   success: "Success",
 },
-employerDashboard: {
-  welcome: "स्वागत है",
-  welcomeDescription:
-    "अपनी नौकरियों का प्रबंधन करें, आवेदनों की समीक्षा करें और कुशल श्रमिकों को नियुक्त करें।",
+admin: {
+  welcome: "Welcome Admin",
+  description:
+    "Monitor the entire Rozgaar Setu platform from one place.",
 
-  postNewJob: "नई नौकरी पोस्ट करें",
-  viewApplications: "आवेदन देखें",
+  workers: "Workers",
+  employers: "Employers",
+  jobs: "Jobs",
+  applications: "Applications",
 
-  jobsPosted: "पोस्ट की गई नौकरियां",
-  applications: "आवेदन",
-  accepted: "स्वीकृत",
-  rejected: "अस्वीकृत",
+  platformSummary: "Platform Summary",
 
-  postJobTitle: "नई नौकरी पोस्ट करें",
-  postJobDescription:
-    "श्रमिकों के लिए नई नौकरी बनाएं और प्रकाशित करें।",
+  totalWorkers: "Total Workers",
+  totalEmployers: "Total Employers",
+  activeJobs: "Active Jobs",
+  totalApplications: "Total Applications",
 
-  manageApplications: "आवेदन प्रबंधित करें",
-  manageApplicationsDescription:
-    "श्रमिकों के आवेदनों की समीक्षा करें, स्वीकार करें या अस्वीकार करें।",
+  systemOverview: "System Overview",
 
-  hiringSummary: "भर्ती सारांश",
-  successRate: "सफलता दर",
+  registeredWorkers: "Registered Workers",
+  workersRegistered: "workers registered",
 
-  recentActivity: "हाल की गतिविधि",
+  registeredEmployers: "Registered Employers",
+  employersRegistered: "employers registered",
 
-  activeJobPosts: "सक्रिय नौकरी पोस्ट",
-  applicationsReceived: "प्राप्त आवेदन",
-  totalApplications: "कुल आवेदन",
+  jobsPosted: "Jobs Posted",
+  jobsAvailable: "jobs available",
 
-  hiringProgress: "भर्ती प्रगति",
+  applicationsTitle: "Applications",
+  applicationsSubmitted: "applications submitted",
 
-  live: "लाइव",
-  updated: "अपडेट किया गया",
-  success: "सफलता",
+  active: "Active",
+  live: "Live",
+  updated: "Updated",
 },
 };
 

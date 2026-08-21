@@ -842,6 +842,41 @@ employerDashboard: {
   updated: "నవీకరించబడింది",
   success: "విజయం",
 },
+admin: {
+  welcome: "అడ్మిన్‌కు స్వాగతం",
+  description:
+    "మొత్తం Rozgaar Setu ప్లాట్‌ఫారమ్‌ను ఒకే చోట నుండి పర్యవేక్షించండి.",
+
+  workers: "కార్మికులు",
+  employers: "యజమానులు",
+  jobs: "ఉద్యోగాలు",
+  applications: "దరఖాస్తులు",
+
+  platformSummary: "ప్లాట్‌ఫారమ్ సారాంశం",
+
+  totalWorkers: "మొత్తం కార్మికులు",
+  totalEmployers: "మొత్తం యజమానులు",
+  activeJobs: "క్రియాశీల ఉద్యోగాలు",
+  totalApplications: "మొత్తం దరఖాస్తులు",
+
+  systemOverview: "సిస్టమ్ అవలోకనం",
+
+  registeredWorkers: "నమోదైన కార్మికులు",
+  workersRegistered: "కార్మికులు నమోదు చేసుకున్నారు",
+
+  registeredEmployers: "నమోదైన యజమానులు",
+  employersRegistered: "యజమానులు నమోదు చేసుకున్నారు",
+
+  jobsPosted: "పోస్ట్ చేసిన ఉద్యోగాలు",
+  jobsAvailable: "ఉద్యోగాలు అందుబాటులో ఉన్నాయి",
+
+  applicationsTitle: "దరఖాస్తులు",
+  applicationsSubmitted: "దరఖాస్తులు సమర్పించబడ్డాయి",
+
+  active: "క్రియాశీలం",
+  live: "లైవ్",
+  updated: "నవీకరించబడింది",
+},
 };
 
 export default te;
