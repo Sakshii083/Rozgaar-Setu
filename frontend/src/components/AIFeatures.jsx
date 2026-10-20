@@ -1,58 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
-import { applyJob } from "../api/applicationApi";
-import { calculateJobMatch } from "../utils/jobMatcher";
+import { applyJob, calculateJobMatch } from "../api/jobApi";
 import { useLanguage } from "../context/LanguageContext";
 
-function AIFeatures() {
-  const navigate = useNavigate();
+function AIFeatures({ compact = false }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
-  const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState("");
+  const [listening, setListening] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [transcript, setTranscript] = useState("");
   const [aiResult, setAiResult] = useState(null);
-
   const [matchingJobs, setMatchingJobs] = useState([]);
-  const [findingJobs, setFindingJobs] = useState(false);
-  const [matchError, setMatchError] = useState("");
-
-  const processWithAI = async (text) => {
-    try {
-      setProcessing(true);
-      setAiResult(null);
-      setMatchingJobs([]);
-      setMatchError("");
-
-      const response = await API.post("/ai/parse", { text });
-
-      if (!response.data?.success) {
-        throw new Error(
-          response.data?.message || "AI processing failed"
-        );
-      }
-
-      setAiResult(response.data.data);
-    } catch (error) {
-      console.error("AI processing error:", error);
-
-      alert(
-        error.response?.data?.message ||
-          t("ai.processingError")
-      );
-    } finally {
-      setProcessing(false);
-    }
-  };
+  const [error, setError] = useState("");
 
   const startListening = () => {
+    setError("");
+    setAiResult(null);
+    setMatchingJobs([]);
+    setTranscript("");
+
     const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert(t("ai.browserNotSupported"));
+      setError(
+        "Voice recognition is not supported in this browser. Please use Google Chrome."
+      );
       return;
     }
 
@@ -63,470 +38,351 @@ function AIFeatures() {
     recognition.interimResults = false;
 
     recognition.onstart = () => {
-      setIsListening(true);
-      setTranscript("");
-      setAiResult(null);
-      setMatchingJobs([]);
-      setMatchError("");
+      setListening(true);
     };
 
-    recognition.onresult = (event) => {
-      const text = event.results[0][0].transcript;
+    recognition.onresult = async (event) => {
+      const spokenText = event.results[0][0].transcript;
 
-      setTranscript(text);
-      processWithAI(text);
+      setTranscript(spokenText);
+
+      await processWithAI(spokenText);
     };
 
     recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
-
-      setIsListening(false);
+      setListening(false);
 
       if (event.error === "not-allowed") {
-        alert(t("ai.microphoneDenied"));
+        setError("Please allow microphone access in your browser.");
       } else {
-        alert(t("ai.voiceError"));
+        setError("Voice recognition failed. Please try again.");
       }
     };
 
     recognition.onend = () => {
-      setIsListening(false);
+      setListening(false);
     };
 
     recognition.start();
   };
 
-  const findMatchingJobs = async () => {
-    if (!aiResult) {
-      alert(t("ai.speakRequirement"));
-      return;
-    }
-
+  const processWithAI = async (text) => {
     try {
-      setFindingJobs(true);
-      setMatchingJobs([]);
-      setMatchError("");
+      setProcessing(true);
+      setError("");
 
+      // Send the spoken requirements to the backend AI endpoint.
+      const response = await API.post("/ai/parse", {
+        text,
+      });
+
+      // Support the existing backend response format.
+      const parsedData = response.data?.data ?? response.data;
+
+      setAiResult(parsedData);
+
+      await findMatchingJobs(parsedData);
+    } catch (err) {
+      console.error("AI processing error:", err);
+
+      setError(
+        err.response?.data?.message ||
+          "Unable to process your request. Please try again."
+      );
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const findMatchingJobs = async (requirements) => {
+    try {
+      // Fetch jobs from the existing backend API.
       const response = await API.get("/jobs");
-      const jobs = response.data?.jobs || [];
 
-      const rankedJobs = jobs
+      const jobsData = Array.isArray(response.data)
+        ? response.data
+        : response.data?.data || response.data?.jobs || [];
+
+      // Calculate matching scores using the existing project function.
+      const matched = jobsData
         .map((job) => {
-          const match = calculateJobMatch(job, aiResult);
+          const matchResult = calculateJobMatch(job, requirements);
+
+          const score =
+            typeof matchResult === "number"
+              ? matchResult
+              : matchResult?.score ?? 0;
 
           return {
             ...job,
-            matchScore: match.score,
-            matchReasons: match.reasons,
+            matchScore: score,
           };
         })
         .filter((job) => job.matchScore > 0)
-        .sort((a, b) => b.matchScore - a.matchScore);
+        .sort((a, b) => b.matchScore - a.matchScore)
+        .slice(0, 5);
 
-      setMatchingJobs(rankedJobs);
-
-      if (rankedJobs.length === 0) {
-        setMatchError(t("ai.noMatchingJobs"));
-      }
-    } catch (error) {
-      console.error("Job matching error:", error);
-
-      setMatchError(
-        error.response?.data?.message ||
-          t("ai.jobsLoadError")
-      );
-    } finally {
-      setFindingJobs(false);
+      setMatchingJobs(matched);
+    } catch (err) {
+      console.error("Job matching error:", err);
+      setMatchingJobs([]);
     }
   };
 
-  const handleApplyFromAI = async (jobId) => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert(t("ai.loginToApply"));
-      navigate("/login");
-      return;
-    }
-
+  const handleApply = async (jobId) => {
     try {
       await applyJob(jobId);
-      alert(t("ai.applicationSuccess"));
-    } catch (error) {
-      console.error("Application error:", error);
+
+      alert("Application submitted successfully!");
+    } catch (err) {
+      console.error("Application error:", err);
+
+      if (err.response?.status === 401) {
+        alert("Please log in before applying for a job.");
+        navigate("/login");
+        return;
+      }
 
       alert(
-        error.response?.data?.message ||
-          t("ai.applicationError")
+        err.response?.data?.message ||
+          "Unable to apply for this job. Please try again."
       );
     }
   };
 
+  const getJobTitle = (job) =>
+    job.title || job.jobTitle || job.position || "Job opportunity";
+
+  const getJobLocation = (job) =>
+    job.location || job.city || job.address || "Location not specified";
+
   return (
-    <section className="bg-blue-50 px-4 py-8 md:px-6 md:py-10">
-
-      <div className="mx-auto max-w-6xl">
-
-        {/* HEADER */}
-
-        <div className="text-center">
-
-          <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-            {t("ai.badge")}
-          </span>
-
-          <h2 className="mt-3 text-3xl font-bold text-gray-900 md:text-4xl">
-            {t("ai.title")} 🤖
+    <section
+      className={
+        compact
+          ? "rounded-xl border border-blue-100 bg-blue-50 p-3"
+          : "bg-blue-50 px-4 py-8 md:px-6 md:py-10"
+      }
+    >
+      <div className={compact ? "mx-auto" : "mx-auto max-w-6xl"}>
+        {/* Heading */}
+        <div className={compact ? "text-left" : "text-center"}>
+          <h2
+            className={
+              compact
+                ? "text-base font-bold text-gray-900"
+                : "text-3xl font-bold text-gray-900 md:text-4xl"
+            }
+          >
+            {compact ? "Rozgaar Saathi AI 🤖" : `${t("ai.title")} 🤖`}
           </h2>
 
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-gray-600">
-            {t("ai.description")}
+          <p
+            className={
+              compact
+                ? "mt-1 text-xs text-gray-600"
+                : "mt-3 text-sm text-gray-600 md:text-base"
+            }
+          >
+            {compact
+              ? "Speak your skills and discover matching jobs."
+              : t("ai.description")}
           </p>
-
         </div>
 
-        {/* MAIN CARD */}
-
-        <div className="mx-auto mt-7 max-w-5xl rounded-2xl bg-white p-5 shadow-lg md:p-6">
-
-          {/* VOICE AREA */}
-
-          <div className="grid items-center gap-5 md:grid-cols-[auto_1fr_auto]">
-
+        {/* Voice Input Card */}
+        <div
+          className={
+            compact
+              ? "mt-3 rounded-lg bg-white p-3 shadow-sm"
+              : "mt-6 rounded-2xl bg-white p-6 shadow-lg md:p-8"
+          }
+        >
+          <div
+            className={
+              compact
+                ? "flex flex-col gap-3"
+                : "flex flex-col items-center gap-4"
+            }
+          >
             <div
-              className={`flex h-16 w-16 items-center justify-center rounded-full text-3xl ${
-                isListening
-                  ? "animate-pulse bg-red-100"
-                  : "bg-blue-100"
-              }`}
+              className={
+                compact
+                  ? "flex items-center gap-3"
+                  : "flex flex-col items-center text-center"
+              }
             >
-              {isListening ? "🔴" : "🎤"}
-            </div>
+              <div
+                className={
+                  compact
+                    ? "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg"
+                    : "flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-3xl"
+                }
+              >
+                🎙️
+              </div>
 
-            <div>
+              <div className={compact ? "min-w-0" : "mt-3"}>
+                <h3
+                  className={
+                    compact
+                      ? "text-sm font-semibold text-gray-800"
+                      : "text-xl font-semibold text-gray-800"
+                  }
+                >
+                  {listening
+                    ? "Listening..."
+                    : processing
+                    ? "Finding matching jobs..."
+                    : "Tell us what work you need"}
+                </h3>
 
-              <h3 className="text-xl font-bold text-gray-900">
-                {isListening
-                  ? t("ai.listening")
-                  : t("ai.tellSaathi")}
-              </h3>
-
-              <p className="mt-1 text-sm text-gray-500">
-                {t("ai.trySaying")}
-              </p>
-
-              <p className="mt-2 rounded-lg bg-gray-50 px-3 py-2 text-xs italic text-gray-600">
-                "{t("ai.example")}"
-              </p>
-
+                <p
+                  className={
+                    compact
+                      ? "mt-1 text-xs text-gray-500"
+                      : "mt-2 text-sm text-gray-500"
+                  }
+                >
+                  {compact
+                    ? "Tap below and speak."
+                    : "Describe your skills, job requirements, or preferred location."}
+                </p>
+              </div>
             </div>
 
             <button
               type="button"
               onClick={startListening}
-              disabled={isListening || processing}
-              className={`rounded-lg px-5 py-3 text-sm font-semibold text-white transition ${
-                isListening || processing
+              disabled={listening || processing}
+              className={`rounded-lg font-semibold text-white transition ${
+                compact
+                  ? "w-full px-3 py-2 text-sm"
+                  : "px-6 py-3 text-base"
+              } ${
+                listening || processing
                   ? "cursor-not-allowed bg-gray-400"
                   : "bg-blue-600 hover:bg-blue-700"
               }`}
             >
-              {isListening
-                ? `🎙️ ${t("ai.listeningButton")}`
+              {listening
+                ? "🎙️ Listening..."
                 : processing
-                ? `🤖 ${t("ai.processing")}`
-                : `🎙️ ${t("ai.startSpeaking")}`}
+                ? "Processing..."
+                : "🎤 Speak Now"}
             </button>
-
           </div>
 
-          {/* TRANSCRIPT */}
-
+          {/* Recognized Speech */}
           {transcript && (
-            <div className="mt-5 rounded-xl border bg-gray-50 p-4">
-
-              <p className="text-xs font-bold text-gray-500">
-                {t("ai.whatIHeard")}
+            <div className="mt-3 rounded-lg bg-gray-50 p-3">
+              <p className="text-xs font-semibold text-gray-500">
+                YOU SAID
               </p>
 
-              <p className="mt-1 text-sm text-gray-700">
-                "{transcript}"
+              <p className="mt-1 break-words text-sm text-gray-800">
+                {transcript}
               </p>
-
             </div>
           )}
 
-          {/* PROCESSING */}
-
-          {processing && (
-            <div className="mt-4 rounded-xl border border-yellow-200 bg-yellow-50 p-4">
-
-              <div className="flex items-center gap-3">
-
-                <span className="animate-pulse text-xl">
-                  🤖
-                </span>
-
-                <div>
-
-                  <p className="text-sm font-semibold text-yellow-800">
-                    {t("ai.understanding")}
-                  </p>
-
-                  <p className="text-xs text-yellow-700">
-                    {t("ai.extracting")}
-                  </p>
-
-                </div>
-
-              </div>
-
+          {/* Error Message */}
+          {error && (
+            <div
+              role="alert"
+              className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-700"
+            >
+              {error}
             </div>
           )}
 
-          {/* AI RESULT */}
+          {/* AI Parsed Requirements */}
+          {aiResult && (
+            <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 p-3">
+              <h3 className="text-sm font-bold text-gray-900">
+                AI Detected Requirements
+              </h3>
 
-          {aiResult && !processing && (
-            <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4">
+              <div className="mt-2 space-y-1 text-sm text-gray-700">
+                {Object.entries(aiResult).map(([key, value]) => {
+                  if (
+                    value === null ||
+                    value === undefined ||
+                    typeof value === "object"
+                  ) {
+                    return null;
+                  }
 
-              <div className="flex items-center gap-2">
-
-                <span className="text-2xl">
-                  🤖
-                </span>
-
-                <div>
-
-                  <h4 className="text-lg font-bold text-blue-700">
-                    {t("ai.understandingTitle")}
-                  </h4>
-
-                  <p className="text-xs text-blue-600">
-                    {t("ai.understoodDescription")}
-                  </p>
-
-                </div>
-
-              </div>
-
-              {/* COMPACT AI DATA */}
-
-              <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-4">
-
-                {[
-                  ["intent", aiResult.intent],
-                  ["skill", aiResult.skill],
-                  ["experience", aiResult.experience],
-                  ["city", aiResult.city],
-                  ["area", aiResult.area],
-                  ["expectedWage", aiResult.wage],
-                  ["jobType", aiResult.jobType],
-                  ["availability", aiResult.availability],
-                ].map(([key, value]) => (
-                  <div
-                    key={key}
-                    className="rounded-lg bg-white p-3 shadow-sm"
-                  >
-                    <p className="text-[10px] text-gray-500">
-                      {t(`ai.${key}`)}
+                  return (
+                    <p key={key} className="break-words">
+                      <span className="font-semibold">
+                        {key.replace(/([A-Z])/g, " $1")}:
+                      </span>{" "}
+                      {String(value)}
                     </p>
-
-                    <p className="mt-1 truncate text-sm font-semibold text-gray-900">
-                      {value || t("ai.notDetected")}
-                    </p>
-                  </div>
-                ))}
-
+                  );
+                })}
               </div>
-
-              {aiResult.description && (
-                <div className="mt-2 rounded-lg bg-white p-3">
-                  <p className="text-[10px] text-gray-500">
-                    {t("ai.descriptionLabel")}
-                  </p>
-
-                  <p className="mt-1 text-sm text-gray-900">
-                    {aiResult.description}
-                  </p>
-                </div>
-              )}
-
-              <button
-                type="button"
-                onClick={findMatchingJobs}
-                disabled={findingJobs}
-                className={`mt-4 w-full rounded-lg px-5 py-3 text-sm font-semibold text-white transition ${
-                  findingJobs
-                    ? "cursor-not-allowed bg-gray-400"
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-              >
-                {findingJobs
-                  ? `🔎 ${t("ai.findingJobs")}`
-                  : `🔎 ${t("ai.findMatchingJobs")}`}
-              </button>
-
             </div>
           )}
 
-          {/* FINDING JOBS */}
-
-          {findingJobs && (
-            <div className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4">
-
-              <div className="flex items-center gap-3">
-
-                <span className="animate-pulse text-xl">
-                  🔎
-                </span>
-
-                <div>
-
-                  <p className="text-sm font-semibold text-green-800">
-                    {t("ai.findingJobsTitle")}
-                  </p>
-
-                  <p className="text-xs text-green-700">
-                    {t("ai.comparingRequirements")}
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-          )}
-
-          {/* ERROR */}
-
-          {!findingJobs && matchError && (
-            <div className="mt-4 rounded-xl border border-orange-200 bg-orange-50 p-4 text-center">
-
-              <div className="text-2xl">
-                🔎
-              </div>
-
-              <p className="mt-1 text-sm font-semibold text-orange-800">
-                {matchError}
-              </p>
-
-              <p className="mt-1 text-xs text-orange-700">
-                {t("ai.makeSureJobs")}
-              </p>
-
-            </div>
-          )}
-
-          {/* MATCHING JOBS */}
-
+          {/* Matching Jobs */}
           {matchingJobs.length > 0 && (
-            <div className="mt-6">
+            <div className="mt-4">
+              <h3 className="text-sm font-bold text-gray-900">
+                Matching Jobs
+              </h3>
 
-              <div className="mb-4">
-
-                <h3 className="text-xl font-bold text-gray-900">
-                  🔎 {t("ai.matchingJobsTitle")}
-                </h3>
-
-                <p className="mt-1 text-sm text-gray-600">
-                  {t("ai.matchingJobsDescription")}
-                </p>
-
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-
+              <div className="mt-2 space-y-2">
                 {matchingJobs.map((job) => (
                   <div
-                    key={job._id}
-                    className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md"
+                    key={job._id || job.id}
+                    className="rounded-lg border border-gray-200 bg-white p-3"
                   >
-
-                    <div className="flex items-start justify-between gap-3">
-
+                    <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-
-                        <h4 className="truncate text-lg font-bold text-gray-900">
-                          {job.title}
+                        <h4 className="break-words text-sm font-semibold text-gray-900">
+                          {getJobTitle(job)}
                         </h4>
 
-                        <p className="mt-1 line-clamp-2 text-xs text-gray-600">
-                          {job.description}
+                        <p className="mt-1 text-xs text-gray-600">
+                          📍 {getJobLocation(job)}
                         </p>
 
+                        {job.salary !== undefined && (
+                          <p className="mt-1 text-xs text-gray-600">
+                            💰 {job.salary}
+                          </p>
+                        )}
                       </div>
 
-                      <span className="shrink-0 rounded-full bg-green-100 px-2.5 py-1 text-xs font-bold text-green-700">
-                        ⭐ {job.matchScore}%
+                      <span className="shrink-0 rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-700">
+                        {job.matchScore}% match
                       </span>
-
                     </div>
-
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-
-                      <span className="rounded-full bg-blue-100 px-2 py-1 text-[10px] font-medium text-blue-700">
-                        🛠️ {job.skill}
-                      </span>
-
-                      <span className="rounded-full bg-green-100 px-2 py-1 text-[10px] font-medium text-green-700">
-                        📍 {job.city}
-                      </span>
-
-                      <span className="rounded-full bg-yellow-100 px-2 py-1 text-[10px] font-medium text-yellow-700">
-                        💰 ₹{job.salary}
-                      </span>
-
-                      {job.jobType && (
-                        <span className="rounded-full bg-purple-100 px-2 py-1 text-[10px] font-medium text-purple-700">
-                          💼 {job.jobType}
-                        </span>
-                      )}
-
-                    </div>
-
-                    {job.matchReasons?.length > 0 && (
-                      <div className="mt-3">
-
-                        <p className="text-xs font-semibold text-gray-700">
-                          {t("ai.whyMatches")}
-                        </p>
-
-                        {job.matchReasons
-                          .slice(0, 3)
-                          .map((reason) => (
-                            <p
-                              key={reason}
-                              className="text-xs text-green-700"
-                            >
-                              ✓ {reason}
-                            </p>
-                          ))}
-
-                      </div>
-                    )}
 
                     <button
                       type="button"
-                      onClick={() =>
-                        handleApplyFromAI(job._id)
-                      }
-                      className="mt-4 w-full rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-green-700"
+                      onClick={() => handleApply(job._id || job.id)}
+                      className="mt-3 rounded-md bg-blue-600 px-3 py-2 text-xs font-semibold text-white hover:bg-blue-700"
                     >
-                      {t("ai.applyNow")}
+                      Apply Now
                     </button>
-
                   </div>
                 ))}
-
               </div>
-
             </div>
           )}
 
+          {/* No Matching Jobs */}
+          {aiResult && !processing && matchingJobs.length === 0 && (
+            <p className="mt-3 rounded-lg bg-yellow-50 p-3 text-sm text-yellow-800">
+              No matching jobs were found. Try describing your skills or
+              requirements differently.
+            </p>
+          )}
         </div>
-
       </div>
-
     </section>
   );
 }

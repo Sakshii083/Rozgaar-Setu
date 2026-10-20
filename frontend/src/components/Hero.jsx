@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { searchWorkers } from "../api/workerDashboardApi";
 import { useLanguage } from "../context/LanguageContext";
+import AIFeatures from "./AIFeatures";
 
 function Hero() {
   const navigate = useNavigate();
@@ -116,14 +117,14 @@ function Hero() {
       : city;
 
   return (
-    <section className="relative overflow-hidden bg-slate-50 px-4 py-6 md:px-6 md:py-8">
+    <section className="relative overflow-hidden bg-slate-50 px-4 py-3 md:px-6 md:py-4">
 
       {/* Background */}
       <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100 opacity-50 blur-3xl" />
 
       <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-blue-50 opacity-60 blur-3xl" />
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+      <div className="relative mx-auto grid max-w-7xl items-start gap-4 lg:grid-cols-[0.9fr_1.1fr]">
 
         {/* LEFT SIDE */}
 
@@ -162,6 +163,9 @@ function Hero() {
               {t("hero.findWorkers")}
             </button>
 
+          </div>
+          <div className="mt-4">
+              <AIFeatures compact />
           </div>
 
           <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">

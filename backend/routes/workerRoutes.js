@@ -24,7 +24,7 @@ router.get("/search", async (req, res) => {
 
     const workers = await Worker.find(query)
       .sort({ createdAt: -1 })
-      .limit(20);
+      .limit(50);
 
     res.status(200).json({
       success: true,

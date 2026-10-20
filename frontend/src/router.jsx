@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Jobs from "./pages/Jobs";
 import Workers from "./pages/Workers";
+import Employers from "./pages/Employers";
 import EmployerDashboard from "./pages/EmployerDashboard";
 import WorkerDashboard from "./pages/WorkerDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -50,6 +51,15 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  {
+  path: "/workers",
+  element: <Workers />,
+},
+
+{
+  path: "/employers",
+  element: <Employers />,
+},
 
   {
     path: "/employer",

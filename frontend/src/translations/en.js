@@ -277,6 +277,19 @@ const en = {
     applicationError:
       "Failed to apply for this job.",
   },
+  workers: {
+  title: "Find Workers",
+  subtitle: "Find skilled workers based on skill and location",
+  available: "Workers Found",
+
+  selectSkill: "All Skills",
+  selectCity: "All Cities",
+
+  search: "Search",
+  clear: "Clear",
+  loading: "Finding workers...",
+  noWorkers: "No workers found",
+ },
   applications: {
   badge: "Applications",
   title: "Job Applications",
