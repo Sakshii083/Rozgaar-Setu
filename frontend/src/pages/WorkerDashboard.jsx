@@ -103,6 +103,12 @@ function WorkerDashboard() {
         >
           {t("workerDashboard.editProfile")}
         </Link>
+        <Link
+          to="/voice-profile"
+          className="mt-3 inline-block rounded-xl bg-yellow-400 px-6 py-3 font-semibold text-gray-900 shadow transition hover:bg-yellow-300 md:ml-3"
+          >
+          🎙️ Try Vaani AI – Create Profile by Voice
+        </Link>
 
       </div>
 
