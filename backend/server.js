@@ -19,6 +19,10 @@ const statsRoutes = require("./routes/statsRoutes");
 const workerDashboardRoutes = require("./routes/workerDashboardRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+
+// NEW: Vernacular Voice-First Profile Assistant
+const voiceProfileRoutes = require("./routes/voiceProfileRoutes");
+
 const app = express();
 
 // ====================
@@ -39,7 +43,8 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests from tools such as Postman
+      // Allow requests without an Origin header, such as server-to-server
+      // requests and tools like Postman.
       if (!origin) {
         return callback(null, true);
       }
@@ -79,7 +84,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ====================
-// Routes
+// Existing Routes
 // ====================
 
 app.use("/api/auth", authRoutes);
@@ -91,7 +96,17 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/stats", statsRoutes);
 app.use("/api/worker-dashboard", workerDashboardRoutes);
 app.use("/api/admin", adminRoutes);
+
+// ====================
+// AI Routes
+// ====================
+
+// Existing Rozgaar Saathi AI
 app.use("/api/ai", aiRoutes);
+
+// New Vernacular Voice-First Profile Assistant
+app.use("/api/ai-profile", voiceProfileRoutes);
+
 // ====================
 // Home Route
 // ====================
@@ -99,7 +114,7 @@ app.use("/api/ai", aiRoutes);
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "🚀 Rozgaar Setu Backend Running Successfully",
+    message: "Rozgaar Setu Backend Running Successfully",
   });
 });
 
@@ -134,5 +149,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server Running on Port ${PORT}`);
+  console.log(`Server Running on Port ${PORT}`);
 });

@@ -2,15 +2,19 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
+    // Basic account information
     name: {
       type: String,
       required: true,
+      trim: true,
     },
 
     email: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
+      lowercase: true,
     },
 
     phone: {
@@ -29,6 +33,7 @@ const userSchema = new mongoose.Schema(
       default: "worker",
     },
 
+    // Existing worker profile fields
     city: {
       type: String,
       default: "",
@@ -62,6 +67,33 @@ const userSchema = new mongoose.Schema(
     profileImage: {
       type: String,
       default: "",
+    },
+
+    // New AI-generated profile fields
+    skills: {
+      type: [String],
+      default: [],
+    },
+
+    serviceAreas: {
+      type: [String],
+      default: [],
+    },
+
+    preferredLanguage: {
+      type: String,
+      enum: ["en", "hi", "kn", "ta", "te", "mr", "es"],
+      default: "en",
+    },
+
+    profileSummary: {
+      type: String,
+      default: "",
+    },
+
+    profileGeneratedByAI: {
+      type: Boolean,
+      default: false,
     },
   },
   {

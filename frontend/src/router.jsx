@@ -12,37 +12,38 @@ import AdminDashboard from "./pages/AdminDashboard";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import WorkerRegister from "./pages/WorkerRegister";
-
-import ProtectedRoute from "./components/ProtectedRoute";
 import EditProfile from "./pages/EditProfile";
 import PostJob from "./pages/PostJob";
 import Applications from "./pages/Applications";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+import VoiceProfileAssistant from "./components/VoiceProfileAssistant";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
   },
-
   {
     path: "/login",
     element: <Login />,
   },
-
   {
     path: "/register",
     element: <Register />,
   },
-
   {
     path: "/jobs",
     element: <Jobs />,
   },
-
   {
     path: "/workers",
     element: <Workers />,
   },
-
+  {
+    path: "/employers",
+    element: <Employers />,
+  },
   {
     path: "/worker",
     element: (
@@ -52,16 +53,6 @@ const router = createBrowserRouter([
     ),
   },
   {
-  path: "/workers",
-  element: <Workers />,
-},
-
-{
-  path: "/employers",
-  element: <Employers />,
-},
-
-  {
     path: "/employer",
     element: (
       <ProtectedRoute>
@@ -69,7 +60,6 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
     path: "/admin",
     element: (
@@ -78,45 +68,50 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
-
   {
     path: "/about",
     element: <About />,
   },
-
   {
     path: "/contact",
     element: <Contact />,
   },
-
   {
     path: "/worker-register",
     element: <WorkerRegister />,
   },
   {
-  path: "/edit-profile",
-  element: (
-    <ProtectedRoute>
-      <EditProfile />
-    </ProtectedRoute>
-  ),
-},
-{
-  path: "/post-job",
-  element: (
-    <ProtectedRoute>
-      <PostJob />
-    </ProtectedRoute>
-  ),
-},
-{
-  path: "/applications",
-  element: (
-    <ProtectedRoute>
-      <Applications />
-    </ProtectedRoute>
-  ),
-},
+    path: "/edit-profile",
+    element: (
+      <ProtectedRoute>
+        <EditProfile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/post-job",
+    element: (
+      <ProtectedRoute>
+        <PostJob />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/applications",
+    element: (
+      <ProtectedRoute>
+        <Applications />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/voice-profile",
+    element: (
+      <ProtectedRoute>
+        <VoiceProfileAssistant />
+      </ProtectedRoute>
+    ),
+  },
 ]);
 
 export default router;
