@@ -4,25 +4,28 @@ import { useLanguage } from "../context/LanguageContext";
 function JobCard({ job }) {
   const { t } = useLanguage();
 
-  const handleApply = async () => {
-    try {
-      const res = await applyJob(job._id);
+const handleApply = async () => {
+  try {
+    const res = await applyJob({
+      jobId: job._id,
+    });
 
-      alert(
-        res.data.message ||
-          t("workerDashboard.applicationSubmitted")
-      );
+    alert(
+      res.data.message ||
+        t("workerDashboard.applicationSubmitted")
+    );
+  } catch (error) {
+    console.error(
+      "Apply Job Error:",
+      error.response?.data || error.message
+    );
 
-    } catch (error) {
-
-      alert(
-        error.response?.data?.message ||
-          t("workerDashboard.applyError")
-      );
-
-    }
-  };
-
+    alert(
+      error.response?.data?.message ||
+        t("workerDashboard.applyError")
+    );
+  }
+};
   return (
     <div className="rounded-xl border bg-white p-6 shadow transition hover:shadow-lg">
 
