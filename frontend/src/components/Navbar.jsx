@@ -5,7 +5,31 @@ import { useLanguage } from "../context/LanguageContext";
 function Navbar() {
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const getStoredUser = () => {
+  try {
+    const storedUser = localStorage.getItem("user");
+
+    if (!storedUser) return null;
+
+    const parsedUser = JSON.parse(storedUser);
+
+    // Ensure user data is an object, not a plain string or ID.
+    if (
+      parsedUser &&
+      typeof parsedUser === "object" &&
+      !Array.isArray(parsedUser)
+    ) {
+      return parsedUser;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Failed to parse stored user:", error);
+    return null;
+  }
+};
+
+const user = getStoredUser();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
