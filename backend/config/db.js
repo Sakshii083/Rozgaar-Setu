@@ -3,11 +3,21 @@ const dns = require("dns");
 
 // Use a public resolver when the default system DNS refuses SRV queries.
 // This is a common workaround for Windows / corporate DNS environments.
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch (e) {
+  // Ignore if unsupported in environment
+}
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    const rawUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+    if (!rawUri) {
+      throw new Error("MONGO_URI is not defined in environment variables.");
+    }
+    const cleanUri = rawUri.replace(/["';]+$/, "").trim();
+
+    await mongoose.connect(cleanUri, {
       serverSelectionTimeoutMS: 10000,
     });
 

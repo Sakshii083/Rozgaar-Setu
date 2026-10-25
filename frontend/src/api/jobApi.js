@@ -1,20 +1,28 @@
 import API from "./axios";
 
-// Get all jobs
-export const getJobs = () => API.get("/jobs");
+// Get all jobs (supports query parameters e.g. { skill, city, jobType, search })
+export const getJobs = (params) => API.get("/jobs", { params });
 
 // Get a single job by ID
 export const getJobById = (id) => API.get(`/jobs/${id}`);
 
+// Employer gets their own posted jobs
+export const getMyJobs = () => API.get("/jobs/my/posted");
+
 // Create a job
 export const createJob = (data) => API.post("/jobs", data);
+
+// Update a job
+export const updateJob = (id, data) => API.put(`/jobs/${id}`, data);
 
 // Delete a job
 export const deleteJob = (id) => API.delete(`/jobs/${id}`);
 
-// Apply for a job
-export const applyJob = (jobId) =>
-  API.post(`/applications/${jobId}`);
+// Apply for a job - ensures payload is always { jobId }
+export const applyJob = (payload) => {
+  const data = typeof payload === "object" ? payload : { jobId: payload };
+  return API.post("/applications/apply", data);
+};
 
 // Calculate job matching score
 export const calculateJobMatch = (job, requirements) => {
@@ -68,19 +76,18 @@ export const calculateJobMatch = (job, requirements) => {
 
   const jobSalary = Number(job.salary || 0);
   const requestedSalary = Number(
-    requirements.salary || requirements.budget || 0
+    String(requirements.salary || requirements.wage || requirements.budget || 0).replace(/[^\d.]/g, "")
   );
 
   if (requestedSalary > 0 && jobSalary > 0) {
     total += 1;
 
-    if (jobSalary >= requestedSalary) {
+    if (jobSalary >= requestedSalary * 0.8) {
       score += 1;
     }
   }
 
-  // If no comparable requirements were detected,
-  // return zero instead of inventing a match.
+  // If no comparable requirements were detected, return zero
   if (total === 0) {
     return 0;
   }

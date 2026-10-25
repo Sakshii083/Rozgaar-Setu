@@ -6,11 +6,18 @@ const applicationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Job",
       required: true,
+      index: true,
     },
     worker: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
+    },
+    employer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
     },
     status: {
       type: String,

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { searchWorkers } from "../api/workerDashboardApi";
 import { useLanguage } from "../context/LanguageContext";
-import AIFeatures from "./AIFeatures";
 
 function Hero() {
   const navigate = useNavigate();
@@ -10,10 +9,8 @@ function Hero() {
 
   const [skill, setSkill] = useState("Plumber");
   const [customSkill, setCustomSkill] = useState("");
-
   const [city, setCity] = useState("Pune");
   const [customCity, setCustomCity] = useState("");
-
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -52,19 +49,16 @@ function Hero() {
   };
 
   const handleSearch = async () => {
-    const selectedSkill =
-      skill === "Other" ? customSkill.trim() : skill;
-
-    const selectedCity =
-      city === "Other" ? customCity.trim() : city;
+    const selectedSkill = skill === "Other" ? customSkill.trim() : skill;
+    const selectedCity = city === "Other" ? customCity.trim() : city;
 
     if (!selectedSkill) {
-      alert(t("hero.selectSkillError"));
+      alert(t("hero.selectSkillError") || "Please select or enter a skill.");
       return;
     }
 
     if (!selectedCity) {
-      alert(t("hero.selectCityError"));
+      alert(t("hero.selectCityError") || "Please select or enter a city.");
       return;
     }
 
@@ -72,19 +66,15 @@ function Hero() {
       setLoading(true);
       setSearched(false);
 
-      const response = await searchWorkers(
-        selectedSkill,
-        selectedCity
-      );
-
+      const response = await searchWorkers(selectedSkill, selectedCity);
       setWorkers(response.data.workers || []);
       setSearched(true);
     } catch (error) {
       console.error("Worker search failed:", error);
-
       alert(
         error.response?.data?.message ||
-          t("hero.searchError")
+          t("hero.searchError") ||
+          "Unable to search workers right now."
       );
     } finally {
       setLoading(false);
@@ -94,183 +84,143 @@ function Hero() {
   const selectedSkillIcon =
     skills.find((item) => item.name === skill)?.icon || "✏️";
 
-  const selectedSkillItem = skills.find(
-    (item) => item.name === skill
-  );
-
+  const selectedSkillItem = skills.find((item) => item.name === skill);
   const selectedSkillLabel =
     skill === "Other"
-      ? customSkill || t("hero.yourSkill")
+      ? customSkill || t("hero.yourSkill") || "Other Skill"
       : selectedSkillItem
       ? t(`hero.skills.${selectedSkillItem.key}`)
       : skill;
 
-  const selectedCityItem = cities.find(
-    (item) => item.name === city
-  );
-
+  const selectedCityItem = cities.find((item) => item.name === city);
   const selectedCityLabel =
     city === "Other"
-      ? customCity || t("hero.yourCity")
+      ? customCity || t("hero.yourCity") || "Other City"
       : selectedCityItem
       ? t(`hero.cities.${selectedCityItem.key}`)
       : city;
 
   return (
-    <section className="relative overflow-hidden bg-slate-50 px-4 py-3 md:px-6 md:py-4">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#F7F9FC] to-white px-4 py-8 md:px-8 md:py-14">
+      {/* Subtle decorative circles */}
+      <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-[#0F9D8A]/5 blur-3xl" />
+      <div className="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-[#173B57]/5 blur-3xl" />
 
-      {/* Background */}
-      <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-100 opacity-50 blur-3xl" />
-
-      <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-blue-50 opacity-60 blur-3xl" />
-
-      <div className="relative mx-auto grid max-w-7xl items-start gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-
-        {/* LEFT SIDE */}
-
+      <div className="relative mx-auto grid max-w-7xl items-start gap-8 lg:grid-cols-[1fr_1.1fr] lg:gap-12">
+        {/* LEFT COLUMN: HERO HEADLINE & CTAs */}
         <div>
-
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-1.5 text-xs font-semibold text-blue-700 shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-green-500" />
-            {t("hero.badge")}
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#0F9D8A]/30 bg-[#0F9D8A]/10 px-4 py-1.5 text-xs font-bold text-[#0F9D8A] shadow-xs">
+            <span className="h-2 w-2 rounded-full bg-[#0F9D8A] animate-pulse" />
+            {t("hero.badge") || "Connecting Local Talent with Local Opportunities"}
           </div>
 
-          <h1 className="text-4xl font-black leading-tight tracking-tight text-slate-950 md:text-5xl">
-            {t("hero.title1")}
-
-            <span className="block text-blue-600">
-              {t("hero.title2")}
+          <h1 className="text-4xl font-black leading-tight tracking-tight text-[#173B57] sm:text-5xl lg:text-5xl">
+            Connecting Local Talent with{" "}
+            <span className="text-[#0F9D8A]">
+              Local Opportunities.
             </span>
           </h1>
 
-          <p className="mt-3 max-w-xl text-base leading-6 text-slate-600">
-            {t("hero.description")}
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            Find meaningful work, discover skilled plumbers, electricians, carpenters, painters, and drivers, and connect with verified opportunities in your neighborhood.
           </p>
 
-          <div className="mt-5 flex flex-wrap gap-3">
-
+          <div className="mt-7 flex flex-wrap gap-3">
             <button
               onClick={() => navigate("/jobs")}
-              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-bold text-white shadow-md transition hover:bg-blue-700"
+              className="rounded-xl bg-[#173B57] px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-[#173B57]/20 transition hover:bg-[#0f2638]"
             >
-              {t("hero.findJobs")}
+              💼 {t("hero.findJobs") || "Find Jobs →"}
             </button>
 
             <button
               onClick={() => navigate("/workers")}
-              className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-800 shadow-sm transition hover:border-blue-300 hover:text-blue-600"
+              className="rounded-xl border-2 border-[#0F9D8A] bg-white px-6 py-3.5 text-sm font-bold text-[#0F9D8A] shadow-xs transition hover:bg-[#0F9D8A] hover:text-white"
             >
-              {t("hero.findWorkers")}
+              👷 {t("hero.findWorkers") || "Find Workers"}
             </button>
 
-          </div>
-          <div className="mt-4">
-              <AIFeatures compact />
-          </div>
-
-          <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
-            <span>
-              ✓ {t("hero.skillBased")}
-            </span>
-
-            <span>
-              ✓ {t("hero.localOpportunities")}
-            </span>
-
-            <span>
-              ✓ {t("hero.simpleHiring")}
-            </span>
+            <a
+              href="#sathi"
+              className="rounded-xl bg-[#F4B942] px-6 py-3.5 text-sm font-bold text-[#202938] shadow-md transition hover:bg-[#dca029]"
+            >
+              🤖 Try Rozgaar Saathi
+            </a>
           </div>
 
+          {/* Quick value badges */}
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-slate-500">
+            <span className="flex items-center gap-1.5">
+              <span className="text-[#0F9D8A]">✓</span> Verified Skills
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="text-[#0F9D8A]">✓</span> Zero Middleman Cut
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="text-[#0F9D8A]">✓</span> Multilingual Voice Tools
+            </span>
+          </div>
         </div>
 
-        {/* RIGHT SEARCH PANEL */}
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg">
-
-          {/* HEADER */}
-
-          <div className="flex items-center justify-between">
-
+        {/* RIGHT COLUMN: INTERACTIVE LOCAL WORKER SEARCH PANEL */}
+        <div className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-xl lg:p-7">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
-
-              <h2 className="text-xl font-bold text-slate-900">
-                {t("hero.searchTitle")}
+              <h2 className="text-lg font-black text-[#173B57] sm:text-xl">
+                {t("hero.searchTitle") || "Find skilled workers near you"}
               </h2>
-
               <p className="mt-0.5 text-xs text-slate-500">
-                {t("hero.searchDescription")}
+                Choose a trade and city to discover available workers.
               </p>
-
             </div>
 
             <div className="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-bold text-green-700">
-              ● {t("hero.live")}
+              ● Live Database
             </div>
-
           </div>
 
-          {/* SKILLS */}
-
-          <div className="mt-4">
-
+          {/* SKILL SELECTOR */}
+          <div className="mt-5">
             <div className="mb-2 flex items-center justify-between">
-
-              <label className="text-xs font-bold text-slate-800">
-                {t("hero.skillQuestion")}
+              <label className="text-xs font-bold uppercase tracking-wider text-[#173B57]">
+                {t("hero.skillQuestion") || "What skill do you need?"}
               </label>
-
-              <span className="text-[10px] text-slate-400">
-                {t("hero.selectOne")}
+              <span className="text-[10px] font-medium text-slate-400">
+                Select one
               </span>
-
             </div>
 
             <div className="grid grid-cols-4 gap-2">
-
               {skills.map((item) => {
-
                 const selected = skill === item.name;
-
                 return (
                   <button
                     key={item.name}
                     type="button"
-                    onClick={() =>
-                      handleSkillSelect(item.name)
-                    }
+                    onClick={() => handleSkillSelect(item.name)}
                     className={`rounded-xl border p-2 text-left transition ${
                       selected
-                        ? "border-blue-500 bg-blue-50 ring-1 ring-blue-100"
-                        : "border-slate-200 hover:border-blue-300 hover:bg-blue-50/50"
+                        ? "border-[#0F9D8A] bg-[#0F9D8A]/10 ring-1 ring-[#0F9D8A]"
+                        : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
                     }`}
                   >
-
                     <div
                       className={`mb-1 flex h-7 w-7 items-center justify-center rounded-lg text-sm ${
-                        selected
-                          ? "bg-blue-600"
-                          : "bg-slate-100"
+                        selected ? "bg-[#0F9D8A] text-white" : "bg-slate-100"
                       }`}
                     >
                       {item.icon}
                     </div>
-
                     <p
                       className={`truncate text-[11px] font-bold ${
-                        selected
-                          ? "text-blue-700"
-                          : "text-slate-700"
+                        selected ? "text-[#0F9D8A]" : "text-slate-700"
                       }`}
                     >
-                      {t(`hero.skills.${item.key}`)}
+                      {t(`hero.skills.${item.key}`) || item.name}
                     </p>
-
                   </button>
                 );
               })}
-
-              {/* OTHER */}
 
               <button
                 type="button"
@@ -281,27 +231,21 @@ function Hero() {
                 }}
                 className={`rounded-xl border p-2 text-left transition ${
                   skill === "Other"
-                    ? "border-blue-500 bg-blue-50 ring-1 ring-blue-100"
-                    : "border-slate-200 hover:border-blue-300 hover:bg-blue-50/50"
+                    ? "border-[#0F9D8A] bg-[#0F9D8A]/10 ring-1 ring-[#0F9D8A]"
+                    : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
                 }`}
               >
-
                 <div
                   className={`mb-1 flex h-7 w-7 items-center justify-center rounded-lg text-sm ${
-                    skill === "Other"
-                      ? "bg-blue-600"
-                      : "bg-slate-100"
+                    skill === "Other" ? "bg-[#0F9D8A] text-white" : "bg-slate-100"
                   }`}
                 >
                   ✏️
                 </div>
-
                 <p className="text-[11px] font-bold text-slate-700">
-                  {t("hero.other")}
+                  {t("hero.other") || "Other"}
                 </p>
-
               </button>
-
             </div>
 
             {skill === "Other" && (
@@ -312,50 +256,38 @@ function Hero() {
                   setCustomSkill(e.target.value);
                   setSearched(false);
                 }}
-                placeholder={t("hero.enterSkill")}
-                className="mt-2 w-full rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm outline-none focus:border-blue-500"
+                placeholder={t("hero.enterSkill") || "Enter the trade/skill you need..."}
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
               />
             )}
-
           </div>
 
-          {/* CITY */}
-
+          {/* CITY SELECTOR */}
           <div className="mt-4">
-
             <div className="mb-2 flex items-center justify-between">
-
-              <label className="text-xs font-bold text-slate-800">
-                {t("hero.locationQuestion")}
+              <label className="text-xs font-bold uppercase tracking-wider text-[#173B57]">
+                {t("hero.locationQuestion") || "Where do you need them?"}
               </label>
-
-              <span className="text-[10px] text-slate-400">
-                {t("hero.selectCity")}
+              <span className="text-[10px] font-medium text-slate-400">
+                City / Location
               </span>
-
             </div>
 
-            <div className="flex flex-wrap gap-2">
-
+            <div className="flex flex-wrap gap-1.5">
               {cities.map((item) => {
-
                 const selected = city === item.name;
-
                 return (
                   <button
                     key={item.name}
                     type="button"
-                    onClick={() =>
-                      handleCitySelect(item.name)
-                    }
+                    onClick={() => handleCitySelect(item.name)}
                     className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                       selected
-                        ? "border-blue-600 bg-blue-600 text-white"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50"
+                        ? "border-[#173B57] bg-[#173B57] text-white font-bold"
+                        : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                     }`}
                   >
-                    {item.icon}{" "}
-                    {t(`hero.cities.${item.key}`)}
+                    {item.icon} {t(`hero.cities.${item.key}`) || item.name}
                   </button>
                 );
               })}
@@ -369,13 +301,12 @@ function Hero() {
                 }}
                 className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                   city === "Other"
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50"
+                    ? "border-[#173B57] bg-[#173B57] text-white"
+                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50"
                 }`}
               >
-                ✏️ {t("hero.other")}
+                ✏️ {t("hero.other") || "Other"}
               </button>
-
             </div>
 
             {city === "Other" && (
@@ -386,255 +317,118 @@ function Hero() {
                   setCustomCity(e.target.value);
                   setSearched(false);
                 }}
-                placeholder={t("hero.enterCity")}
-                className="mt-2 w-full rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-sm outline-none focus:border-blue-500"
+                placeholder={t("hero.enterCity") || "Enter your city..."}
+                className="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
               />
             )}
-
           </div>
 
-          {/* SELECTED SUMMARY */}
-
-          <div className="mt-4 flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2.5">
-
+          {/* SEARCH SUMMARY & ACTION */}
+          <div className="mt-5 flex items-center justify-between rounded-xl bg-[#F7F9FC] px-3.5 py-2.5 text-xs">
             <div>
-
-              <p className="text-[10px] text-slate-400">
-                {t("hero.lookingFor")}
+              <p className="text-[10px] font-semibold text-slate-400">SEARCHING FOR</p>
+              <p className="font-bold text-[#173B57]">
+                {selectedSkillIcon} {selectedSkillLabel} • 📍 {selectedCityLabel}
               </p>
-
-              <p className="text-sm font-bold text-slate-900">
-                {selectedSkillIcon}{" "}
-                {selectedSkillLabel}
-
-                <span className="mx-1 text-slate-300">
-                  •
-                </span>
-
-                📍 {selectedCityLabel}
-              </p>
-
             </div>
-
-            <span className="text-[10px] font-semibold text-slate-400">
-              {t("hero.realWorkers")}
-            </span>
-
+            <span className="font-semibold text-[#0F9D8A]">Verified Database</span>
           </div>
-
-          {/* SEARCH BUTTON */}
 
           <button
             onClick={handleSearch}
             disabled={loading}
-            className="mt-3 w-full rounded-lg bg-blue-600 py-3 text-sm font-bold text-white shadow-md transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-3 w-full rounded-xl bg-[#0F9D8A] py-3 text-sm font-bold text-white shadow-md shadow-[#0F9D8A]/20 transition hover:bg-[#0b7c6d] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading
-              ? t("hero.findingMatches")
-              : `🔎 ${t("hero.searchWorkers")}`}
+            {loading ? "Searching Local Workers..." : `🔍 Search ${selectedSkillLabel}s in ${selectedCityLabel}`}
           </button>
 
-          {/* RESULTS */}
-
+          {/* WORKER SEARCH RESULTS */}
           {searched && (
-            <div className="mt-4">
-
-              {/* NO WORKERS */}
-
+            <div className="mt-5 border-t border-slate-100 pt-4">
               {workers.length === 0 ? (
-
                 <div className="rounded-xl bg-slate-50 p-4 text-center">
-
-                  <div className="text-xl">
-                    🔍
-                  </div>
-
-                  <p className="mt-1 text-sm font-semibold text-slate-700">
-                    {t("hero.noWorkers")}
+                  <div className="text-2xl">🔍</div>
+                  <p className="mt-1 text-xs font-bold text-slate-700">
+                    {t("hero.noWorkers") || "No workers found for this exact criteria"}
                   </p>
-
-                  <p className="text-xs text-slate-500">
-                    {t("hero.tryAnother")}
+                  <p className="text-[11px] text-slate-500">
+                    Try searching nearby cities or browse all workers in the directory.
                   </p>
-
+                  <button
+                    onClick={() => navigate("/workers")}
+                    className="mt-3 rounded-lg bg-[#173B57] px-3 py-1.5 text-xs font-bold text-white"
+                  >
+                    View All Registered Workers
+                  </button>
                 </div>
-
               ) : (
-
                 <div>
-
-                  {/* RESULT HEADER */}
-
                   <div className="mb-2 flex items-center justify-between">
-
-                    <p className="text-sm font-bold text-slate-900">
-                      {workers.length}{" "}
-                      {t("hero.workersFound")}
+                    <p className="text-xs font-bold text-[#173B57]">
+                      {workers.length} {t("hero.workersFound") || "Workers Found"}
                     </p>
-
-                    <span className="rounded-full bg-green-100 px-2 py-1 text-[10px] font-bold text-green-700">
-                      ● {t("hero.live")}
-                    </span>
-
+                    <span className="text-[10px] font-bold text-green-700">● Available</span>
                   </div>
 
-                  {/* WORKER CARDS */}
-
-                  <div className="space-y-3">
-
-                    {workers.slice(0, 2).map((worker) => (
-
+                  <div className="space-y-2.5">
+                    {workers.slice(0, 2).map((w) => (
                       <div
-                        key={worker._id}
-                        className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+                        key={w._id}
+                        className="rounded-xl border border-slate-200 bg-[#F7F9FC] p-3 text-xs"
                       >
-
-                        {/* WORKER HEADER */}
-
-                        <div className="flex items-start justify-between gap-3">
-
-                          <div className="min-w-0">
-
-                            <h3 className="text-base font-bold text-slate-900">
-                              👤 {worker.fullName || "Worker"}
-                            </h3>
-
-                            <p className="text-xs font-semibold text-blue-600">
-                              🛠️ {worker.skill || "N/A"}
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-bold text-slate-900">
+                              👤 {w.fullName || "Worker"}
+                            </h4>
+                            <p className="font-semibold text-[#0F9D8A]">
+                              🛠️ {w.skill}
                             </p>
-
-                            <p className="text-[11px] text-slate-500">
-                              📍{" "}
-                              {worker.area || "N/A"},{" "}
-                              {worker.city || "N/A"}
+                            <p className="text-slate-500 text-[11px]">
+                              📍 {w.area ? `${w.area}, ` : ""}{w.city}
                             </p>
-
                           </div>
-
-                          <span
-                            className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-bold ${
-                              worker.availability ===
-                              "Available Today"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-yellow-100 text-yellow-700"
-                            }`}
-                          >
-                            {worker.availability ||
-                              "N/A"}
+                          <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-800">
+                            ₹{w.wage || "N/A"}/day
                           </span>
-
                         </div>
 
-                        {/* WORKER DETAILS */}
-
-                        <div className="mt-3 grid grid-cols-2 gap-3 border-t border-slate-200 pt-3">
-
-                          <div>
-                            <p className="text-[10px] text-slate-400">
-                              Experience
-                            </p>
-
-                            <p className="text-xs font-semibold text-slate-700">
-                              {worker.experience ||
-                                "N/A"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-[10px] text-slate-400">
-                              Expected Wage
-                            </p>
-
-                            <p className="text-xs font-semibold text-green-700">
-                              ₹{worker.wage || "N/A"}/day
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-[10px] text-slate-400">
-                              Phone
-                            </p>
-
-                            <p className="truncate text-xs font-semibold text-slate-700">
-                              {worker.phone ||
-                                "Not Available"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <p className="text-[10px] text-slate-400">
-                              Email
-                            </p>
-
-                            <p className="truncate text-xs font-semibold text-slate-700">
-                              {worker.email ||
-                                "Not Available"}
-                            </p>
-                          </div>
-
-                        </div>
-
-                        {/* CONTACT BUTTONS */}
-
-                        {worker.phone && (
-
-                          <div className="mt-3 flex gap-2">
-
+                        {w.phone && (
+                          <div className="mt-2 flex gap-2 pt-2 border-t border-slate-200">
                             <a
-                              href={`tel:${worker.phone}`}
-                              className="flex-1 rounded-lg bg-green-600 px-3 py-2 text-center text-xs font-bold text-white transition hover:bg-green-700"
+                              href={`tel:${w.phone}`}
+                              className="flex-1 rounded-lg bg-[#0F9D8A] py-1 text-center text-[11px] font-bold text-white transition hover:bg-[#0b7c6d]"
                             >
                               📞 Call
                             </a>
-
                             <a
-                              href={`https://wa.me/91${String(
-                                worker.phone
-                              ).replace(
-                                /\D/g,
-                                ""
-                              )}`}
+                              href={`https://wa.me/91${String(w.phone).replace(/\D/g, "")}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex-1 rounded-lg bg-green-500 px-3 py-2 text-center text-xs font-bold text-white transition hover:bg-green-600"
+                              className="flex-1 rounded-lg bg-emerald-500 py-1 text-center text-[11px] font-bold text-white transition hover:bg-emerald-600"
                             >
                               💬 WhatsApp
                             </a>
-
                           </div>
-
                         )}
-
                       </div>
-
                     ))}
-
                   </div>
 
-                  {/* VIEW ALL */}
-
                   {workers.length > 2 && (
-
                     <button
                       onClick={() => navigate("/workers")}
-                      className="mt-3 w-full rounded-lg border border-blue-200 py-2 text-xs font-semibold text-blue-600 transition hover:bg-blue-50"
+                      className="mt-3 w-full rounded-xl border border-[#0F9D8A] py-2 text-xs font-bold text-[#0F9D8A] hover:bg-[#0F9D8A]/5 transition"
                     >
-                      {t("hero.viewAll")} ({workers.length})
+                      {t("hero.viewAll") || "View all workers"} ({workers.length}) →
                     </button>
-
                   )}
-
                 </div>
-
               )}
-
             </div>
           )}
-
         </div>
-
       </div>
-
     </section>
   );
 }

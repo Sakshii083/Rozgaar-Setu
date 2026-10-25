@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import API from "../api/axios";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import { useLanguage } from "../context/LanguageContext";
 
 const LANGUAGES = [
   { code: "en", label: "English", speechCode: "en-IN" },
@@ -19,6 +23,7 @@ const createEmptyProfile = () => ({
 });
 
 export default function VoiceProfileAssistant() {
+  const { t } = useLanguage();
   const [language, setLanguage] = useState("en");
   const [transcript, setTranscript] = useState("");
   const [profile, setProfile] = useState(createEmptyProfile);
@@ -32,7 +37,7 @@ export default function VoiceProfileAssistant() {
 
   const selectedLanguage = LANGUAGES.find(
     (item) => item.code === language
-  );
+  ) || LANGUAGES[0];
 
   useEffect(() => {
     return () => {
@@ -55,8 +60,7 @@ export default function VoiceProfileAssistant() {
 
     if (!SpeechRecognition) {
       setError(
-        "Speech recognition is not supported by this browser. " +
-          "Please try a supported browser or type your description."
+        "Speech recognition is not supported by your current browser. You can type your work details directly into the text box below."
       );
       return;
     }
@@ -68,7 +72,6 @@ export default function VoiceProfileAssistant() {
     }
 
     const recognition = new SpeechRecognition();
-
     recognition.lang = selectedLanguage.speechCode;
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -78,62 +81,50 @@ export default function VoiceProfileAssistant() {
     recognition.onstart = () => {
       setListening(true);
       setStatus(
-        `Listening in ${selectedLanguage.label}. Speak naturally about your work.`
+        `Listening in ${selectedLanguage.label}. Speak naturally about your trade, experience, and service locations.`
       );
     };
 
     recognition.onresult = (event) => {
       let interimTranscript = "";
 
-      for (
-        let i = event.resultIndex;
-        i < event.results.length;
-        i++
-      ) {
+      for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
-
         if (result.isFinal) {
           finalTranscript +=
-            (finalTranscript ? " " : "") +
-            result[0].transcript.trim();
+            (finalTranscript ? " " : "") + result[0].transcript.trim();
         } else {
           interimTranscript += result[0].transcript;
         }
       }
 
       setTranscript(
-        [finalTranscript, interimTranscript.trim()]
-          .filter(Boolean)
-          .join(" ")
+        [finalTranscript, interimTranscript.trim()].filter(Boolean).join(" ")
       );
     };
 
     recognition.onerror = (event) => {
       setListening(false);
-
       if (event.error === "not-allowed") {
         setError(
-          "Microphone access was denied. Allow microphone access in your browser settings."
+          "Microphone access was denied. Please allow microphone permissions in your browser or type your description."
         );
       } else if (event.error === "language-not-supported") {
         setError(
-          `Speech recognition for ${selectedLanguage.label} is not supported by this browser or device. You can type your description instead.`
+          `Speech recognition for ${selectedLanguage.label} is not available on this device. You can type your description directly.`
         );
       } else if (event.error !== "no-speech" && event.error !== "aborted") {
         setError(
-          `Speech recognition error: ${event.error}. You can type your description instead.`
+          `Voice recognition error (${event.error}). Please type your description.`
         );
       }
     };
 
     recognition.onend = () => {
       setListening(false);
-
-      setStatus((previous) =>
-        previous ||
-        "Recording stopped. Review your transcript before generating."
+      setStatus((prev) =>
+        prev || "Recording stopped. Review your statement before generating profile."
       );
-
       if (window.profileRecognition === recognition) {
         window.profileRecognition = null;
       }
@@ -146,9 +137,7 @@ export default function VoiceProfileAssistant() {
     } catch (err) {
       window.profileRecognition = null;
       setListening(false);
-      setError(
-        "Could not start voice recording. Please try again or type your description."
-      );
+      setError("Could not activate microphone. Please type your work description.");
     }
   };
 
@@ -157,16 +146,13 @@ export default function VoiceProfileAssistant() {
     if (window.profileRecognition) {
       window.profileRecognition.stop();
     }
-
     setListening(false);
   };
 
-  // Generate structured profile using the backend Gemini endpoint
+  // Generate structured profile
   const generateProfile = async () => {
     if (!transcript.trim()) {
-      setError(
-        "Please speak or type a description of your work first."
-      );
+      setError("Please speak or type a description of your work first.");
       return;
     }
 
@@ -181,7 +167,6 @@ export default function VoiceProfileAssistant() {
       });
 
       const data = response.data.profile || response.data;
-
       const experience =
         data.experienceYears === null ||
         data.experienceYears === undefined ||
@@ -189,75 +174,45 @@ export default function VoiceProfileAssistant() {
           ? ""
           : Number(data.experienceYears);
 
-      if (
-        !Number.isFinite(experience === "" ? 0 : experience) ||
-        (experience !== "" &&
-          (experience < 0 || experience > 80))
-      ) {
-        throw new Error(
-          "The AI returned an invalid experience value. Please try generating the profile again."
-        );
-      }
-
       setProfile({
-        primarySkill:
-          typeof data.primarySkill === "string"
-            ? data.primarySkill
-            : "",
+        primarySkill: typeof data.primarySkill === "string" ? data.primarySkill : "",
         skills: Array.isArray(data.skills)
-          ? data.skills.filter(
-              (item) => typeof item === "string"
-            )
+          ? data.skills.filter((item) => typeof item === "string")
           : [],
-        experienceYears: experience,
-        city:
-          typeof data.city === "string" ? data.city : "",
+        experienceYears: Number.isFinite(experience) ? experience : "",
+        city: typeof data.city === "string" ? data.city : "",
         serviceAreas: Array.isArray(data.serviceAreas)
-          ? data.serviceAreas.filter(
-              (item) => typeof item === "string"
-            )
+          ? data.serviceAreas.filter((item) => typeof item === "string")
           : [],
-        profileSummary:
-          typeof data.profileSummary === "string"
-            ? data.profileSummary
-            : "",
+        profileSummary: typeof data.profileSummary === "string" ? data.profileSummary : "",
       });
 
       setMissingInformation(
         Array.isArray(data.missingInformation)
-          ? data.missingInformation.filter(
-              (item) => typeof item === "string"
-            )
+          ? data.missingInformation.filter((item) => typeof item === "string")
           : []
       );
 
       setGenerated(true);
-
-      setStatus(
-        "Profile generated! Review the details and correct any mistakes before saving."
-      );
+      setStatus("Profile generated! Review and edit the details below, then click Confirm & Save.");
     } catch (err) {
       console.error("Profile generation error:", err);
-
       setError(
         err.response?.data?.message ||
-          err.message ||
-          "Could not generate your profile. Check your login, connection, and backend AI configuration."
+          "Could not generate profile. Please ensure you are logged in and your network is active."
       );
     } finally {
       setGenerating(false);
     }
   };
 
-  // Update an individual profile field
   const updateField = (field, value) => {
-    setProfile((previous) => ({
-      ...previous,
+    setProfile((prev) => ({
+      ...prev,
       [field]: value,
     }));
   };
 
-  // Convert comma-separated input into an array
   const updateList = (field, value) => {
     updateField(
       field,
@@ -268,10 +223,10 @@ export default function VoiceProfileAssistant() {
     );
   };
 
-  // Save worker-confirmed profile
+  // Save confirmed profile
   const saveProfile = async () => {
     if (!profile.primarySkill.trim()) {
-      setError("Please enter your main skill before saving.");
+      setError("Please enter your main trade or skill before saving.");
       return;
     }
 
@@ -281,30 +236,6 @@ export default function VoiceProfileAssistant() {
       profile.experienceYears === undefined
         ? null
         : Number(profile.experienceYears);
-
-    if (
-      experience !== null &&
-      (!Number.isFinite(experience) ||
-        experience < 0 ||
-        experience > 80)
-    ) {
-      setError(
-        "Please enter a valid experience between 0 and 80 years."
-      );
-      return;
-    }
-
-    if (
-      profile.skills.some(
-        (skill) => typeof skill !== "string"
-      ) ||
-      profile.serviceAreas.some(
-        (area) => typeof area !== "string"
-      )
-    ) {
-      setError("Please check your skills and service areas.");
-      return;
-    }
 
     setSaving(true);
     setError("");
@@ -317,22 +248,18 @@ export default function VoiceProfileAssistant() {
         preferredLanguage: language,
       });
 
-      setStatus(
-        "Your profile has been saved successfully! Your confirmed details are now stored in your account."
-      );
+      setStatus("✅ Your profile has been successfully saved to your worker account!");
     } catch (err) {
       console.error("Profile saving error:", err);
-
       setError(
         err.response?.data?.message ||
-          "Could not save your profile. Please log in and try again."
+          "Could not save profile. Please make sure you are logged into a worker account."
       );
     } finally {
       setSaving(false);
     }
   };
 
-  // Reset the form
   const resetForm = () => {
     setTranscript("");
     setProfile(createEmptyProfile());
@@ -343,347 +270,260 @@ export default function VoiceProfileAssistant() {
   };
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-      <div className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-lg">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-700 to-indigo-700 px-6 py-7 text-white sm:px-8">
-          <div className="mb-3 inline-flex rounded-full bg-white/15 px-3 py-1 text-sm">
-            AI-Powered Worker Assistant
-          </div>
+    <div className="min-h-screen bg-[#F7F9FC]">
+      <Navbar />
 
-          <h1 className="text-2xl font-bold sm:text-3xl">
-            Vaani — Rozgaar Saathi
-          </h1>
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+        <div className="overflow-hidden rounded-3xl border border-[#E2E8F0] bg-white shadow-xl">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-[#173B57] via-[#1c4769] to-[#0F9D8A] px-6 py-8 text-white sm:px-10">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3.5 py-1 text-xs font-semibold text-[#F4B942]">
+              <span>🎙️</span>
+              <span>Vaani AI — Vernacular Assistant</span>
+            </div>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-blue-100 sm:text-base">
-            Speak in your preferred language. AI helps organize
-            your work experience into a professional profile
-            that you can review and save.
-          </p>
-        </div>
+            <h1 className="mt-3 text-2xl font-black sm:text-3xl">
+              Create Your Worker Profile with Your Voice
+            </h1>
 
-        <div className="space-y-6 p-5 sm:p-8">
-          {/* Language selection */}
-          <div>
-            <label
-              htmlFor="profile-language"
-              className="mb-2 block text-sm font-semibold text-gray-800"
-            >
-              Choose your language
-            </label>
-
-            <select
-              id="profile-language"
-              value={language}
-              onChange={(event) => {
-                setLanguage(event.target.value);
-                setStatus("");
-                setError("");
-              }}
-              disabled={listening || generating || saving}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-            >
-              {LANGUAGES.map((item) => (
-                <option key={item.code} value={item.code}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-
-            <p className="mt-2 text-xs text-gray-500">
-              Speech recognition availability depends on your
-              browser, device, and selected language.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-200">
+              Speak naturally in your mother tongue. Vaani AI structures your experience into a professional employment profile for employers to discover you.
             </p>
           </div>
 
-          {/* Voice transcript */}
-          <div>
-            <label
-              htmlFor="work-description"
-              className="mb-2 block text-sm font-semibold text-gray-800"
-            >
-              Tell us about your work
-            </label>
+          <div className="space-y-6 p-6 sm:p-10">
+            {/* Language Selection */}
+            <div>
+              <label htmlFor="profile-language" className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#173B57]">
+                Choose your spoken language
+              </label>
 
-            <textarea
-              id="work-description"
-              value={transcript}
-              onChange={(event) => setTranscript(event.target.value)}
-              placeholder="Example: I am a plumber with 8 years of experience. I work on residential plumbing, concealed piping and sanitary fittings in Mysuru."
-              rows={5}
-              disabled={generating || saving}
-              className="w-full resize-y rounded-lg border border-gray-300 p-4 leading-6 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-            />
+              <select
+                id="profile-language"
+                value={language}
+                onChange={(e) => {
+                  setLanguage(e.target.value);
+                  setStatus("");
+                  setError("");
+                }}
+                disabled={listening || generating || saving}
+                className="w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] px-4 py-3 text-sm font-semibold text-[#202938] outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+              >
+                {LANGUAGES.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <p className="mt-2 text-xs text-gray-500">
-              Mention your skills, experience, city, and service
-              areas. Review the transcription for mistakes.
-            </p>
-          </div>
+            {/* Spoken / Typed Description */}
+            <div>
+              <label htmlFor="work-description" className="mb-2 block text-xs font-bold uppercase tracking-wider text-[#173B57]">
+                Describe your work & experience
+              </label>
 
-          {/* Recording and generation buttons */}
-          <div className="flex flex-col gap-3 sm:flex-row">
-            {!listening ? (
-              <button
-                type="button"
-                onClick={startRecording}
+              <textarea
+                id="work-description"
+                value={transcript}
+                onChange={(e) => setTranscript(e.target.value)}
+                placeholder="Example: I am a plumber with 6 years of experience. I do residential piping, leak repairs, and bathroom fitting in Pune and nearby areas."
+                rows={5}
                 disabled={generating || saving}
-                className="flex-1 rounded-lg border border-blue-600 px-5 py-3 font-semibold text-blue-700 transition hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                🎙️ Speak About My Work
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={stopRecording}
-                className="flex-1 rounded-lg bg-red-600 px-5 py-3 font-semibold text-white transition hover:bg-red-700"
-              >
-                ⏹ Stop Recording
-              </button>
-            )}
+                className="w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-4 text-sm text-[#202938] outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+              />
 
-            <button
-              type="button"
-              onClick={generateProfile}
-              disabled={
-                !transcript.trim() ||
-                generating ||
-                listening ||
-                saving
-              }
-              className="flex-1 rounded-lg bg-blue-700 px-5 py-3 font-semibold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {generating
-                ? "Generating Profile..."
-                : "✨ Generate My Profile"}
-            </button>
-          </div>
-
-          {/* Status */}
-          {status && (
-            <div
-              role="status"
-              className="rounded-lg border border-green-200 bg-green-50 p-4 text-sm leading-6 text-green-800"
-            >
-              {status}
-            </div>
-          )}
-
-          {/* Error */}
-          {error && (
-            <div
-              role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700"
-            >
-              {error}
-            </div>
-          )}
-
-          {/* Generated profile */}
-          {generated && (
-            <div className="space-y-5 border-t border-gray-200 pt-6">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">
-                  Review Your AI-Generated Profile
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-600">
-                  AI-generated details may contain mistakes.
-                  Correct them before saving.
-                </p>
-              </div>
-
-              {/* Missing information */}
-              {missingInformation.length > 0 && (
-                <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-                  <h3 className="font-semibold text-amber-900">
-                    Information to confirm
-                  </h3>
-
-                  <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-amber-800">
-                    {missingInformation.map((item, index) => (
-                      <li key={`${item}-${index}`}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Primary skill */}
-              <div>
-                <label
-                  htmlFor="primary-skill"
-                  className="mb-2 block text-sm font-semibold text-gray-800"
-                >
-                  Main Skill *
-                </label>
-
-                <input
-                  id="primary-skill"
-                  value={profile.primarySkill}
-                  onChange={(event) =>
-                    updateField("primarySkill", event.target.value)
-                  }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-                  placeholder="e.g. Plumber"
-                />
-              </div>
-
-              {/* Additional skills */}
-              <div>
-                <label
-                  htmlFor="skills"
-                  className="mb-2 block text-sm font-semibold text-gray-800"
-                >
-                  Additional Skills
-                </label>
-
-                <input
-                  id="skills"
-                  value={profile.skills.join(", ")}
-                  onChange={(event) =>
-                    updateList("skills", event.target.value)
-                  }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-                  placeholder="Concealed piping, sanitary fittings"
-                />
-
-                <p className="mt-1 text-xs text-gray-500">
-                  Separate skills with commas.
-                </p>
-              </div>
-
-              {/* Experience */}
-              <div>
-                <label
-                  htmlFor="experience"
-                  className="mb-2 block text-sm font-semibold text-gray-800"
-                >
-                  Years of Experience
-                </label>
-
-                <input
-                  id="experience"
-                  type="number"
-                  min="0"
-                  max="80"
-                  step="0.5"
-                  value={profile.experienceYears}
-                  onChange={(event) =>
-                    updateField(
-                      "experienceYears",
-                      event.target.value
-                    )
-                  }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-                  placeholder="Leave blank if unknown"
-                />
-
-                <p className="mt-1 text-xs text-gray-500">
-                  Leave blank if you haven't provided this information.
-                </p>
-              </div>
-
-              {/* City */}
-              <div>
-                <label
-                  htmlFor="city"
-                  className="mb-2 block text-sm font-semibold text-gray-800"
-                >
-                  City
-                </label>
-
-                <input
-                  id="city"
-                  value={profile.city}
-                  onChange={(event) =>
-                    updateField("city", event.target.value)
-                  }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-                  placeholder="e.g. Mysuru"
-                />
-              </div>
-
-              {/* Service areas */}
-              <div>
-                <label
-                  htmlFor="service-areas"
-                  className="mb-2 block text-sm font-semibold text-gray-800"
-                >
-                  Service Areas
-                </label>
-
-                <input
-                  id="service-areas"
-                  value={profile.serviceAreas.join(", ")}
-                  onChange={(event) =>
-                    updateList("serviceAreas", event.target.value)
-                  }
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none"
-                  placeholder="e.g. Gokulam, Vijayanagar, Hebbal"
-                />
-
-                <p className="mt-1 text-xs text-gray-500">
-                  Enter only areas where you actually provide services.
-                </p>
-              </div>
-
-              {/* Professional summary */}
-              <div>
-                <label
-                  htmlFor="profile-summary"
-                  className="mb-2 block text-sm font-semibold text-gray-800"
-                >
-                  Professional Summary
-                </label>
-
-                <textarea
-                  id="profile-summary"
-                  rows={5}
-                  value={profile.profileSummary}
-                  onChange={(event) =>
-                    updateField(
-                      "profileSummary",
-                      event.target.value
-                    )
-                  }
-                  className="w-full rounded-lg border border-gray-300 p-4 leading-6 focus:border-blue-500 focus:outline-none"
-                  placeholder="Your professional summary will appear here."
-                />
-              </div>
-
-              {/* Save and reset */}
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="button"
-                  onClick={saveProfile}
-                  disabled={saving || generating}
-                  className="flex-1 rounded-lg bg-green-600 px-5 py-3 font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {saving
-                    ? "Saving Profile..."
-                    : "💾 Confirm & Save Profile"}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  disabled={saving || generating || listening}
-                  className="rounded-lg border border-gray-300 px-5 py-3 font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
-                >
-                  Start Again
-                </button>
-              </div>
-
-              <p className="text-xs leading-5 text-gray-500">
-                Your profile is saved only after you select Confirm
-                & Save Profile. AI-generated information is not
-                independent verification of identity, qualifications,
-                or service locations.
+              <p className="mt-2 text-xs text-slate-500">
+                You can tap "Speak About My Work" below to dictate with your microphone, or type directly into the box.
               </p>
             </div>
-          )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3 sm:flex-row">
+              {!listening ? (
+                <button
+                  type="button"
+                  onClick={startRecording}
+                  disabled={generating || saving}
+                  className="flex-1 rounded-xl border-2 border-[#0F9D8A] bg-[#0F9D8A]/10 px-5 py-3 text-sm font-bold text-[#0F9D8A] transition hover:bg-[#0F9D8A] hover:text-white disabled:opacity-50"
+                >
+                  🎙️ Speak About My Work
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={stopRecording}
+                  className="flex-1 animate-pulse rounded-xl bg-red-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-red-700"
+                >
+                  ⏹ Stop Recording
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={generateProfile}
+                disabled={!transcript.trim() || generating || listening || saving}
+                className="flex-1 rounded-xl bg-[#173B57] px-5 py-3 text-sm font-bold text-white shadow-md transition hover:bg-[#0f2638] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {generating ? "Generating Profile with AI..." : "✨ Generate My Profile"}
+              </button>
+            </div>
+
+            {/* Status & Error Alerts */}
+            {status && (
+              <div role="status" className="rounded-xl border border-green-200 bg-green-50 p-4 text-xs font-semibold text-green-800">
+                {status}
+              </div>
+            )}
+
+            {error && (
+              <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-xs font-semibold text-red-700">
+                ⚠️ {error}
+              </div>
+            )}
+
+            {/* Review & Edit AI Generated Profile */}
+            {generated && (
+              <div className="space-y-5 border-t border-[#E2E8F0] pt-6">
+                <div>
+                  <h2 className="text-lg font-bold text-[#173B57]">
+                    Review Your Profile Details
+                  </h2>
+                  <p className="mt-1 text-xs text-slate-500">
+                    Verify and edit the details extracted by AI before saving to your account.
+                  </p>
+                </div>
+
+                {missingInformation.length > 0 && (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-amber-900">
+                      Suggested details to fill in:
+                    </h3>
+                    <ul className="mt-2 list-inside list-disc text-xs text-amber-800 space-y-1">
+                      {missingInformation.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Primary Skill */}
+                <div>
+                  <label htmlFor="primary-skill" className="mb-1 block text-xs font-bold text-slate-700">
+                    Main Occupation / Skill *
+                  </label>
+                  <input
+                    id="primary-skill"
+                    value={profile.primarySkill}
+                    onChange={(e) => updateField("primarySkill", e.target.value)}
+                    className="w-full rounded-xl border border-[#E2E8F0] p-3 text-sm outline-none focus:border-[#0F9D8A]"
+                    placeholder="e.g. Plumber, Electrician, Carpenter"
+                  />
+                </div>
+
+                {/* Additional Skills */}
+                <div>
+                  <label htmlFor="skills" className="mb-1 block text-xs font-bold text-slate-700">
+                    Specific Skills (comma separated)
+                  </label>
+                  <input
+                    id="skills"
+                    value={profile.skills.join(", ")}
+                    onChange={(e) => updateList("skills", e.target.value)}
+                    className="w-full rounded-xl border border-[#E2E8F0] p-3 text-sm outline-none focus:border-[#0F9D8A]"
+                    placeholder="e.g. Sanitary fittings, Pipeline repair, Water pump installation"
+                  />
+                </div>
+
+                {/* Experience & City */}
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="experience" className="mb-1 block text-xs font-bold text-slate-700">
+                      Years of Experience
+                    </label>
+                    <input
+                      id="experience"
+                      type="number"
+                      min="0"
+                      max="80"
+                      step="0.5"
+                      value={profile.experienceYears}
+                      onChange={(e) => updateField("experienceYears", e.target.value)}
+                      className="w-full rounded-xl border border-[#E2E8F0] p-3 text-sm outline-none focus:border-[#0F9D8A]"
+                      placeholder="e.g. 5"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="city" className="mb-1 block text-xs font-bold text-slate-700">
+                      City
+                    </label>
+                    <input
+                      id="city"
+                      value={profile.city}
+                      onChange={(e) => updateField("city", e.target.value)}
+                      className="w-full rounded-xl border border-[#E2E8F0] p-3 text-sm outline-none focus:border-[#0F9D8A]"
+                      placeholder="e.g. Pune, Bengaluru, Mumbai"
+                    />
+                  </div>
+                </div>
+
+                {/* Service Areas */}
+                <div>
+                  <label htmlFor="service-areas" className="mb-1 block text-xs font-bold text-slate-700">
+                    Service Areas / Localities (comma separated)
+                  </label>
+                  <input
+                    id="service-areas"
+                    value={profile.serviceAreas.join(", ")}
+                    onChange={(e) => updateList("serviceAreas", e.target.value)}
+                    className="w-full rounded-xl border border-[#E2E8F0] p-3 text-sm outline-none focus:border-[#0F9D8A]"
+                    placeholder="e.g. Kothrud, Shivaji Nagar, Baner"
+                  />
+                </div>
+
+                {/* Professional Summary */}
+                <div>
+                  <label htmlFor="profile-summary" className="mb-1 block text-xs font-bold text-slate-700">
+                    Professional Summary
+                  </label>
+                  <textarea
+                    id="profile-summary"
+                    rows={4}
+                    value={profile.profileSummary}
+                    onChange={(e) => updateField("profileSummary", e.target.value)}
+                    className="w-full rounded-xl border border-[#E2E8F0] p-3 text-sm outline-none focus:border-[#0F9D8A]"
+                    placeholder="Brief description for employers..."
+                  />
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-col gap-3 pt-3 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={saveProfile}
+                    disabled={saving || generating}
+                    className="flex-1 rounded-xl bg-[#0F9D8A] px-6 py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0b7c6d] disabled:opacity-50"
+                  >
+                    {saving ? "Saving to Account..." : "💾 Confirm & Save Profile"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    disabled={saving || generating || listening}
+                    className="rounded-xl border border-[#E2E8F0] px-5 py-3.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+                  >
+                    Start Again
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </section>
+      </main>
+
+      <Footer />
+    </div>
   );
 }

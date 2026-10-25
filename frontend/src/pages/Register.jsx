@@ -16,43 +16,55 @@ function Register() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
+    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
-      !formData.name ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.password ||
-      !formData.role
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.password
     ) {
-      alert(t("register.fillFields"));
+      setErrorMessage("Please fill in all required fields.");
+      return;
+    }
+
+    if (!/^[0-9]{10}$/.test(formData.phone.trim())) {
+      setErrorMessage("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long.");
       return;
     }
 
     try {
       setLoading(true);
+      setErrorMessage("");
 
-      const res = await registerUser(formData);
+      const res = await registerUser({
+        ...formData,
+        phone: formData.phone.trim(),
+        email: formData.email.trim().toLowerCase(),
+      });
 
-      alert(
-        res.data.message ||
-          t("register.success")
-      );
-
+      alert(res.data.message || "Account registered successfully! Please log in.");
       navigate("/login");
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-          t("register.error")
+      console.error("Registration error:", error);
+      setErrorMessage(
+        error.response?.data?.message || "Registration failed. Please check your details."
       );
     } finally {
       setLoading(false);
@@ -60,177 +72,121 @@ function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4 py-10">
-
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl"
-      >
-
-        {/* HEADER */}
-
-        <div className="mb-8 text-center">
-
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-600 text-2xl font-bold text-white shadow-lg shadow-blue-200">
-            R
-          </div>
-
-          <h1 className="mt-5 text-3xl font-bold text-slate-900">
-            {t("register.title")}
-          </h1>
-
-          <p className="mt-2 text-gray-500">
-            {t("register.subtitle")}
-          </p>
-
-        </div>
-
-        {/* NAME */}
-
-        <div className="mb-4">
-
-          <label className="mb-2 block font-semibold text-gray-700">
-            {t("register.fullName")}
-          </label>
-
-          <input
-            type="text"
-            name="name"
-            placeholder={t(
-              "register.fullNamePlaceholder"
-            )}
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-          />
-
-        </div>
-
-        {/* EMAIL */}
-
-        <div className="mb-4">
-
-          <label className="mb-2 block font-semibold text-gray-700">
-            {t("register.email")}
-          </label>
-
-          <input
-            type="email"
-            name="email"
-            placeholder={t(
-              "register.emailPlaceholder"
-            )}
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-          />
-
-        </div>
-
-        {/* PHONE */}
-
-        <div className="mb-4">
-
-          <label className="mb-2 block font-semibold text-gray-700">
-            {t("register.phone")}
-          </label>
-
-          <input
-            type="tel"
-            name="phone"
-            placeholder={t(
-              "register.phonePlaceholder"
-            )}
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-          />
-
-        </div>
-
-        {/* PASSWORD */}
-
-        <div className="mb-4">
-
-          <label className="mb-2 block font-semibold text-gray-700">
-            {t("register.password")}
-          </label>
-
-          <input
-            type="password"
-            name="password"
-            placeholder={t(
-              "register.passwordPlaceholder"
-            )}
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-          />
-
-        </div>
-
-        {/* ROLE */}
-
-        <div className="mb-6">
-
-          <label className="mb-2 block font-semibold text-gray-700">
-            {t("register.role")}
-          </label>
-
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-          >
-            <option value="worker">
-              {t("register.worker")}
-            </option>
-
-            <option value="employer">
-              {t("register.employer")}
-            </option>
-
-            <option value="professional">
-              {t("register.professional")}
-            </option>
-          </select>
-
-        </div>
-
-        {/* REGISTER BUTTON */}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full rounded-xl py-3 font-semibold text-white transition ${
-            loading
-              ? "cursor-not-allowed bg-gray-500"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-        >
-          {loading
-            ? `⏳ ${t("register.registering")}`
-            : `🚀 ${t("register.button")}`}
-        </button>
-
-        {/* LOGIN */}
-
-        <p className="mt-6 text-center text-gray-600">
-
-          {t("register.haveAccount")}{" "}
-
-          <Link
-            to="/login"
-            className="font-semibold text-blue-600 hover:text-blue-700"
-          >
-            {t("register.login")}
+    <div className="flex min-h-screen items-center justify-center bg-[#F7F9FC] px-4 py-12">
+      <div className="w-full max-w-md rounded-3xl border border-[#E2E8F0] bg-white p-8 shadow-xl sm:p-10">
+        <div className="text-center">
+          <Link to="/" className="inline-block">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#173B57] text-2xl font-black text-white shadow-md shadow-[#173B57]/20">
+              R
+            </div>
           </Link>
 
-        </p>
+          <h1 className="mt-5 text-2xl font-black text-[#173B57] sm:text-3xl">
+            {t("register.title") || "Create an Account"}
+          </h1>
 
-      </form>
+          <p className="mt-1 text-xs text-slate-500">
+            {t("register.subtitle") || "Join Rozgaar Setu to connect with local jobs and talent"}
+          </p>
+        </div>
 
+        {errorMessage && (
+          <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">
+            ⚠️ {errorMessage}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-xs">
+          <div>
+            <label className="block font-bold text-slate-700">Full Name *</label>
+            <input
+              type="text"
+              name="name"
+              required
+              placeholder="e.g. Ramesh Kumar"
+              value={formData.name}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700">Email Address *</label>
+            <input
+              type="email"
+              name="email"
+              required
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700">10-Digit Mobile Number *</label>
+            <input
+              type="tel"
+              name="phone"
+              required
+              maxLength={10}
+              placeholder="9876543210"
+              value={formData.phone}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700">Password (min 6 characters) *</label>
+            <input
+              type="password"
+              name="password"
+              required
+              minLength={6}
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-slate-700">I am joining as: *</label>
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+            >
+              <option value="worker">👷 Skilled / Daily Wage Worker</option>
+              <option value="employer">🏢 Employer / Hirer</option>
+              <option value="professional">👨‍🎓 Trade Professional</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-2 w-full rounded-xl bg-[#0F9D8A] py-3.5 text-sm font-bold text-white shadow-md shadow-[#0F9D8A]/20 transition hover:bg-[#0b7c6d] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {loading ? "Creating Account..." : "🚀 Register Free"}
+          </button>
+        </form>
+
+        <div className="mt-6 border-t border-slate-100 pt-4 text-center text-xs text-slate-600">
+          <span>Already registered? </span>
+          <Link to="/login" className="font-bold text-[#173B57] hover:underline">
+            Login to your Account
+          </Link>
+        </div>
+
+        <div className="mt-3 text-center">
+          <Link to="/" className="text-[11px] text-slate-400 hover:text-slate-600">
+            ← Return to Homepage
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

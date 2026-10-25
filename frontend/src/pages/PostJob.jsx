@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { createJob } from "../api/jobApi";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -10,13 +12,28 @@ function PostJob() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    skill: "",
+    skill: "Plumber",
     city: "",
     salary: "",
     jobType: "Daily Wage",
   });
 
   const [loading, setLoading] = useState(false);
+
+  const skills = [
+    "Plumber",
+    "Electrician",
+    "Painter",
+    "Carpenter",
+    "Mason",
+    "Driver",
+    "Tailor",
+    "Cook",
+    "Housekeeper",
+    "Welder",
+    "Mechanic",
+    "Other",
+  ];
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -28,232 +45,155 @@ function PostJob() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const {
-      title,
-      description,
-      skill,
-      city,
-      salary,
-      jobType,
-    } = formData;
+    const { title, description, skill, city, salary, jobType } = formData;
 
-    if (
-      !title ||
-      !description ||
-      !skill ||
-      !city ||
-      !salary ||
-      !jobType
-    ) {
-      alert(t("postJob.fillAllFields"));
+    if (!title || !description || !skill || !city || !salary || !jobType) {
+      alert("Please fill in all required job fields.");
       return;
     }
 
     try {
       setLoading(true);
-
-      await createJob(formData);
-
-      alert(t("postJob.success"));
-
-      setFormData({
-        title: "",
-        description: "",
-        skill: "",
-        city: "",
-        salary: "",
-        jobType: "Daily Wage",
+      await createJob({
+        ...formData,
+        salary: Number(salary),
       });
 
+      alert("🎉 Job posted successfully! Workers can now find and apply for your listing.");
       navigate("/employer");
-
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-          t("postJob.error")
-      );
+      console.error("Job posting error:", error);
+      alert(error.response?.data?.message || "Failed to post job. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-10">
+    <div className="min-h-screen bg-[#F7F9FC]">
+      <Navbar />
 
-      <div className="mx-auto max-w-4xl rounded-2xl bg-white p-8 shadow-lg">
-
-        {/* HEADER */}
-
-        <div className="mb-8 text-center">
-
-          <div className="text-5xl">
-            💼
+      <main className="py-10 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-2xl rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-xl sm:p-10">
+          {/* HEADER */}
+          <div className="text-center border-b border-slate-100 pb-6">
+            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-[#173B57] text-2xl text-white">
+              💼
+            </div>
+            <h1 className="mt-3 text-2xl font-black text-[#173B57] sm:text-3xl">
+              Post a New Job Vacancy
+            </h1>
+            <p className="mt-1 text-xs text-slate-500">
+              Reach thousands of skilled local workers in your city and neighborhood.
+            </p>
           </div>
 
-          <h1 className="mt-3 text-4xl font-bold text-blue-700">
-            {t("postJob.title")}
-          </h1>
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-xs">
+            {/* TITLE */}
+            <div>
+              <label className="block font-bold text-slate-700">Job Title *</label>
+              <input
+                type="text"
+                name="title"
+                required
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="e.g. Experienced Plumber for Residential Renovation"
+                className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+              />
+            </div>
 
-          <p className="mt-2 text-gray-500">
-            {t("postJob.description")}
-          </p>
+            {/* DESCRIPTION */}
+            <div>
+              <label className="block font-bold text-slate-700">Detailed Job Description *</label>
+              <textarea
+                rows={4}
+                name="description"
+                required
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Describe the nature of work, scope, location, timings, and required tools..."
+                className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+              />
+            </div>
 
+            {/* SKILL & EMPLOYMENT TYPE */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block font-bold text-slate-700">Required Trade / Skill *</label>
+                <select
+                  name="skill"
+                  value={formData.skill}
+                  onChange={handleChange}
+                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                >
+                  {skills.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700">Employment Type *</label>
+                <select
+                  name="jobType"
+                  value={formData.jobType}
+                  onChange={handleChange}
+                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                >
+                  <option value="Daily Wage">Daily Wage</option>
+                  <option value="Part Time">Part Time</option>
+                  <option value="Full Time">Full Time</option>
+                  <option value="Contract">Contract</option>
+                </select>
+              </div>
+            </div>
+
+            {/* CITY & SALARY */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block font-bold text-slate-700">City / Location *</label>
+                <input
+                  type="text"
+                  name="city"
+                  required
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="e.g. Pune, Bengaluru, Mumbai"
+                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700">Offered Wage / Salary (₹) *</label>
+                <input
+                  type="number"
+                  name="salary"
+                  min="1"
+                  required
+                  value={formData.salary}
+                  onChange={handleChange}
+                  placeholder="e.g. 800"
+                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                />
+              </div>
+            </div>
+
+            {/* SUBMIT BUTTON */}
+            <div className="pt-4">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-xl bg-[#173B57] py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0f2638] disabled:opacity-50"
+              >
+                {loading ? "Publishing Job..." : "🚀 Publish Job Listing"}
+              </button>
+            </div>
+          </form>
         </div>
+      </main>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5"
-        >
-
-          {/* JOB TITLE */}
-
-          <div>
-            <label className="mb-2 block font-semibold text-gray-700">
-              {t("postJob.jobTitle")}
-            </label>
-
-            <input
-              type="text"
-              name="title"
-              placeholder={t("postJob.jobTitlePlaceholder")}
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-              required
-            />
-          </div>
-
-          {/* DESCRIPTION */}
-
-          <div>
-            <label className="mb-2 block font-semibold text-gray-700">
-              {t("postJob.jobDescription")}
-            </label>
-
-            <textarea
-              rows="5"
-              name="description"
-              placeholder={t(
-                "postJob.jobDescriptionPlaceholder"
-              )}
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-              required
-            />
-          </div>
-
-          {/* SKILL */}
-
-          <div>
-            <label className="mb-2 block font-semibold text-gray-700">
-              {t("postJob.requiredSkill")}
-            </label>
-
-            <input
-              type="text"
-              name="skill"
-              placeholder={t(
-                "postJob.skillPlaceholder"
-              )}
-              value={formData.skill}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-              required
-            />
-          </div>
-
-          {/* CITY */}
-
-          <div>
-            <label className="mb-2 block font-semibold text-gray-700">
-              {t("postJob.city")}
-            </label>
-
-            <input
-              type="text"
-              name="city"
-              placeholder={t(
-                "postJob.cityPlaceholder"
-              )}
-              value={formData.city}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-              required
-            />
-          </div>
-
-          {/* SALARY */}
-
-          <div>
-            <label className="mb-2 block font-semibold text-gray-700">
-              {t("postJob.salary")}
-            </label>
-
-            <input
-              type="number"
-              name="salary"
-              placeholder={t(
-                "postJob.salaryPlaceholder"
-              )}
-              value={formData.salary}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-              required
-            />
-          </div>
-
-          {/* JOB TYPE */}
-
-          <div>
-            <label className="mb-2 block font-semibold text-gray-700">
-              {t("postJob.jobType")}
-            </label>
-
-            <select
-              name="jobType"
-              value={formData.jobType}
-              onChange={handleChange}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 p-3 outline-none transition focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100"
-            >
-              <option value="Daily Wage">
-                {t("postJob.dailyWage")}
-              </option>
-
-              <option value="Part Time">
-                {t("postJob.partTime")}
-              </option>
-
-              <option value="Full Time">
-                {t("postJob.fullTime")}
-              </option>
-
-              <option value="Contract">
-                {t("postJob.contract")}
-              </option>
-            </select>
-          </div>
-
-          {/* SUBMIT */}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full rounded-xl py-4 font-semibold text-white shadow-md transition ${
-              loading
-                ? "cursor-not-allowed bg-gray-500"
-                : "bg-blue-600 hover:bg-blue-700 hover:shadow-lg"
-            }`}
-          >
-            {loading
-              ? `⏳ ${t("postJob.posting")}`
-              : `🚀 ${t("postJob.publish")}`}
-          </button>
-
-        </form>
-
-      </div>
-
+      <Footer />
     </div>
   );
 }

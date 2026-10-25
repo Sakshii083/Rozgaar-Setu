@@ -1,0 +1,24 @@
+{
+  "name": "Rozgaar Setu — Local Employment Platform",
+  "short_name": "Rozgaar Setu",
+  "description": "Connecting Local Talent with Local Opportunities across India",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#173B57",
+  "background_color": "#F7F9FC",
+  "icons": [
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
