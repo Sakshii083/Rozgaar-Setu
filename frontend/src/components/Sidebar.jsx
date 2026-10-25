@@ -77,7 +77,7 @@ function Sidebar({ onNavigate, isMobile = false }) {
 
   const containerClasses = isMobile
     ? "flex flex-col h-full justify-between"
-    : "flex flex-col h-full justify-between bg-[#173B57] p-6 text-white";
+    : "flex flex-col h-full justify-between bg-[#173B57] p-3.5 text-white";
 
   return (
     <div className={containerClasses}>
@@ -86,29 +86,29 @@ function Sidebar({ onNavigate, isMobile = false }) {
         <Link
           to="/"
           onClick={onNavigate}
-          className="flex items-center gap-3 mb-8"
+          className="flex items-center gap-2.5 mb-4"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0F9D8A] text-lg font-black text-white shadow-md">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0F9D8A] text-base font-black text-white shadow-xs">
             R
           </div>
           <div>
-            <h1 className="text-xl font-black text-white tracking-tight">
+            <h1 className="text-base font-black text-white tracking-tight">
               Rozgaar<span className="text-[#F4B942]"> Setu</span>
             </h1>
-            <p className="text-[10px] text-slate-300 font-medium">Dashboard</p>
+            <p className="text-[9px] text-slate-300 font-medium">Dashboard</p>
           </div>
         </Link>
 
         {/* User Card */}
         {user && (
-          <div className="mb-6 rounded-2xl bg-white/10 p-3 text-xs backdrop-blur-xs">
-            <p className="font-bold text-white truncate">{user.name}</p>
-            <p className="text-[11px] capitalize text-[#F4B942] font-semibold">{user.role}</p>
+          <div className="mb-3.5 rounded-xl bg-white/10 p-2.5 text-xs backdrop-blur-xs">
+            <p className="font-bold text-white truncate text-[11px]">{user.name}</p>
+            <p className="text-[10px] capitalize text-[#F4B942] font-semibold">{user.role}</p>
           </div>
         )}
 
         {/* NAVIGATION LINKS */}
-        <nav className="space-y-1.5">
+        <nav className="space-y-1">
           {menu.map((item) => {
             const active = location.pathname === item.path;
             return (
@@ -116,13 +116,13 @@ function Sidebar({ onNavigate, isMobile = false }) {
                 key={item.path}
                 to={item.path}
                 onClick={onNavigate}
-                className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-xs font-bold transition ${
+                className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-bold transition ${
                   active
-                    ? "bg-[#0F9D8A] text-white shadow-sm"
+                    ? "bg-[#0F9D8A] text-white shadow-xs"
                     : "text-slate-200 hover:bg-white/10 hover:text-white"
                 }`}
               >
-                <span className="text-base">{item.icon}</span>
+                <span className="text-sm">{item.icon}</span>
                 <span>{item.name}</span>
               </Link>
             );
@@ -131,19 +131,19 @@ function Sidebar({ onNavigate, isMobile = false }) {
       </div>
 
       {/* FOOTER ACTIONS */}
-      <div className="pt-6 border-t border-white/10 space-y-2">
+      <div className="pt-3 border-t border-white/10 space-y-1.5">
         <Link
           to="/"
           onClick={onNavigate}
-          className="flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5"
+          className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/5"
         >
           <span>🌐</span>
-          <span>Return to Homepage</span>
+          <span>Homepage</span>
         </Link>
 
         <button
           onClick={logout}
-          className="w-full flex items-center justify-center gap-2 rounded-xl bg-red-500/20 px-4 py-2.5 text-xs font-bold text-red-300 transition hover:bg-red-500 hover:text-white"
+          className="w-full flex items-center justify-center gap-2 rounded-lg bg-red-500/20 px-3 py-2 text-xs font-bold text-red-300 transition hover:bg-red-500 hover:text-white"
         >
           <span>🚪</span>
           <span>{t("dashboard.logout") || "Logout"}</span>

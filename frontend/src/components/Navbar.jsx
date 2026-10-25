@@ -49,27 +49,27 @@ function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-6">
         {/* LOGO */}
-        <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#173B57] text-lg font-black text-white shadow-md shadow-[#173B57]/20">
+        <Link to="/" className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#173B57] text-base font-black text-white shadow-xs">
             R
           </div>
           <div>
-            <span className="text-xl font-black tracking-tight text-[#173B57]">
+            <span className="text-base sm:text-lg font-black tracking-tight text-[#173B57]">
               Rozgaar<span className="text-[#0F9D8A]"> Setu</span>
             </span>
-            <p className="hidden text-[10px] font-semibold text-slate-500 sm:block">
+            <p className="hidden text-[9px] font-semibold text-slate-500 sm:block leading-none">
               Local Skills. Local Opportunities.
             </p>
           </div>
         </Link>
 
         {/* DESKTOP NAVIGATION LINKS */}
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-5 lg:flex">
           <Link
             to="/"
-            className={`text-sm font-semibold transition ${
+            className={`text-xs font-semibold transition ${
               location.pathname === "/"
                 ? "text-[#0F9D8A] font-bold"
                 : "text-slate-700 hover:text-[#173B57]"
@@ -80,7 +80,7 @@ function Navbar() {
 
           <Link
             to="/jobs"
-            className={`text-sm font-semibold transition ${
+            className={`text-xs font-semibold transition ${
               location.pathname === "/jobs"
                 ? "text-[#0F9D8A] font-bold"
                 : "text-slate-700 hover:text-[#173B57]"
@@ -91,7 +91,7 @@ function Navbar() {
 
           <Link
             to="/workers"
-            className={`text-sm font-semibold transition ${
+            className={`text-xs font-semibold transition ${
               location.pathname === "/workers"
                 ? "text-[#0F9D8A] font-bold"
                 : "text-slate-700 hover:text-[#173B57]"
@@ -102,7 +102,7 @@ function Navbar() {
 
           <Link
             to="/#sathi"
-            className="flex items-center gap-1 text-sm font-semibold text-slate-700 transition hover:text-[#0F9D8A]"
+            className="flex items-center gap-1 text-xs font-semibold text-slate-700 transition hover:text-[#0F9D8A]"
           >
             <span>🤖</span>
             <span>Rozgaar Saathi</span>
@@ -110,7 +110,7 @@ function Navbar() {
 
           <Link
             to="/voice-profile"
-            className="flex items-center gap-1 text-sm font-semibold text-slate-700 transition hover:text-[#0F9D8A]"
+            className="flex items-center gap-1 text-xs font-semibold text-slate-700 transition hover:text-[#0F9D8A]"
           >
             <span>🎙️</span>
             <span>Vaani AI</span>
@@ -118,7 +118,7 @@ function Navbar() {
 
           <Link
             to="/about"
-            className={`text-sm font-semibold transition ${
+            className={`text-xs font-semibold transition ${
               location.pathname === "/about"
                 ? "text-[#0F9D8A] font-bold"
                 : "text-slate-700 hover:text-[#173B57]"
@@ -129,10 +129,10 @@ function Navbar() {
         </nav>
 
         {/* DESKTOP RIGHT ACTIONS */}
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2.5 lg:flex">
           {/* LANGUAGE SELECTOR */}
-          <div className="flex items-center gap-1.5 rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-1.5 text-xs">
-            <span className="text-sm">🌐</span>
+          <div className="flex items-center gap-1 rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2 py-1 text-xs">
+            <span className="text-xs">🌐</span>
             <select
               value={language}
               onChange={handleLanguageChange}
@@ -149,17 +149,17 @@ function Navbar() {
 
           {/* AUTHENTICATION STATE */}
           {!user ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <Link
                 to="/login"
-                className="rounded-xl px-4 py-2 text-sm font-bold text-[#173B57] transition hover:bg-slate-100"
+                className="rounded-lg px-2.5 py-1 text-xs font-bold text-[#173B57] transition hover:bg-slate-100"
               >
                 {t("nav.login") || "Login"}
               </Link>
 
               <Link
                 to="/register"
-                className="rounded-xl bg-[#173B57] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#0f2638]"
+                className="rounded-lg bg-[#173B57] px-3 py-1 text-xs font-bold text-white shadow-xs transition hover:bg-[#0f2638]"
               >
                 {t("nav.getStarted") || "Get Started"}
               </Link>

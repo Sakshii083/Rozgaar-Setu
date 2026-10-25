@@ -80,93 +80,95 @@ function WorkerRegister() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC]">
+    <div className="min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-[#F7F9FC]">
       <Navbar />
 
-      <main className="py-10 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-xl sm:p-10">
-          <div className="text-center border-b border-slate-100 pb-6">
-            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-[#0F9D8A] text-2xl text-white">
+      <main className="flex-1 min-h-0 flex flex-col items-center justify-center p-2.5 sm:p-3.5 md:overflow-y-auto">
+        <div className="mx-auto max-w-xl w-full rounded-2xl border border-[#E2E8F0] bg-white p-4 sm:p-5 shadow-lg">
+          <div className="text-center border-b border-slate-100 pb-3">
+            <div className="flex h-9 w-9 mx-auto items-center justify-center rounded-xl bg-[#0F9D8A] text-lg text-white">
               👷
             </div>
-            <h1 className="mt-3 text-2xl font-black text-[#173B57] sm:text-3xl">
+            <h1 className="mt-1.5 text-lg font-black text-[#173B57]">
               Register as a Skilled Worker
             </h1>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-0.5 text-[11px] text-slate-500">
               Get discovered by local contractors and residential hirers in your city.
             </p>
           </div>
 
           {success ? (
-            <div className="py-10 text-center">
-              <div className="text-5xl">🎉</div>
-              <h2 className="mt-4 text-xl font-black text-[#173B57]">
+            <div className="py-6 text-center">
+              <div className="text-4xl">🎉</div>
+              <h2 className="mt-2 text-lg font-black text-[#173B57]">
                 Registration Successful!
               </h2>
-              <p className="mt-2 text-xs text-slate-600 max-w-md mx-auto">
-                Your profile is now listed in the worker directory. Local employers can now contact you directly via Call or WhatsApp.
+              <p className="mt-1 text-xs text-slate-600 max-w-md mx-auto">
+                Your profile is now listed in the worker directory. Local employers can contact you directly via Call or WhatsApp.
               </p>
 
-              <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+              <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row text-xs">
                 <Link
                   to="/workers"
-                  className="rounded-xl bg-[#173B57] px-6 py-3 text-xs font-bold text-white shadow-sm"
+                  className="rounded-lg bg-[#173B57] px-4 py-2 font-bold text-white shadow-xs"
                 >
-                  View Worker Directory
+                  View Directory
                 </Link>
 
                 <Link
                   to="/jobs"
-                  className="rounded-xl bg-[#0F9D8A] px-6 py-3 text-xs font-bold text-white shadow-sm"
+                  className="rounded-lg bg-[#0F9D8A] px-4 py-2 font-bold text-white shadow-xs"
                 >
                   Find Open Jobs
                 </Link>
 
                 <Link
                   to="/voice-profile"
-                  className="rounded-xl border border-[#0F9D8A] px-6 py-3 text-xs font-bold text-[#0F9D8A]"
+                  className="rounded-lg border border-[#0F9D8A] px-4 py-2 font-bold text-[#0F9D8A]"
                 >
-                  🎙️ Try Vaani Voice Profile
+                  🎙️ Try Vaani AI
                 </Link>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700">Full Name *</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  required
-                  placeholder="e.g. Suresh Patil"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
-                />
+            <form onSubmit={handleSubmit} className="mt-3.5 space-y-2.5 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div>
+                  <label className="block font-bold text-slate-700">Full Name *</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    required
+                    placeholder="e.g. Suresh Patil"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700">Mobile Number (Call & WhatsApp) *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    required
+                    maxLength={10}
+                    placeholder="9876543210"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block font-bold text-slate-700">10-Digit Mobile Number (For Calls & WhatsApp) *</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  required
-                  maxLength={10}
-                  placeholder="9876543210"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <div>
                   <label className="block font-bold text-slate-700">Trade / Primary Skill *</label>
                   <select
                     name="skill"
                     value={formData.skill}
                     onChange={handleChange}
-                    className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                   >
                     {skills.map((s) => (
                       <option key={s} value={s}>{s}</option>
@@ -180,7 +182,7 @@ function WorkerRegister() {
                     name="experience"
                     value={formData.experience}
                     onChange={handleChange}
-                    className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                   >
                     <option value="0 - 1 Year">0 - 1 Year</option>
                     <option value="2 - 5 Years">2 - 5 Years</option>
@@ -190,7 +192,7 @@ function WorkerRegister() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <div>
                   <label className="block font-bold text-slate-700">City *</label>
                   <input
@@ -200,7 +202,7 @@ function WorkerRegister() {
                     placeholder="e.g. Pune, Bengaluru"
                     value={formData.city}
                     onChange={handleChange}
-                    className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                   />
                 </div>
 
@@ -213,19 +215,19 @@ function WorkerRegister() {
                     placeholder="e.g. Shivaji Nagar, Kothrud"
                     value={formData.area}
                     onChange={handleChange}
-                    className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <div>
                   <label className="block font-bold text-slate-700">Availability *</label>
                   <select
                     name="availability"
                     value={formData.availability}
                     onChange={handleChange}
-                    className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                   >
                     <option value="Available Today">Available Today</option>
                     <option value="Available This Week">Available This Week</option>
@@ -243,16 +245,16 @@ function WorkerRegister() {
                     placeholder="e.g. 800"
                     value={formData.wage}
                     onChange={handleChange}
-                    className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                    className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                   />
                 </div>
               </div>
 
-              <div className="pt-4">
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full rounded-xl bg-[#0F9D8A] py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0b7c6d] disabled:opacity-50"
+                  className="w-full rounded-lg bg-[#0F9D8A] py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#0b7c6d] disabled:opacity-50"
                 >
                   {loading ? "Registering Profile..." : "🚀 Complete Worker Registration"}
                 </button>
@@ -261,8 +263,6 @@ function WorkerRegister() {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

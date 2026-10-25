@@ -144,98 +144,98 @@ function Jobs() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC]">
+    <div className="min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-[#F7F9FC]">
       <Navbar />
 
-      <main className="py-8 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          {/* HEADER */}
-          <div className="text-center">
-            <span className="inline-block rounded-full bg-[#173B57]/10 px-4 py-1 text-xs font-bold text-[#173B57] uppercase">
-              💼 Employment Opportunities
-            </span>
-            <h1 className="mt-3 text-3xl font-black text-[#173B57] sm:text-4xl">
-              Browse Available Jobs
+      <main className="flex-1 min-h-0 flex flex-col p-2.5 sm:p-3.5 max-w-7xl mx-auto w-full md:overflow-hidden">
+        {/* HEADER */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 mb-2 border-b border-slate-200 shrink-0 gap-1">
+          <div>
+            <h1 className="text-base sm:text-lg font-black text-[#173B57]">
+              💼 Browse Available Jobs
             </h1>
-            <p className="mx-auto mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
-              Explore local openings across trades. Apply directly with your worker profile.
+            <p className="text-[11px] text-slate-500">
+              Explore verified local openings across trades. Apply directly with your worker profile.
             </p>
           </div>
-
-          {/* SEARCH & FILTER CONTROLS */}
-          <div className="mt-8 rounded-2xl border border-[#E2E8F0] bg-white p-5 shadow-sm">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              {/* Keyword Search */}
-              <input
-                type="text"
-                placeholder="Search by job title or keyword..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] px-3.5 py-2.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
-              />
-
-              {/* Skill Filter */}
-              <select
-                value={selectedSkill}
-                onChange={(e) => setSelectedSkill(e.target.value)}
-                className="rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-2.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
-              >
-                <option value="">All Skills</option>
-                {skills.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-
-              {/* City Filter */}
-              <select
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
-                className="rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-2.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
-              >
-                <option value="">All Cities</option>
-                {cities.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-
-              {/* Job Type Filter */}
-              <select
-                value={selectedJobType}
-                onChange={(e) => setSelectedJobType(e.target.value)}
-                className="rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-2.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
-              >
-                <option value="">All Employment Types</option>
-                {jobTypes.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
-              </select>
-
-              {/* Clear Filters Button */}
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-200"
-              >
-                ↻ Reset Filters
-              </button>
-            </div>
-
-            <div className="mt-3 flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-              <span>Showing {filteredJobs.length} of {jobs.length} total jobs</span>
-              {jobs.length > 0 && <span className="font-semibold text-[#0F9D8A]">● Real-time Listings</span>}
-            </div>
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+            <span className="rounded-full bg-[#173B57]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#173B57]">
+              {filteredJobs.length} of {jobs.length} Jobs
+            </span>
+            <span className="font-semibold text-[#0F9D8A] text-[11px]">● Live Openings</span>
           </div>
+        </div>
 
-          {/* JOB LISTINGS */}
+        {/* SEARCH & FILTER CONTROLS */}
+        <div className="rounded-xl border border-[#E2E8F0] bg-white p-2.5 shadow-2xs mb-2.5 shrink-0">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 text-xs">
+            {/* Keyword Search */}
+            <input
+              type="text"
+              placeholder="Search keyword..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
+            />
+
+            {/* Skill Filter */}
+            <select
+              value={selectedSkill}
+              onChange={(e) => setSelectedSkill(e.target.value)}
+              className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
+            >
+              <option value="">All Skills</option>
+              {skills.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+
+            {/* City Filter */}
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
+            >
+              <option value="">All Cities</option>
+              {cities.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+
+            {/* Job Type Filter */}
+            <select
+              value={selectedJobType}
+              onChange={(e) => setSelectedJobType(e.target.value)}
+              className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
+            >
+              <option value="">All Types</option>
+              {jobTypes.map((t) => (
+                <option key={t} value={t}>{t}</option>
+              ))}
+            </select>
+
+            {/* Clear Filters Button */}
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-200 col-span-2 sm:col-span-1"
+            >
+              ↻ Reset
+            </button>
+          </div>
+        </div>
+
+        {/* JOB LISTINGS */}
+        <div className="flex-1 min-h-0 overflow-y-auto pr-1">
           {loading ? (
-            <div className="py-20 text-center">
-              <div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-[#0F9D8A]"></div>
-              <p className="mt-4 text-sm font-semibold text-slate-600">Loading active opportunities...</p>
+            <div className="py-16 text-center">
+              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-3 border-slate-200 border-t-[#0F9D8A]"></div>
+              <p className="mt-3 text-xs font-semibold text-slate-500">Loading active opportunities...</p>
             </div>
           ) : filteredJobs.length === 0 ? (
-            <div className="mt-8 rounded-3xl border border-[#E2E8F0] bg-white p-12 text-center shadow-sm">
-              <div className="text-4xl">🔍</div>
-              <h2 className="mt-3 text-lg font-bold text-slate-800">
+            <div className="rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center shadow-xs">
+              <div className="text-3xl">🔍</div>
+              <h2 className="mt-2 text-sm font-bold text-slate-800">
                 No Jobs Matching Your Criteria
               </h2>
               <p className="mt-1 text-xs text-slate-500">
@@ -243,13 +243,13 @@ function Jobs() {
               </p>
               <button
                 onClick={clearFilters}
-                className="mt-4 rounded-xl bg-[#173B57] px-5 py-2.5 text-xs font-bold text-white shadow-xs"
+                className="mt-3 rounded-lg bg-[#173B57] px-4 py-2 text-xs font-bold text-white shadow-xs"
               >
                 Clear Filters
               </button>
             </div>
           ) : (
-            <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
               {filteredJobs.map((job) => {
                 const isAlreadyApplied = appliedJobIds.has(job._id);
                 const isApplying = applyingJob === job._id;
@@ -257,12 +257,12 @@ function Jobs() {
                 return (
                   <div
                     key={job._id}
-                    className="flex flex-col justify-between rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-xs transition duration-200 hover:-translate-y-1 hover:shadow-lg"
+                    className="flex flex-col justify-between rounded-xl border border-[#E2E8F0] bg-white p-3.5 shadow-2xs hover:border-[#0F9D8A] transition text-xs"
                   >
                     <div>
                       {/* Badge & Title */}
-                      <div className="flex items-start justify-between gap-2">
-                        <span className="rounded-full bg-[#0F9D8A]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#0F9D8A]">
+                      <div className="flex items-start justify-between gap-1.5">
+                        <span className="rounded-full bg-[#0F9D8A]/10 px-2 py-0.5 text-[10px] font-bold text-[#0F9D8A]">
                           {job.jobType || "Daily Wage"}
                         </span>
                         <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
@@ -270,16 +270,16 @@ function Jobs() {
                         </span>
                       </div>
 
-                      <h2 className="mt-3 text-lg font-black text-[#173B57]">
+                      <h2 className="mt-2 text-sm font-black text-[#173B57] line-clamp-1">
                         {job.title}
                       </h2>
 
-                      <p className="mt-2 text-xs leading-relaxed text-slate-600 line-clamp-3">
+                      <p className="mt-1 text-[11px] leading-snug text-slate-600 line-clamp-2">
                         {job.description}
                       </p>
 
                       {/* Details Grid */}
-                      <div className="mt-4 space-y-1.5 rounded-xl bg-[#F7F9FC] p-3 text-xs text-slate-700">
+                      <div className="mt-2.5 space-y-1 rounded-lg bg-[#F7F9FC] p-2 text-[11px] text-slate-700">
                         <div className="flex justify-between">
                           <span className="text-slate-400">Location:</span>
                           <span className="font-semibold text-slate-800">📍 {job.city}</span>
@@ -300,9 +300,9 @@ function Jobs() {
                     </div>
 
                     {/* Apply Button */}
-                    <div className="mt-6 pt-3 border-t border-slate-100">
+                    <div className="mt-3 pt-2 border-t border-slate-100">
                       {isAlreadyApplied ? (
-                        <div className="rounded-xl bg-green-50 py-2.5 text-center text-xs font-bold text-green-700 border border-green-200">
+                        <div className="rounded-lg bg-green-50 py-1.5 text-center text-xs font-bold text-green-700 border border-green-200">
                           ✓ Applied
                         </div>
                       ) : (
@@ -310,9 +310,9 @@ function Jobs() {
                           type="button"
                           onClick={() => handleApply(job._id)}
                           disabled={isApplying}
-                          className="w-full rounded-xl bg-[#173B57] py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#0f2638] disabled:cursor-not-allowed disabled:opacity-60"
+                          className="w-full rounded-lg bg-[#173B57] py-1.5 text-xs font-bold text-white shadow-2xs transition hover:bg-[#0f2638] disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          {isApplying ? "Submitting Application..." : "✅ Apply Now"}
+                          {isApplying ? "Submitting..." : "✅ Apply Now"}
                         </button>
                       )}
                     </div>
@@ -323,8 +323,6 @@ function Jobs() {
           )}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

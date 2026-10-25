@@ -72,31 +72,31 @@ function Register() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F7F9FC] px-4 py-12">
-      <div className="w-full max-w-md rounded-3xl border border-[#E2E8F0] bg-white p-8 shadow-xl sm:p-10">
+    <div className="flex min-h-screen md:h-screen items-center justify-center bg-[#F7F9FC] p-3 sm:p-4">
+      <div className="w-full max-w-sm rounded-2xl border border-[#E2E8F0] bg-white p-4 sm:p-5 shadow-xl">
         <div className="text-center">
           <Link to="/" className="inline-block">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#173B57] text-2xl font-black text-white shadow-md shadow-[#173B57]/20">
+            <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-xl bg-[#173B57] text-base font-black text-white shadow-xs">
               R
             </div>
           </Link>
 
-          <h1 className="mt-5 text-2xl font-black text-[#173B57] sm:text-3xl">
+          <h1 className="mt-1.5 text-lg font-black text-[#173B57]">
             {t("register.title") || "Create an Account"}
           </h1>
 
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-0.5 text-[11px] text-slate-500">
             {t("register.subtitle") || "Join Rozgaar Setu to connect with local jobs and talent"}
           </p>
         </div>
 
         {errorMessage && (
-          <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">
+          <div role="alert" className="mt-2.5 rounded-lg border border-red-200 bg-red-50 p-2 text-xs font-semibold text-red-700">
             ⚠️ {errorMessage}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-xs">
+        <form onSubmit={handleSubmit} className="mt-3 space-y-2 text-xs">
           <div>
             <label className="block font-bold text-slate-700">Full Name *</label>
             <input
@@ -106,82 +106,86 @@ function Register() {
               placeholder="e.g. Ramesh Kumar"
               value={formData.name}
               onChange={handleChange}
-              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+              className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
             />
           </div>
 
-          <div>
-            <label className="block font-bold text-slate-700">Email Address *</label>
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder="you@example.com"
-              value={formData.email}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
-            />
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block font-bold text-slate-700">Email *</label>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
+              />
+            </div>
+
+            <div>
+              <label className="block font-bold text-slate-700">Phone *</label>
+              <input
+                type="tel"
+                name="phone"
+                required
+                maxLength={10}
+                placeholder="10-digit mobile"
+                value={formData.phone}
+                onChange={handleChange}
+                className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block font-bold text-slate-700">10-Digit Mobile Number *</label>
-            <input
-              type="tel"
-              name="phone"
-              required
-              maxLength={10}
-              placeholder="9876543210"
-              value={formData.phone}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
-            />
-          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block font-bold text-slate-700">Password *</label>
+              <input
+                type="password"
+                name="password"
+                required
+                minLength={6}
+                placeholder="Min 6 chars"
+                value={formData.password}
+                onChange={handleChange}
+                className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
+              />
+            </div>
 
-          <div>
-            <label className="block font-bold text-slate-700">Password (min 6 characters) *</label>
-            <input
-              type="password"
-              name="password"
-              required
-              minLength={6}
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
-            />
-          </div>
-
-          <div>
-            <label className="block font-bold text-slate-700">I am joining as: *</label>
-            <select
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm font-semibold text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
-            >
-              <option value="worker">👷 Skilled / Daily Wage Worker</option>
-              <option value="employer">🏢 Employer / Hirer</option>
-              <option value="professional">👨‍🎓 Trade Professional</option>
-            </select>
+            <div>
+              <label className="block font-bold text-slate-700">Role *</label>
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs font-semibold text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
+              >
+                <option value="worker">👷 Worker</option>
+                <option value="employer">🏢 Employer</option>
+                <option value="professional">👨‍🎓 Pro</option>
+              </select>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full rounded-xl bg-[#0F9D8A] py-3.5 text-sm font-bold text-white shadow-md shadow-[#0F9D8A]/20 transition hover:bg-[#0b7c6d] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-2 w-full rounded-lg bg-[#0F9D8A] py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#0b7c6d] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Creating Account..." : "🚀 Register Free"}
+            {loading ? "Creating..." : "🚀 Register Free"}
           </button>
         </form>
 
-        <div className="mt-6 border-t border-slate-100 pt-4 text-center text-xs text-slate-600">
+        <div className="mt-3 border-t border-slate-100 pt-2.5 text-center text-xs text-slate-600">
           <span>Already registered? </span>
           <Link to="/login" className="font-bold text-[#173B57] hover:underline">
-            Login to your Account
+            Login
           </Link>
         </div>
 
-        <div className="mt-3 text-center">
+        <div className="mt-1.5 text-center">
           <Link to="/" className="text-[11px] text-slate-400 hover:text-slate-600">
             ← Return to Homepage
           </Link>

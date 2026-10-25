@@ -97,47 +97,47 @@ function WorkerDashboard() {
   return (
     <DashboardLayout>
       {/* WELCOME BANNER */}
-      <div className="mb-6 rounded-3xl bg-gradient-to-r from-[#173B57] via-[#1c4769] to-[#0F9D8A] p-6 text-white shadow-lg sm:p-8">
-        <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-[#F4B942]">
+      <div className="mb-3.5 rounded-2xl bg-gradient-to-r from-[#173B57] via-[#1c4769] to-[#0F9D8A] p-4 text-white shadow-md">
+        <span className="inline-block rounded-full bg-white/15 px-2.5 py-0.5 text-[10px] font-semibold text-[#F4B942]">
           Worker Workspace
         </span>
 
-        <h1 className="mt-2 text-2xl font-black sm:text-3xl">
+        <h1 className="mt-1 text-lg font-black sm:text-xl">
           {t("workerDashboard.welcome") || "Welcome back"},{" "}
           {user?.name || "Worker"} 👋
         </h1>
 
-        <p className="mt-2 max-w-xl text-xs sm:text-sm text-slate-200">
+        <p className="mt-0.5 max-w-xl text-xs text-slate-200">
           {t("workerDashboard.welcomeDescription") ||
             "Discover matching local jobs, manage your applications, and keep your trade profile up to date."}
         </p>
 
-        <div className="mt-5 flex flex-wrap gap-2.5">
+        <div className="mt-3 flex flex-wrap gap-2">
           <Link
             to="/edit-profile"
-            className="rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-[#173B57] shadow-sm transition hover:bg-slate-100"
+            className="rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-[#173B57] shadow-2xs transition hover:bg-slate-100"
           >
             👤 {t("workerDashboard.editProfile") || "Edit Profile"}
           </Link>
 
           <Link
             to="/voice-profile"
-            className="rounded-xl bg-[#F4B942] px-4 py-2.5 text-xs font-bold text-[#202938] shadow-sm transition hover:bg-[#dca029]"
+            className="rounded-lg bg-[#F4B942] px-3 py-1.5 text-xs font-bold text-[#202938] shadow-2xs transition hover:bg-[#dca029]"
           >
-            🎙️ Update Profile with Vaani AI
+            🎙️ Vaani AI Profile
           </Link>
 
           <Link
             to="/jobs"
-            className="rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-white/20"
+            className="rounded-lg border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-white/20"
           >
-            💼 Browse All Jobs
+            💼 Browse Jobs
           </Link>
         </div>
       </div>
 
       {/* STATS CARDS */}
-      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-3.5 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <DashboardCard
           title={t("workerDashboard.availableJobs") || "Available Jobs"}
           value={stats.availableJobs}
@@ -168,9 +168,9 @@ function WorkerDashboard() {
       </div>
 
       {/* PROFILE SUMMARY CARD */}
-      <div className="mb-6 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
-          <h2 className="text-base font-bold text-[#173B57]">
+      <div className="mb-3.5 rounded-xl border border-[#E2E8F0] bg-white p-3.5 shadow-2xs">
+        <div className="flex items-center justify-between mb-2.5 border-b border-slate-100 pb-2">
+          <h2 className="text-sm font-bold text-[#173B57]">
             {t("workerDashboard.myProfile") || "My Profile Overview"}
           </h2>
           <Link
@@ -228,9 +228,9 @@ function WorkerDashboard() {
       </div>
 
       {/* MY APPLICATIONS SECTION */}
-      <div className="mb-6 rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
-          <h2 className="text-base font-bold text-[#173B57]">
+      <div className="mb-3.5 rounded-xl border border-[#E2E8F0] bg-white p-3.5 shadow-2xs">
+        <div className="mb-2.5 flex items-center justify-between border-b border-slate-100 pb-2">
+          <h2 className="text-sm font-bold text-[#173B57]">
             {t("workerDashboard.myApplications") || "My Applications"} ({applications.length})
           </h2>
           <Link to="/applications" className="text-xs font-bold text-[#0F9D8A] hover:underline">
@@ -239,30 +239,30 @@ function WorkerDashboard() {
         </div>
 
         {applications.length === 0 ? (
-          <div className="py-8 text-center text-slate-500">
-            <div className="text-3xl">📭</div>
-            <p className="mt-2 text-xs">
+          <div className="py-4 text-center text-slate-500">
+            <div className="text-2xl">📭</div>
+            <p className="mt-1 text-xs">
               {t("workerDashboard.noApplications") || "You haven't applied for any jobs yet."}
             </p>
             <Link
               to="/jobs"
-              className="mt-3 inline-block rounded-xl bg-[#173B57] px-4 py-2 text-xs font-bold text-white"
+              className="mt-2 inline-block rounded-lg bg-[#173B57] px-3 py-1.5 text-xs font-bold text-white"
             >
               Browse Open Jobs
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
-            {applications.slice(0, 5).map((app) => (
+          <div className="space-y-2">
+            {applications.slice(0, 4).map((app) => (
               <div
                 key={app._id}
-                className="flex flex-col justify-between gap-3 rounded-xl border border-slate-200 bg-[#F7F9FC] p-4 sm:flex-row sm:items-center"
+                className="flex flex-col justify-between gap-2 rounded-lg border border-slate-200 bg-[#F7F9FC] p-2.5 sm:flex-row sm:items-center text-xs"
               >
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900">
+                  <h3 className="text-xs font-bold text-slate-900">
                     {app.job?.title || "Job Listing"}
                   </h3>
-                  <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+                  <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-slate-500">
                     <span>📍 {app.job?.city || "Local"}</span>
                     <span>💰 ₹{app.job?.salary || "N/A"}</span>
                     {app.employer?.name && <span>👤 Employer: {app.employer.name}</span>}
@@ -271,7 +271,7 @@ function WorkerDashboard() {
 
                 <div>
                   <span
-                    className={`inline-block rounded-full px-3 py-1 text-xs font-bold ${
+                    className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
                       app.status === "Accepted"
                         ? "bg-green-100 text-green-800"
                         : app.status === "Rejected"
@@ -293,31 +293,31 @@ function WorkerDashboard() {
       </div>
 
       {/* AVAILABLE JOBS SECTION */}
-      <div className="rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-sm">
-        <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center border-b border-slate-100 pb-3">
-          <h2 className="text-base font-bold text-[#173B57]">
-            {t("workerDashboard.availableJobs") || "Recent Job Opportunities"}
+      <div className="rounded-xl border border-[#E2E8F0] bg-white p-3.5 shadow-2xs">
+        <div className="mb-2.5 flex flex-col justify-between gap-2 sm:flex-row sm:items-center border-b border-slate-100 pb-2">
+          <h2 className="text-sm font-bold text-[#173B57]">
+            {t("workerDashboard.availableJobs") || "Recent Opportunities"}
           </h2>
 
-          <div className="w-full sm:w-64">
+          <div className="w-full sm:w-56">
             <SearchBar
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Filter by title, trade, city..."
+              placeholder="Filter by trade, city..."
             />
           </div>
         </div>
 
         {filteredJobs.length === 0 ? (
-          <div className="py-12 text-center text-slate-500">
-            <div className="text-3xl">🔍</div>
-            <p className="mt-2 text-xs">
+          <div className="py-6 text-center text-slate-500">
+            <div className="text-2xl">🔍</div>
+            <p className="mt-1 text-xs">
               {t("workerDashboard.noMatchingJobs") || "No matching jobs found."}
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {filteredJobs.slice(0, 6).map((job) => (
+          <div className="grid grid-cols-1 gap-2.5 lg:grid-cols-2">
+            {filteredJobs.slice(0, 4).map((job) => (
               <JobCard key={job._id} job={job} />
             ))}
           </div>

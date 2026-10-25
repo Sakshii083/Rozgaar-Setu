@@ -70,25 +70,24 @@ function PostJob() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC]">
+    <div className="min-h-screen md:h-screen md:overflow-hidden flex flex-col bg-[#F7F9FC]">
       <Navbar />
 
-      <main className="py-10 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-xl sm:p-10">
-          {/* HEADER */}
-          <div className="text-center border-b border-slate-100 pb-6">
-            <div className="flex h-12 w-12 mx-auto items-center justify-center rounded-2xl bg-[#173B57] text-2xl text-white">
+      <main className="flex-1 min-h-0 flex flex-col items-center justify-center p-2.5 sm:p-3.5 md:overflow-y-auto">
+        <div className="mx-auto max-w-xl w-full rounded-2xl border border-[#E2E8F0] bg-white p-4 sm:p-5 shadow-lg">
+          <div className="text-center border-b border-slate-100 pb-3">
+            <div className="flex h-9 w-9 mx-auto items-center justify-center rounded-xl bg-[#173B57] text-lg text-white">
               💼
             </div>
-            <h1 className="mt-3 text-2xl font-black text-[#173B57] sm:text-3xl">
+            <h1 className="mt-1.5 text-lg font-black text-[#173B57]">
               Post a New Job Vacancy
             </h1>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-0.5 text-[11px] text-slate-500">
               Reach thousands of skilled local workers in your city and neighborhood.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-xs">
+          <form onSubmit={handleSubmit} className="mt-3.5 space-y-2.5 text-xs">
             {/* TITLE */}
             <div>
               <label className="block font-bold text-slate-700">Job Title *</label>
@@ -99,33 +98,33 @@ function PostJob() {
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="e.g. Experienced Plumber for Residential Renovation"
-                className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
               />
             </div>
 
             {/* DESCRIPTION */}
             <div>
-              <label className="block font-bold text-slate-700">Detailed Job Description *</label>
+              <label className="block font-bold text-slate-700">Job Description *</label>
               <textarea
-                rows={4}
+                rows={2}
                 name="description"
                 required
                 value={formData.description}
                 onChange={handleChange}
-                placeholder="Describe the nature of work, scope, location, timings, and required tools..."
-                className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                placeholder="Describe work scope, location, timings, and required tools..."
+                className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white resize-none"
               />
             </div>
 
             {/* SKILL & EMPLOYMENT TYPE */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <div>
-                <label className="block font-bold text-slate-700">Required Trade / Skill *</label>
+                <label className="block font-bold text-slate-700">Required Trade *</label>
                 <select
                   name="skill"
                   value={formData.skill}
                   onChange={handleChange}
-                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                  className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                 >
                   {skills.map((s) => (
                     <option key={s} value={s}>{s}</option>
@@ -139,7 +138,7 @@ function PostJob() {
                   name="jobType"
                   value={formData.jobType}
                   onChange={handleChange}
-                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                  className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                 >
                   <option value="Daily Wage">Daily Wage</option>
                   <option value="Part Time">Part Time</option>
@@ -150,7 +149,7 @@ function PostJob() {
             </div>
 
             {/* CITY & SALARY */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <div>
                 <label className="block font-bold text-slate-700">City / Location *</label>
                 <input
@@ -160,7 +159,7 @@ function PostJob() {
                   value={formData.city}
                   onChange={handleChange}
                   placeholder="e.g. Pune, Bengaluru, Mumbai"
-                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                  className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                 />
               </div>
 
@@ -174,17 +173,17 @@ function PostJob() {
                   value={formData.salary}
                   onChange={handleChange}
                   placeholder="e.g. 800"
-                  className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
+                  className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                 />
               </div>
             </div>
 
             {/* SUBMIT BUTTON */}
-            <div className="pt-4">
+            <div className="pt-2">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-xl bg-[#173B57] py-3.5 text-sm font-bold text-white shadow-md transition hover:bg-[#0f2638] disabled:opacity-50"
+                className="w-full rounded-lg bg-[#173B57] py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#0f2638] disabled:opacity-50"
               >
                 {loading ? "Publishing Job..." : "🚀 Publish Job Listing"}
               </button>
@@ -192,8 +191,6 @@ function PostJob() {
           </form>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }

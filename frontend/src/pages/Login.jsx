@@ -66,33 +66,33 @@ function Login() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#F7F9FC] px-4 py-12">
-      <div className="w-full max-w-md rounded-3xl border border-[#E2E8F0] bg-white p-8 shadow-xl sm:p-10">
+    <div className="flex min-h-screen md:h-screen items-center justify-center bg-[#F7F9FC] p-3 sm:p-4">
+      <div className="w-full max-w-sm rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:p-6 shadow-xl">
         {/* LOGO & HEADING */}
         <div className="text-center">
           <Link to="/" className="inline-block">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#173B57] text-2xl font-black text-white shadow-md shadow-[#173B57]/20">
+            <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-[#173B57] text-lg font-black text-white shadow-xs">
               R
             </div>
           </Link>
 
-          <h1 className="mt-5 text-2xl font-black text-[#173B57] sm:text-3xl">
+          <h1 className="mt-2 text-xl font-black text-[#173B57]">
             {t("login.title") || "Welcome Back"}
           </h1>
 
-          <p className="mt-1 text-xs text-slate-500">
+          <p className="mt-0.5 text-[11px] text-slate-500">
             {t("login.subtitle") || "Login to access your employment dashboard"}
           </p>
         </div>
 
         {/* ERROR ALERT */}
         {errorMessage && (
-          <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-semibold text-red-700">
+          <div role="alert" className="mt-3 rounded-lg border border-red-200 bg-red-50 p-2 text-xs font-semibold text-red-700">
             ⚠️ {errorMessage}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4 text-xs">
+        <form onSubmit={handleSubmit} className="mt-4 space-y-3 text-xs">
           <div>
             <label className="block font-bold text-slate-700">Email Address *</label>
             <input
@@ -102,7 +102,7 @@ function Login() {
               placeholder="you@example.com"
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+              className="mt-1 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-2 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
             />
           </div>
 
@@ -115,27 +115,27 @@ function Login() {
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
-              className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white focus:ring-2 focus:ring-[#0F9D8A]/20"
+              className="mt-1 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-2 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full rounded-xl bg-[#173B57] py-3.5 text-sm font-bold text-white shadow-md shadow-[#173B57]/20 transition hover:bg-[#0f2638] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-1 w-full rounded-lg bg-[#173B57] py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#0f2638] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Logging in..." : "🔐 Login to Account"}
           </button>
         </form>
 
-        <div className="mt-6 border-t border-slate-100 pt-4 text-center text-xs text-slate-600">
+        <div className="mt-4 border-t border-slate-100 pt-3 text-center text-xs text-slate-600">
           <span>Don't have an account yet? </span>
           <Link to="/register" className="font-bold text-[#0F9D8A] hover:underline">
             Register Here
           </Link>
         </div>
 
-        <div className="mt-3 text-center">
+        <div className="mt-2 text-center">
           <Link to="/" className="text-[11px] text-slate-400 hover:text-slate-600">
             ← Return to Homepage
           </Link>

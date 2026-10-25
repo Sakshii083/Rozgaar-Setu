@@ -353,32 +353,32 @@ export default function Home() {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#F7F9FC] text-[#202938] flex flex-col font-sans select-none">
+    <div className="min-h-screen md:h-screen w-full md:overflow-hidden bg-[#F7F9FC] text-[#202938] flex flex-col font-sans select-none">
       {/* 1. COMPACT TOP HEADER BAR (FIT IN FRAME) */}
-      <header className="h-14 bg-white border-b border-[#E2E8F0] px-3 sm:px-6 flex items-center justify-between shrink-0 shadow-xs z-30">
+      <header className="h-12 bg-white border-b border-[#E2E8F0] px-3 sm:px-5 flex items-center justify-between shrink-0 shadow-2xs z-30">
         {/* Brand */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#173B57] text-base font-black text-white shadow-xs">
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#173B57] text-base font-black text-white shadow-2xs">
             R
           </div>
           <div>
             <span className="text-base sm:text-lg font-black text-[#173B57] tracking-tight">
               Rozgaar<span className="text-[#0F9D8A]"> Setu</span>
             </span>
-            <span className="hidden md:inline ml-2 text-[10px] bg-[#0F9D8A]/10 text-[#0F9D8A] font-bold px-2 py-0.5 rounded-full">
+            <span className="hidden md:inline ml-2 text-[9px] bg-[#0F9D8A]/10 text-[#0F9D8A] font-bold px-1.5 py-0.5 rounded-full">
               Local Employment Hub
             </span>
           </div>
         </div>
 
         {/* Center Mode Switcher Tabs */}
-        <nav className="flex items-center gap-1 bg-[#F7F9FC] p-1 rounded-xl border border-[#E2E8F0] text-xs">
+        <nav className="flex items-center gap-1 bg-[#F7F9FC] p-0.5 rounded-lg border border-[#E2E8F0] text-xs">
           <button
             type="button"
             onClick={() => setActiveTab("workers")}
-            className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg font-bold transition ${
+            className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md font-bold transition text-xs ${
               activeTab === "workers"
-                ? "bg-[#173B57] text-white shadow-xs"
+                ? "bg-[#173B57] text-white shadow-2xs"
                 : "text-slate-600 hover:text-[#173B57]"
             }`}
           >
@@ -390,9 +390,9 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setActiveTab("jobs")}
-            className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg font-bold transition ${
+            className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md font-bold transition text-xs ${
               activeTab === "jobs"
-                ? "bg-[#173B57] text-white shadow-xs"
+                ? "bg-[#173B57] text-white shadow-2xs"
                 : "text-slate-600 hover:text-[#173B57]"
             }`}
           >
@@ -404,9 +404,9 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setActiveTab("sathi")}
-            className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg font-bold transition ${
+            className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md font-bold transition text-xs ${
               activeTab === "sathi"
-                ? "bg-[#0F9D8A] text-white shadow-xs"
+                ? "bg-[#0F9D8A] text-white shadow-2xs"
                 : "text-[#0F9D8A] hover:bg-[#0F9D8A]/10"
             }`}
           >
@@ -418,9 +418,9 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setActiveTab("vaani")}
-            className={`flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-lg font-bold transition ${
+            className={`flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md font-bold transition text-xs ${
               activeTab === "vaani"
-                ? "bg-[#F4B942] text-[#202938] shadow-xs"
+                ? "bg-[#F4B942] text-[#202938] shadow-2xs"
                 : "text-slate-600 hover:text-[#173B57]"
             }`}
           >
@@ -432,9 +432,9 @@ export default function Home() {
           <button
             type="button"
             onClick={() => setActiveTab("hub")}
-            className={`md:hidden flex items-center gap-1 px-2 py-1.5 rounded-lg font-bold transition ${
+            className={`md:hidden flex items-center gap-1 px-2 py-1 rounded-md font-bold transition text-xs ${
               activeTab === "hub"
-                ? "bg-[#173B57] text-white shadow-xs"
+                ? "bg-[#173B57] text-white shadow-2xs"
                 : "text-slate-600 hover:text-[#173B57]"
             }`}
           >
@@ -497,7 +497,7 @@ export default function Home() {
       </header>
 
       {/* 2. MAIN ONE-FRAME WORKSPACE (NO OUTER SCROLL) */}
-      <main className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-[1fr_290px] lg:grid-cols-[1fr_330px] p-2 sm:p-3.5 gap-2.5 sm:gap-3 overflow-hidden">
+      <main className="flex-1 min-h-0 grid grid-cols-1 md:grid-cols-[1fr_280px] lg:grid-cols-[1fr_315px] p-2 sm:p-2.5 gap-2 sm:gap-2.5 md:overflow-hidden">
         {/* ========================================================= */}
         {/* LEFT / CENTER INTERACTIVE STAGE (Dynamic by Active Tab)   */}
         {/* ========================================================= */}
@@ -1112,58 +1112,58 @@ export default function Home() {
         {/* ========================================================= */}
         {/* RIGHT COMMAND WIDGET (STATS, DIRECT ACTIONS & PILLARS)    */}
         {/* ========================================================= */}
-        <aside className="hidden md:flex h-full min-h-0 bg-white rounded-2xl border border-[#E2E8F0] p-3.5 shadow-xs flex-col justify-between overflow-hidden">
+        <aside className="hidden md:flex h-full min-h-0 bg-white rounded-xl border border-[#E2E8F0] p-2.5 sm:p-3 shadow-2xs flex-col justify-between md:overflow-hidden">
           {/* Top: Live Platform Counters */}
           <div>
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
-              <span className="text-xs font-black text-[#173B57] uppercase tracking-wider">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <span className="text-[11px] font-black text-[#173B57] uppercase tracking-wider">
                 Live Activity
               </span>
-              <span className="flex items-center gap-1 text-[10px] font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
+              <span className="flex items-center gap-1 text-[9px] font-bold text-green-700 bg-green-50 px-1.5 py-0.5 rounded-full">
                 <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse"></span>
                 Connected
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 mt-2.5">
-              <div className="rounded-xl bg-[#F7F9FC] p-2.5 text-center border border-slate-100">
-                <span className="text-base">👷</span>
-                <p className="text-lg font-black text-[#173B57] leading-tight mt-0.5">{stats.workers}</p>
-                <p className="text-[10px] font-semibold text-slate-500">Registered Workers</p>
+            <div className="grid grid-cols-2 gap-1.5 mt-2">
+              <div className="rounded-lg bg-[#F7F9FC] p-2 text-center border border-slate-100">
+                <span className="text-sm">👷</span>
+                <p className="text-base font-black text-[#173B57] leading-tight mt-0.5">{stats.workers}</p>
+                <p className="text-[9px] font-semibold text-slate-500">Registered Workers</p>
               </div>
 
-              <div className="rounded-xl bg-[#F7F9FC] p-2.5 text-center border border-slate-100">
-                <span className="text-base">💼</span>
-                <p className="text-lg font-black text-[#0F9D8A] leading-tight mt-0.5">{stats.jobs}</p>
-                <p className="text-[10px] font-semibold text-slate-500">Active Job Openings</p>
+              <div className="rounded-xl bg-[#F7F9FC] p-2 text-center border border-slate-100">
+                <span className="text-sm">💼</span>
+                <p className="text-base font-black text-[#0F9D8A] leading-tight mt-0.5">{stats.jobs}</p>
+                <p className="text-[9px] font-semibold text-slate-500">Active Job Openings</p>
               </div>
 
-              <div className="rounded-xl bg-[#F7F9FC] p-2.5 text-center border border-slate-100">
-                <span className="text-base">🏢</span>
-                <p className="text-lg font-black text-slate-800 leading-tight mt-0.5">{stats.employers}</p>
-                <p className="text-[10px] font-semibold text-slate-500">Direct Employers</p>
+              <div className="rounded-xl bg-[#F7F9FC] p-2 text-center border border-slate-100">
+                <span className="text-sm">🏢</span>
+                <p className="text-base font-black text-slate-800 leading-tight mt-0.5">{stats.employers}</p>
+                <p className="text-[9px] font-semibold text-slate-500">Direct Employers</p>
               </div>
 
-              <div className="rounded-xl bg-[#F7F9FC] p-2.5 text-center border border-slate-100">
-                <span className="text-base">📍</span>
-                <p className="text-lg font-black text-[#F4B942] leading-tight mt-0.5">{stats.cities}</p>
-                <p className="text-[10px] font-semibold text-slate-500">Cities Connected</p>
+              <div className="rounded-xl bg-[#F7F9FC] p-2 text-center border border-slate-100">
+                <span className="text-sm">📍</span>
+                <p className="text-base font-black text-[#F4B942] leading-tight mt-0.5">{stats.cities}</p>
+                <p className="text-[9px] font-semibold text-slate-500">Cities Connected</p>
               </div>
             </div>
 
             {/* Middle: Fast Action Buttons */}
-            <div className="mt-3.5 pt-3 border-t border-slate-100 space-y-2">
+            <div className="mt-2.5 pt-2 border-t border-slate-100 space-y-1.5">
               <Link
                 to="/post-job"
-                className="w-full flex items-center justify-between rounded-xl bg-[#173B57] px-3.5 py-2.5 text-xs font-bold text-white shadow-2xs hover:bg-[#0f2638] transition"
+                className="w-full flex items-center justify-between rounded-lg bg-[#173B57] px-3 py-2 text-xs font-bold text-white shadow-2xs hover:bg-[#0f2638] transition"
               >
-                <span>➕ Post a Job Requirement</span>
+                <span>➕ Post a Job Opening</span>
                 <span>→</span>
               </Link>
 
               <Link
                 to="/worker-register"
-                className="w-full flex items-center justify-between rounded-xl bg-[#0F9D8A] px-3.5 py-2.5 text-xs font-bold text-white shadow-2xs hover:bg-[#0b7c6d] transition"
+                className="w-full flex items-center justify-between rounded-lg bg-[#0F9D8A] px-3 py-2 text-xs font-bold text-white shadow-2xs hover:bg-[#0b7c6d] transition"
               >
                 <span>👷 Register as Worker</span>
                 <span>→</span>

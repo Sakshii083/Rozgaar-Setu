@@ -74,30 +74,30 @@ function Applications() {
 
   return (
     <DashboardLayout>
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-5xl">
         {/* HEADER */}
-        <div className="mb-6 flex flex-col justify-between gap-2 sm:flex-row sm:items-center border-b border-[#E2E8F0] pb-4">
+        <div className="mb-3.5 flex flex-col justify-between gap-1.5 sm:flex-row sm:items-center border-b border-[#E2E8F0] pb-2.5">
           <div>
-            <h1 className="text-2xl font-black text-[#173B57]">
+            <h1 className="text-lg font-black text-[#173B57]">
               {isEmployer ? "Candidate Applications" : "My Job Applications"}
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-[11px] text-slate-500">
               {isEmployer
                 ? "Review skilled candidates who applied for your job listings"
                 : "Track the status of your applications submitted to employers"}
             </p>
           </div>
 
-          <span className="self-start rounded-full bg-[#173B57]/10 px-3.5 py-1 text-xs font-bold text-[#173B57]">
-            {applications.length} Total Applications
+          <span className="self-start rounded-full bg-[#173B57]/10 px-2.5 py-0.5 text-xs font-bold text-[#173B57]">
+            {applications.length} Applications
           </span>
         </div>
 
         {/* EMPTY STATE */}
         {applications.length === 0 ? (
-          <div className="rounded-3xl border border-[#E2E8F0] bg-white p-12 text-center shadow-xs">
-            <div className="text-4xl">📭</div>
-            <h2 className="mt-3 text-base font-bold text-slate-800">
+          <div className="rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center shadow-2xs">
+            <div className="text-3xl">📭</div>
+            <h2 className="mt-2 text-sm font-bold text-slate-800">
               No Applications Found
             </h2>
             <p className="mt-1 text-xs text-slate-500">
@@ -108,26 +108,26 @@ function Applications() {
           </div>
         ) : (
           /* APPLICATION CARDS */
-          <div className="space-y-4">
+          <div className="space-y-2.5">
             {applications.map((app) => (
               <div
                 key={app._id}
-                className="rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-xs transition hover:shadow-md"
+                className="rounded-xl border border-[#E2E8F0] bg-white p-3.5 shadow-2xs transition hover:shadow-xs text-xs"
               >
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid gap-3 md:grid-cols-2">
                   {/* LEFT: WORKER / APPLICANT PROFILE */}
                   <div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#173B57] text-xl font-bold text-white">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#173B57] text-base font-bold text-white">
                         👤
                       </div>
                       <div>
-                        <h2 className="text-base font-bold text-[#202938]">
+                        <h2 className="text-sm font-bold text-[#202938]">
                           {isEmployer
                             ? app.worker?.name || "Applicant"
                             : app.job?.title || "Job Listing"}
                         </h2>
-                        <p className="text-xs font-semibold text-[#0F9D8A]">
+                        <p className="text-[11px] font-semibold text-[#0F9D8A]">
                           {isEmployer
                             ? `Trade: ${app.worker?.skill || "Worker"}`
                             : `Employer: ${app.employer?.name || "Direct Employer"}`}
@@ -135,7 +135,7 @@ function Applications() {
                       </div>
                     </div>
 
-                    <div className="mt-4 space-y-1.5 rounded-xl bg-[#F7F9FC] p-3 text-xs text-slate-700">
+                    <div className="mt-2 space-y-1 rounded-lg bg-[#F7F9FC] p-2 text-[11px] text-slate-700">
                       {isEmployer ? (
                         <>
                           <p>📞 Phone: <span className="font-bold text-slate-900">{app.worker?.phone || "Not available"}</span></p>
@@ -159,11 +159,11 @@ function Applications() {
                   <div className="flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                          {isEmployer ? "Job Listing Applied For" : "Application Status"}
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                          {isEmployer ? "Job Applied For" : "Application Status"}
                         </span>
                         <span
-                          className={`rounded-full px-3 py-0.5 text-xs font-bold ${
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                             app.status === "Accepted"
                               ? "bg-green-100 text-green-800"
                               : app.status === "Rejected"
@@ -180,7 +180,7 @@ function Applications() {
                       </div>
 
                       {isEmployer && (
-                        <div className="mt-3 rounded-xl bg-[#F7F9FC] p-3 text-xs text-slate-700 space-y-1">
+                        <div className="mt-2 rounded-lg bg-[#F7F9FC] p-2 text-[11px] text-slate-700 space-y-0.5">
                           <p className="font-bold text-slate-900">{app.job?.title || "Job Listing"}</p>
                           <p>📍 Location: {app.job?.city}</p>
                           <p>💰 Wage: ₹{app.job?.salary}</p>
@@ -190,11 +190,11 @@ function Applications() {
 
                     {/* EMPLOYER ACTION BUTTONS */}
                     {isEmployer && (
-                      <div className="mt-4 flex flex-wrap gap-2 pt-3 border-t border-slate-100">
+                      <div className="mt-2.5 flex flex-wrap gap-1.5 pt-2 border-t border-slate-100">
                         {app.worker?.phone && (
                           <a
                             href={`tel:${app.worker.phone}`}
-                            className="rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                            className="rounded-lg border border-slate-200 px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-slate-50"
                           >
                             📞 Call
                           </a>
@@ -206,16 +206,16 @@ function Applications() {
                               type="button"
                               onClick={() => handleStatusUpdate(app._id, "Accepted")}
                               disabled={updatingId === app._id}
-                              className="rounded-xl bg-[#0F9D8A] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#0b7c6d] disabled:opacity-50"
+                              className="rounded-lg bg-[#0F9D8A] px-3 py-1 text-xs font-bold text-white transition hover:bg-[#0b7c6d] disabled:opacity-50"
                             >
-                              ✅ Accept Applicant
+                              ✅ Accept
                             </button>
 
                             <button
                               type="button"
                               onClick={() => handleStatusUpdate(app._id, "Rejected")}
                               disabled={updatingId === app._id}
-                              className="rounded-xl bg-red-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-red-700 disabled:opacity-50"
+                              className="rounded-lg bg-red-600 px-3 py-1 text-xs font-bold text-white transition hover:bg-red-700 disabled:opacity-50"
                             >
                               ✕ Reject
                             </button>
