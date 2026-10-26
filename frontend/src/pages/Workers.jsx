@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import AIFeatures from "../components/AIFeatures";
 import { useLanguage } from "../context/LanguageContext";
 import { searchWorkers } from "../api/workerDashboardApi";
 
@@ -13,6 +14,7 @@ function Workers() {
   const [city, setCity] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedWorker, setSelectedWorker] = useState(null);
+  const [showAIAssistant, setShowAIAssistant] = useState(false);
 
   const skills = [
     "Plumber",
@@ -100,17 +102,17 @@ function Workers() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 mb-2 border-b border-slate-200 shrink-0 gap-1">
           <div>
             <h1 className="text-base sm:text-lg font-black text-[#173B57]">
-              👷 Discover Skilled Workers Near You
+              👷 {t("workers.title") || "Discover Skilled Workers Near You"}
             </h1>
             <p className="text-[11px] text-slate-500">
-              Hire trusted tradespeople directly in your neighborhood. Zero commission deductions.
+              {t("workers.subtitle") || "Hire trusted tradespeople directly in your neighborhood. Zero commission deductions."}
             </p>
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
             <span className="rounded-full bg-[#0F9D8A]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#0F9D8A]">
-              {filteredWorkers.length} Workers
+              {filteredWorkers.length} {t("workers.available") || "Workers"}
             </span>
-            <span className="font-semibold text-green-700 text-[11px]">● Direct Contact</span>
+            <span className="font-semibold text-green-700 text-[11px]">● {t("hero.benefits.directContact") || "Direct Contact"}</span>
           </div>
         </div>
 
@@ -122,7 +124,7 @@ function Workers() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1.5 text-xs">
             <input
               type="text"
-              placeholder="Search by name, skill..."
+              placeholder={t("workers.search") || "Search by name, skill..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
@@ -133,9 +135,11 @@ function Workers() {
               onChange={(e) => setSkill(e.target.value)}
               className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
             >
-              <option value="">All Skills / Trades</option>
+              <option value="">{t("workers.selectSkill") || "All Skills / Trades"}</option>
               {skills.map((item) => (
-                <option key={item} value={item}>{item}</option>
+                <option key={item} value={item}>
+                  {t("hero.skills." + item.toLowerCase()) || item}
+                </option>
               ))}
             </select>
 
@@ -144,9 +148,11 @@ function Workers() {
               onChange={(e) => setCity(e.target.value)}
               className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
             >
-              <option value="">All Cities</option>
+              <option value="">{t("workers.selectCity") || "All Cities"}</option>
               {cities.map((item) => (
-                <option key={item} value={item}>{item}</option>
+                <option key={item} value={item}>
+                  {t("hero.cities." + item.toLowerCase()) || item}
+                </option>
               ))}
             </select>
 
@@ -154,7 +160,7 @@ function Workers() {
               type="submit"
               className="rounded-lg bg-[#173B57] px-3 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#0f2638]"
             >
-              🔍 Filter
+              🔍 {t("common.search") || "Filter"}
             </button>
 
             <button
@@ -162,10 +168,34 @@ function Workers() {
               onClick={clearSearch}
               className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-200"
             >
-              ↻ Reset
+              ↻ {t("workers.clear") || "Reset"}
             </button>
           </div>
         </form>
+
+        {/* ROZGAAR SAATHI AI DISCOVERY INTEGRATION */}
+        <div className="mb-2 rounded-xl border border-[#0F9D8A]/30 bg-[#0F9D8A]/5 px-3 py-2 flex items-center justify-between text-xs shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-base">🤖</span>
+            <div>
+              <span className="font-bold text-[#173B57]">{t("ai.title") || "Rozgaar Saathi AI"}:</span>{" "}
+              <span className="text-slate-600 hidden sm:inline">{t("ai.description") || "Search using voice or natural language"}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowAIAssistant(!showAIAssistant)}
+            className="rounded-lg bg-[#0F9D8A] px-3 py-1 font-bold text-white text-xs hover:bg-[#0b7c6d] transition shrink-0"
+          >
+            {showAIAssistant ? "✕ Close" : "🤖 " + (t("ai.title") || "Ask Rozgaar Saathi")}
+          </button>
+        </div>
+
+        {showAIAssistant && (
+          <div className="mb-2.5 rounded-xl border border-slate-200 bg-white p-3 shadow-2xs shrink-0 max-h-64 overflow-y-auto">
+            <AIFeatures compact />
+          </div>
+        )}
 
         {/* WORKERS GRID */}
         <div className="flex-1 min-h-0 overflow-y-auto pr-1">

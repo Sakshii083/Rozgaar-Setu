@@ -29,23 +29,13 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.name.trim() ||
-      !formData.email.trim() ||
-      !formData.phone.trim() ||
-      !formData.password
-    ) {
-      setErrorMessage("Please fill in all required fields.");
+    if (!formData.name.trim() || !formData.email.trim() || !formData.password || !formData.phone.trim()) {
+      setErrorMessage(t("register.fillAllFields") || "Please fill all required fields.");
       return;
     }
 
-    if (!/^[0-9]{10}$/.test(formData.phone.trim())) {
-      setErrorMessage("Please enter a valid 10-digit mobile number.");
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setErrorMessage("Password must be at least 6 characters long.");
+    if (formData.phone.trim().length !== 10) {
+      setErrorMessage(t("register.phoneLength") || "Please enter a valid 10-digit Indian phone number.");
       return;
     }
 
@@ -59,12 +49,12 @@ function Register() {
         email: formData.email.trim().toLowerCase(),
       });
 
-      alert(res.data.message || "Account registered successfully! Please log in.");
+      alert(res.data.message || t("register.success") || "Account registered successfully! Please log in.");
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
       setErrorMessage(
-        error.response?.data?.message || "Registration failed. Please check your details."
+        error.response?.data?.message || t("register.error") || "Registration failed. Please check your details."
       );
     } finally {
       setLoading(false);
@@ -98,7 +88,9 @@ function Register() {
 
         <form onSubmit={handleSubmit} className="mt-3 space-y-2 text-xs">
           <div>
-            <label className="block font-bold text-slate-700">Full Name *</label>
+            <label className="block font-bold text-slate-700">
+              {t("register.fullName") || "Full Name"} *
+            </label>
             <input
               type="text"
               name="name"
@@ -112,7 +104,9 @@ function Register() {
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block font-bold text-slate-700">Email *</label>
+              <label className="block font-bold text-slate-700">
+                {t("login.email") || "Email"} *
+              </label>
               <input
                 type="email"
                 name="email"
@@ -125,7 +119,9 @@ function Register() {
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700">Phone *</label>
+              <label className="block font-bold text-slate-700">
+                {t("register.phone") || "Phone"} *
+              </label>
               <input
                 type="tel"
                 name="phone"
@@ -141,7 +137,9 @@ function Register() {
 
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block font-bold text-slate-700">Password *</label>
+              <label className="block font-bold text-slate-700">
+                {t("login.password") || "Password"} *
+              </label>
               <input
                 type="password"
                 name="password"
@@ -155,16 +153,18 @@ function Register() {
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700">Role *</label>
+              <label className="block font-bold text-slate-700">
+                {t("register.role") || "Role"} *
+              </label>
               <select
                 name="role"
                 value={formData.role}
                 onChange={handleChange}
                 className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs font-semibold text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
               >
-                <option value="worker">👷 Worker</option>
-                <option value="employer">🏢 Employer</option>
-                <option value="professional">👨‍🎓 Pro</option>
+                <option value="worker">👷 {t("roles.worker.title") || "Worker"}</option>
+                <option value="employer">🏢 {t("roles.employer.title") || "Employer"}</option>
+                <option value="professional">👨‍🎓 {t("roles.professional.title") || "Pro"}</option>
               </select>
             </div>
           </div>
@@ -174,20 +174,20 @@ function Register() {
             disabled={loading}
             className="mt-2 w-full rounded-lg bg-[#0F9D8A] py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#0b7c6d] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Creating..." : "🚀 Register Free"}
+            {loading ? (t("register.creating") || "Creating...") : `🚀 ${t("nav.getStarted") || "Register Free"}`}
           </button>
         </form>
 
         <div className="mt-3 border-t border-slate-100 pt-2.5 text-center text-xs text-slate-600">
-          <span>Already registered? </span>
+          <span>{t("register.alreadyRegistered") || "Already registered?"} </span>
           <Link to="/login" className="font-bold text-[#173B57] hover:underline">
-            Login
+            {t("nav.login") || "Login"}
           </Link>
         </div>
 
         <div className="mt-1.5 text-center">
           <Link to="/" className="text-[11px] text-slate-400 hover:text-slate-600">
-            ← Return to Homepage
+            ← {t("nav.home") || "Return to Homepage"}
           </Link>
         </div>
       </div>

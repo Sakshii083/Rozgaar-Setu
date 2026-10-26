@@ -136,6 +136,33 @@ function WorkerDashboard() {
         </div>
       </div>
 
+      {/* VAANI AI FEATURE CARD FOR AUTHENTICATED WORKERS */}
+      <div className="mb-3.5 rounded-2xl border border-amber-200 bg-amber-50/80 p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#F4B942] text-xl shadow-xs">
+            🎙️
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-bold text-[#173B57]">Vaani AI — Voice Profile Creator</h3>
+              <span className="rounded-full bg-amber-200/80 px-2 py-0.5 text-[10px] font-bold text-amber-900">
+                Worker Feature
+              </span>
+            </div>
+            <p className="mt-0.5 text-xs text-slate-600">
+              Speak naturally in your mother tongue (Hindi, Kannada, Marathi, Telugu, English) to generate or update your trade profile hands-free.
+            </p>
+          </div>
+        </div>
+
+        <Link
+          to="/voice-profile"
+          className="rounded-xl bg-[#173B57] px-4 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#0f2638] shrink-0 text-center"
+        >
+          🎙️ Vaani AI – Create Your Profile
+        </Link>
+      </div>
+
       {/* STATS CARDS */}
       <div className="mb-3.5 grid grid-cols-2 gap-2 sm:grid-cols-2 lg:grid-cols-4">
         <DashboardCard

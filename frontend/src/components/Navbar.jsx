@@ -48,28 +48,28 @@ function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#E2E8F0] bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-2 sm:px-6">
+    <header className="sticky top-0 z-50 border-b border-[#DCE6EF] bg-white/95 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-3 py-1.5 sm:px-6">
         {/* LOGO */}
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#173B57] text-base font-black text-white shadow-xs">
+        <Link to="/" className="flex items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#173B57] text-sm font-black text-white shadow-xs">
             R
           </div>
           <div>
-            <span className="text-base sm:text-lg font-black tracking-tight text-[#173B57]">
+            <span className="text-sm sm:text-base font-black tracking-tight text-[#173B57]">
               Rozgaar<span className="text-[#0F9D8A]"> Setu</span>
             </span>
-            <p className="hidden text-[9px] font-semibold text-slate-500 sm:block leading-none">
-              Local Skills. Local Opportunities.
+            <p className="hidden text-[8px] font-semibold text-slate-500 sm:block leading-none">
+              {t("nav.tagline") || "Local Skills. Local Opportunities."}
             </p>
           </div>
         </Link>
 
         {/* DESKTOP NAVIGATION LINKS */}
-        <nav className="hidden items-center gap-5 lg:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           <Link
             to="/"
-            className={`text-xs font-semibold transition ${
+            className={`text-sm font-semibold transition ${
               location.pathname === "/"
                 ? "text-[#0F9D8A] font-bold"
                 : "text-slate-700 hover:text-[#173B57]"
@@ -80,7 +80,7 @@ function Navbar() {
 
           <Link
             to="/jobs"
-            className={`text-xs font-semibold transition ${
+            className={`text-sm font-semibold transition ${
               location.pathname === "/jobs"
                 ? "text-[#0F9D8A] font-bold"
                 : "text-slate-700 hover:text-[#173B57]"
@@ -91,7 +91,7 @@ function Navbar() {
 
           <Link
             to="/workers"
-            className={`text-xs font-semibold transition ${
+            className={`text-sm font-semibold transition ${
               location.pathname === "/workers"
                 ? "text-[#0F9D8A] font-bold"
                 : "text-slate-700 hover:text-[#173B57]"
@@ -99,44 +99,17 @@ function Navbar() {
           >
             {t("nav.workers") || "Find Workers"}
           </Link>
-
-          <Link
-            to="/#sathi"
-            className="flex items-center gap-1 text-xs font-semibold text-slate-700 transition hover:text-[#0F9D8A]"
-          >
-            <span>🤖</span>
-            <span>Rozgaar Saathi</span>
-          </Link>
-
-          <Link
-            to="/voice-profile"
-            className="flex items-center gap-1 text-xs font-semibold text-slate-700 transition hover:text-[#0F9D8A]"
-          >
-            <span>🎙️</span>
-            <span>Vaani AI</span>
-          </Link>
-
-          <Link
-            to="/about"
-            className={`text-xs font-semibold transition ${
-              location.pathname === "/about"
-                ? "text-[#0F9D8A] font-bold"
-                : "text-slate-700 hover:text-[#173B57]"
-            }`}
-          >
-            About
-          </Link>
         </nav>
 
         {/* DESKTOP RIGHT ACTIONS */}
-        <div className="hidden items-center gap-2.5 lg:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           {/* LANGUAGE SELECTOR */}
-          <div className="flex items-center gap-1 rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2 py-1 text-xs">
+          <div className="flex items-center gap-1 rounded-full border border-[#DCE6EF] bg-white px-3 py-1.5 text-xs shadow-2xs">
             <span className="text-xs">🌐</span>
             <select
               value={language}
               onChange={handleLanguageChange}
-              className="cursor-pointer bg-transparent text-xs font-bold text-slate-700 outline-none"
+              className="cursor-pointer bg-transparent text-xs font-bold text-[#172B4D] outline-none"
               aria-label={t("nav.language") || "Language"}
             >
               <option value="en">English</option>
@@ -149,17 +122,17 @@ function Navbar() {
 
           {/* AUTHENTICATION STATE */}
           {!user ? (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               <Link
                 to="/login"
-                className="rounded-lg px-2.5 py-1 text-xs font-bold text-[#173B57] transition hover:bg-slate-100"
+                className="rounded-full px-4 py-1.5 text-xs font-bold text-[#172B4D] transition hover:bg-slate-100"
               >
                 {t("nav.login") || "Login"}
               </Link>
 
               <Link
                 to="/register"
-                className="rounded-lg bg-[#173B57] px-3 py-1 text-xs font-bold text-white shadow-xs transition hover:bg-[#0f2638]"
+                className="rounded-full bg-[#0F9D8A] px-4 py-1.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#0c8272]"
               >
                 {t("nav.getStarted") || "Get Started"}
               </Link>
@@ -170,7 +143,7 @@ function Navbar() {
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                 className="flex items-center gap-2.5 rounded-xl border border-[#E2E8F0] bg-white px-3 py-1.5 transition hover:bg-slate-50"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0F9D8A] font-bold text-white text-xs">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#0F9D8A] font-bold text-white text-xs">
                   {user.name?.charAt(0).toUpperCase()}
                 </div>
 
@@ -201,7 +174,7 @@ function Navbar() {
                     onClick={() => setUserDropdownOpen(false)}
                     className="block rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-[#F7F9FC] hover:text-[#173B57]"
                   >
-                    📄 Applications
+                    📄 {t("dashboard.applications") || "Applications"}
                   </Link>
 
                   {user.role === "worker" && (
@@ -211,7 +184,7 @@ function Navbar() {
                         onClick={() => setUserDropdownOpen(false)}
                         className="block rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-[#F7F9FC] hover:text-[#173B57]"
                       >
-                        👤 Edit Profile
+                        👤 {t("dashboard.editProfile") || "Edit Profile"}
                       </Link>
                       <Link
                         to="/voice-profile"
@@ -229,7 +202,7 @@ function Navbar() {
                       onClick={() => setUserDropdownOpen(false)}
                       className="block rounded-xl px-4 py-2.5 text-xs font-bold text-[#0F9D8A] hover:bg-[#0F9D8A]/10"
                     >
-                      ➕ Post New Job
+                      ➕ {t("nav.postJob") || "Post New Job"}
                     </Link>
                   )}
 
@@ -253,8 +226,8 @@ function Navbar() {
           <select
             value={language}
             onChange={handleLanguageChange}
-            className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2 py-1.5 text-xs font-bold text-slate-700 outline-none"
-            aria-label="Language"
+            className="rounded-lg border border-[#DCE6EF] bg-[#F4F8FB] px-2 py-1 text-xs font-bold text-[#172B4D] outline-none"
+            aria-label={t("nav.language") || "Language"}
           >
             <option value="en">EN</option>
             <option value="hi">HI</option>
@@ -265,7 +238,7 @@ function Navbar() {
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="rounded-xl border border-[#E2E8F0] p-2 text-slate-700 focus:outline-none"
+            className="rounded-xl border border-[#DCE6EF] p-1.5 text-slate-700 focus:outline-none"
             aria-label="Toggle menu"
           >
             {menuOpen ? "✕" : "☰"}
@@ -275,12 +248,12 @@ function Navbar() {
 
       {/* MOBILE COLLAPSIBLE MENU */}
       {menuOpen && (
-        <div className="border-t border-[#E2E8F0] bg-white px-4 py-4 lg:hidden">
+        <div className="border-t border-[#DCE6EF] bg-white px-4 py-3 lg:hidden">
           <div className="flex flex-col gap-1 text-sm font-semibold text-slate-700">
             <Link
               to="/"
               onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC]"
+              className="rounded-xl px-3 py-2 hover:bg-[#F7F9FC]"
             >
               🏠 {t("nav.home") || "Home"}
             </Link>
@@ -288,7 +261,7 @@ function Navbar() {
             <Link
               to="/jobs"
               onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC]"
+              className="rounded-xl px-3 py-2 hover:bg-[#F7F9FC]"
             >
               💼 {t("nav.jobs") || "Find Jobs"}
             </Link>
@@ -296,58 +269,26 @@ function Navbar() {
             <Link
               to="/workers"
               onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC]"
+              className="rounded-xl px-3 py-2 hover:bg-[#F7F9FC]"
             >
               👷 {t("nav.workers") || "Find Workers"}
             </Link>
 
-            <Link
-              to="/#sathi"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC] text-[#0F9D8A]"
-            >
-              🤖 Rozgaar Saathi (AI Discovery)
-            </Link>
-
-            <Link
-              to="/voice-profile"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC] text-[#0F9D8A]"
-            >
-              🎙️ Vaani AI (Voice Profile)
-            </Link>
-
-            <Link
-              to="/about"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC]"
-            >
-              ℹ️ About Rozgaar Setu
-            </Link>
-
-            <Link
-              to="/contact"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC]"
-            >
-              📞 Contact & Help
-            </Link>
-
-            <div className="my-2 border-t border-slate-100" />
+            <div className="my-1.5 border-t border-slate-100" />
 
             {!user ? (
               <div className="flex flex-col gap-2 pt-1">
                 <Link
                   to="/login"
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-xl border border-[#173B57] py-2.5 text-center font-bold text-[#173B57]"
+                  className="rounded-xl border border-[#173B57] py-2 text-center text-xs font-bold text-[#173B57]"
                 >
                   {t("nav.login") || "Login"}
                 </Link>
                 <Link
                   to="/register"
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-xl bg-[#173B57] py-2.5 text-center font-bold text-white shadow-sm"
+                  className="rounded-xl bg-[#0F9D8A] py-2 text-center text-xs font-bold text-white shadow-xs"
                 >
                   {t("nav.getStarted") || "Get Started"}
                 </Link>
@@ -372,7 +313,7 @@ function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC]"
                 >
-                  📄 View Applications
+                  📄 {t("dashboard.applications") || "Applications"}
                 </Link>
 
                 {user.role === "worker" && (
@@ -381,7 +322,7 @@ function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className="rounded-xl px-4 py-2.5 hover:bg-[#F7F9FC]"
                   >
-                    👤 Edit Profile
+                    👤 {t("dashboard.editProfile") || "Edit Profile"}
                   </Link>
                 )}
 
@@ -391,7 +332,7 @@ function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className="rounded-xl px-4 py-2.5 text-[#0F9D8A] hover:bg-[#F7F9FC]"
                   >
-                    ➕ Post a Job
+                    ➕ {t("nav.postJob") || "Post a Job"}
                   </Link>
                 )}
 

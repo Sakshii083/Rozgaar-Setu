@@ -152,15 +152,15 @@ function Jobs() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-2 mb-2 border-b border-slate-200 shrink-0 gap-1">
           <div>
             <h1 className="text-base sm:text-lg font-black text-[#173B57]">
-              💼 Browse Available Jobs
+              💼 {t("jobs.title") || "Browse Available Jobs"}
             </h1>
             <p className="text-[11px] text-slate-500">
-              Explore verified local openings across trades. Apply directly with your worker profile.
+              {t("jobs.description") || "Explore verified local openings across trades. Apply directly with your worker profile."}
             </p>
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
             <span className="rounded-full bg-[#173B57]/10 px-2.5 py-0.5 text-[11px] font-bold text-[#173B57]">
-              {filteredJobs.length} of {jobs.length} Jobs
+              {filteredJobs.length} of {jobs.length} {t("jobs.title") || "Jobs"}
             </span>
             <span className="font-semibold text-[#0F9D8A] text-[11px]">● Live Openings</span>
           </div>
@@ -172,7 +172,7 @@ function Jobs() {
             {/* Keyword Search */}
             <input
               type="text"
-              placeholder="Search keyword..."
+              placeholder={t("common.search") || "Search keyword..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
@@ -184,9 +184,11 @@ function Jobs() {
               onChange={(e) => setSelectedSkill(e.target.value)}
               className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
             >
-              <option value="">All Skills</option>
+              <option value="">{t("jobs.skill") || "All Skills"}</option>
               {skills.map((s) => (
-                <option key={s} value={s}>{s}</option>
+                <option key={s} value={s}>
+                  {t("hero.skills." + s.toLowerCase()) || s}
+                </option>
               ))}
             </select>
 
@@ -196,9 +198,11 @@ function Jobs() {
               onChange={(e) => setSelectedCity(e.target.value)}
               className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
             >
-              <option value="">All Cities</option>
+              <option value="">{t("jobs.city") || "All Cities"}</option>
               {cities.map((c) => (
-                <option key={c} value={c}>{c}</option>
+                <option key={c} value={c}>
+                  {t("hero.cities." + c.toLowerCase()) || c}
+                </option>
               ))}
             </select>
 
@@ -208,9 +212,9 @@ function Jobs() {
               onChange={(e) => setSelectedJobType(e.target.value)}
               className="rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs text-slate-800 outline-none focus:border-[#0F9D8A] focus:bg-white"
             >
-              <option value="">All Types</option>
-              {jobTypes.map((t) => (
-                <option key={t} value={t}>{t}</option>
+              <option value="">{t("jobs.jobType") || "All Types"}</option>
+              {jobTypes.map((tItem) => (
+                <option key={tItem} value={tItem}>{tItem}</option>
               ))}
             </select>
 
@@ -220,7 +224,7 @@ function Jobs() {
               onClick={clearFilters}
               className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:bg-slate-200 col-span-2 sm:col-span-1"
             >
-              ↻ Reset
+              ↻ {t("workers.clear") || "Reset"}
             </button>
           </div>
         </div>

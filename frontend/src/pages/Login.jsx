@@ -27,7 +27,7 @@ function Login() {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      setErrorMessage("Please enter both email and password.");
+      setErrorMessage(t("login.fillFields") || "Please enter both email and password.");
       return;
     }
 
@@ -58,6 +58,7 @@ function Login() {
       console.error("Login failed:", error);
       setErrorMessage(
         error.response?.data?.message ||
+          t("login.error") ||
           "Invalid email or password. Please try again."
       );
     } finally {
@@ -94,12 +95,14 @@ function Login() {
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-3 text-xs">
           <div>
-            <label className="block font-bold text-slate-700">Email Address *</label>
+            <label className="block font-bold text-slate-700">
+              {t("login.email") || "Email Address"} *
+            </label>
             <input
               type="email"
               name="email"
               required
-              placeholder="you@example.com"
+              placeholder={t("login.emailPlaceholder") || "you@example.com"}
               value={formData.email}
               onChange={handleChange}
               className="mt-1 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-2 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
@@ -107,12 +110,14 @@ function Login() {
           </div>
 
           <div>
-            <label className="block font-bold text-slate-700">Password *</label>
+            <label className="block font-bold text-slate-700">
+              {t("login.password") || "Password"} *
+            </label>
             <input
               type="password"
               name="password"
               required
-              placeholder="••••••••"
+              placeholder={t("login.passwordPlaceholder") || "••••••••"}
               value={formData.password}
               onChange={handleChange}
               className="mt-1 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-3 py-2 text-xs text-slate-800 outline-none transition focus:border-[#0F9D8A] focus:bg-white"
@@ -124,20 +129,20 @@ function Login() {
             disabled={loading}
             className="mt-1 w-full rounded-lg bg-[#173B57] py-2.5 text-xs font-bold text-white shadow-xs transition hover:bg-[#0f2638] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Logging in..." : "🔐 Login to Account"}
+            {loading ? (t("login.loggingIn") || "Logging in...") : `🔐 ${t("login.button") || "Login to Account"}`}
           </button>
         </form>
 
         <div className="mt-4 border-t border-slate-100 pt-3 text-center text-xs text-slate-600">
-          <span>Don't have an account yet? </span>
+          <span>{t("login.noAccount") || "Don't have an account yet?"} </span>
           <Link to="/register" className="font-bold text-[#0F9D8A] hover:underline">
-            Register Here
+            {t("login.register") || "Register Here"}
           </Link>
         </div>
 
         <div className="mt-2 text-center">
           <Link to="/" className="text-[11px] text-slate-400 hover:text-slate-600">
-            ← Return to Homepage
+            ← {t("nav.home") || "Return to Homepage"}
           </Link>
         </div>
       </div>
