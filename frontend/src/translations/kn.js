@@ -64,7 +64,17 @@ const kn = {
       "bengaluru": "ಬೆಂಗಳೂರು",
       "mumbai": "ಮುಂಬೈ",
       "hyderabad": "ಹೈದರಾಬಾದ್",
-      "other": "ಇತರೆ"
+      "other": "ಇತರೆ",
+      "belagavi": "ಬೆಳಗಾವಿ",
+      "athani": "ಅಥಣಿ",
+      "chikodi": "ಚಿಕ್ಕೋಡಿ",
+      "gokak": "ಗೋಕಾಕ್",
+      "hukkeri": "ಹುಕ್ಕೇರಿ",
+      "nippani": "ನಿಪ್ಪಾಣಿ",
+      "sankeshwar": "ಸಂಕೇಶ್ವರ",
+      "nagargali": "ನಾಗರಗಾಳಿ",
+      "halsi": "ಹಲಸಿ",
+      "khanapur": "ಖಾನಾಪುರ"
     },
     "benefits": {
       "zeroCommission": "0% ಮಧ್ಯವರ್ತಿ ಕಡಿತ",

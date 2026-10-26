@@ -60,11 +60,21 @@ const te = {
     },
     "cities": {
       "pune": "పూణే",
-      "belgaum": "బెలగావి",
+      "belgaum": "బెల్గాం",
       "bengaluru": "బెంగళూరు",
       "mumbai": "ముంబై",
       "hyderabad": "హైదరాబాద్",
-      "other": "ఇతర"
+      "other": "ఇతర",
+      "belagavi": "బెల్గాం",
+      "athani": "అథణి",
+      "chikodi": "చిక్కోడి",
+      "gokak": "గోకాక్",
+      "hukkeri": "హుక్కేరి",
+      "nippani": "నిప్పాణి",
+      "sankeshwar": "సంకేశ్వర్",
+      "nagargali": "నాగర్‌గాలి",
+      "halsi": "హలసి",
+      "khanapur": "ఖానాపూర్"
     },
     "benefits": {
       "zeroCommission": "0% మధ్యవర్తి కటింగ్",

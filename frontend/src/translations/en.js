@@ -60,11 +60,21 @@ const en = {
     },
     "cities": {
       "pune": "Pune",
-      "belgaum": "Belgaum",
+      "belgaum": "Belagavi",
       "bengaluru": "Bengaluru",
       "mumbai": "Mumbai",
       "hyderabad": "Hyderabad",
-      "other": "Other"
+      "other": "Other",
+      "belagavi": "Belagavi",
+      "athani": "Athani",
+      "chikodi": "Chikodi",
+      "gokak": "Gokak",
+      "hukkeri": "Hukkeri",
+      "nippani": "Nippani",
+      "sankeshwar": "Sankeshwar",
+      "nagargali": "Nagargali",
+      "halsi": "Halsi",
+      "khanapur": "Khanapur"
     },
     "benefits": {
       "zeroCommission": "0% Middleman Cut",

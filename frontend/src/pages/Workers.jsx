@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AIFeatures from "../components/AIFeatures";
 import { useLanguage } from "../context/LanguageContext";
 import { searchWorkers } from "../api/workerDashboardApi";
+import { CITIES } from "../constants/cities";
 
 function Workers() {
   const { t } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [skill, setSkill] = useState("");
-  const [city, setCity] = useState("");
+  const [skill, setSkill] = useState(() => searchParams.get("skill") || "");
+  const [city, setCity] = useState(() => searchParams.get("city") || "");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [showAIAssistant, setShowAIAssistant] = useState(false);
@@ -30,25 +33,22 @@ function Workers() {
     "Mechanic",
   ];
 
-  const cities = [
-    "Pune",
-    "Bengaluru",
-    "Mumbai",
-    "Hyderabad",
-    "Belgaum",
-    "Delhi",
-    "Nagpur",
-    "Nashik",
-  ];
+  // 10 operational cities
+  const cities = CITIES;
 
+  // Reactively re-load whenever searchParams in URL change
   useEffect(() => {
-    loadWorkers();
-  }, []);
+    const paramSkill = searchParams.get("skill") || "";
+    const paramCity = searchParams.get("city") || "";
+    setSkill(paramSkill);
+    setCity(paramCity);
+    loadWorkers(paramSkill, paramCity);
+  }, [searchParams]);
 
-  const loadWorkers = async () => {
+  const loadWorkers = async (filterSkill = skill, filterCity = city) => {
     try {
       setLoading(true);
-      const res = await searchWorkers(skill, city);
+      const res = await searchWorkers(filterSkill, filterCity);
       setWorkers(res.data.workers || []);
     } catch (error) {
       console.error("Worker search error:", error);
@@ -60,16 +60,19 @@ function Workers() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    loadWorkers();
+    const nextParams = new URLSearchParams();
+    if (skill) nextParams.set("skill", skill);
+    if (city) nextParams.set("city", city);
+    setSearchParams(nextParams);
+    loadWorkers(skill, city);
   };
 
   const clearSearch = () => {
     setSkill("");
     setCity("");
     setSearchTerm("");
-    setTimeout(() => {
-      loadWorkers();
-    }, 0);
+    setSearchParams({});
+    loadWorkers("", "");
   };
 
   const getWhatsAppNumber = (phone) => {
@@ -208,16 +211,16 @@ function Workers() {
             <div className="rounded-2xl border border-[#E2E8F0] bg-white p-8 text-center shadow-xs">
               <div className="text-3xl">🔍</div>
               <h2 className="mt-2 text-sm font-bold text-slate-800">
-                No Workers Found for This Criteria
+                No workers found for this skill and location. Try another skill or city.
               </h2>
               <p className="mt-1 text-xs text-slate-500">
-                Try selecting another skill or nearby city, or clear filters to see all registered workers.
+                Try selecting another trade or town, or reset filters to see all available workers.
               </p>
               <button
                 onClick={clearSearch}
-                className="mt-3 rounded-lg bg-[#173B57] px-4 py-2 text-xs font-bold text-white"
+                className="mt-3 rounded-lg bg-[#173B57] px-4 py-2 text-xs font-bold text-white transition hover:bg-[#0f2638]"
               >
-                Reset Search
+                ↻ Reset Filters
               </button>
             </div>
           ) : (

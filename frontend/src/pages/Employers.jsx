@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { getEmployers } from "../api/employerApi";
 import { useLanguage } from "../context/LanguageContext";
+import { CITIES } from "../constants/cities";
 
 function Employers() {
   const { t } = useLanguage();
@@ -13,16 +14,8 @@ function Employers() {
   const [loading, setLoading] = useState(false);
   const [selectedEmployer, setSelectedEmployer] = useState(null);
 
-  const cities = [
-    "Pune",
-    "Bengaluru",
-    "Mumbai",
-    "Hyderabad",
-    "Belgaum",
-    "Delhi",
-    "Nagpur",
-    "Nashik",
-  ];
+  // 10 operational cities
+  const cities = CITIES;
 
   useEffect(() => {
     loadEmployers();

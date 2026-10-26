@@ -27,11 +27,16 @@ function Hero() {
   ];
 
   const cities = [
-    { name: "Pune", key: "pune", icon: "📍" },
-    { name: "Belgaum", key: "belgaum", icon: "📍" },
-    { name: "Bengaluru", key: "bengaluru", icon: "📍" },
-    { name: "Mumbai", key: "mumbai", icon: "📍" },
-    { name: "Hyderabad", key: "hyderabad", icon: "📍" },
+    { name: "Belagavi", key: "belagavi", icon: "📍" },
+    { name: "Athani", key: "athani", icon: "📍" },
+    { name: "Chikodi", key: "chikodi", icon: "📍" },
+    { name: "Gokak", key: "gokak", icon: "📍" },
+    { name: "Hukkeri", key: "hukkeri", icon: "📍" },
+    { name: "Nippani", key: "nippani", icon: "📍" },
+    { name: "Sankeshwar", key: "sankeshwar", icon: "📍" },
+    { name: "Nagargali", key: "nagargali", icon: "📍" },
+    { name: "Halsi", key: "halsi", icon: "📍" },
+    { name: "Khanapur", key: "khanapur", icon: "📍" },
   ];
 
   const handleSkillSelect = (selectedSkill) => {

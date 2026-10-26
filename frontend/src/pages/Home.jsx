@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { getStats } from "../api/statsApi";
 import API from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
+import { CITIES } from "../constants/cities";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -20,9 +21,9 @@ export default function Home() {
   const [statsLoading, setStatsLoading] = useState(true);
 
   // Skill & City selection states (store identifiers for routing)
-  const [selectedSkill, setSelectedSkill] = useState("Plumber");
+  const [selectedSkill, setSelectedSkill] = useState("Painter");
   const [customSkill, setCustomSkill] = useState("");
-  const [selectedCity, setSelectedCity] = useState("Pune");
+  const [selectedCity, setSelectedCity] = useState("Belagavi");
   const [customCity, setCustomCity] = useState("");
 
   // Rozgaar Saathi AI Voice state
@@ -45,15 +46,8 @@ export default function Home() {
     { id: "Other", defaultName: "Other", icon: "✏️" },
   ];
 
-  // 6 city choices
-  const cityList = [
-    "Pune",
-    "Belgaum",
-    "Bengaluru",
-    "Mumbai",
-    "Hyderabad",
-    "Other",
-  ];
+  // 10 predefined operational cities + Other option
+  const cityList = [...CITIES, "Other"];
 
   // Fetch real statistics from MongoDB backend
   useEffect(() => {

@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import { getJobs } from "../api/jobApi";
 import { applyJob, getWorkerApplications } from "../api/applicationApi";
 import { useLanguage } from "../context/LanguageContext";
+import { CITIES } from "../constants/cities";
 
 function Jobs() {
   const navigate = useNavigate();
@@ -35,16 +36,8 @@ function Jobs() {
     "Mechanic",
   ];
 
-  const cities = [
-    "Pune",
-    "Bengaluru",
-    "Mumbai",
-    "Hyderabad",
-    "Belgaum",
-    "Delhi",
-    "Nagpur",
-    "Nashik",
-  ];
+  // 10 operational cities
+  const cities = CITIES;
 
   const jobTypes = [
     "Daily Wage",
@@ -135,7 +128,9 @@ function Jobs() {
 
     const matchesCity =
       !selectedCity ||
-      job.city?.toLowerCase() === selectedCity.toLowerCase();
+      (selectedCity.toLowerCase() === "belagavi"
+        ? (job.city?.toLowerCase() === "belagavi" || job.city?.toLowerCase() === "belgaum")
+        : job.city?.toLowerCase() === selectedCity.toLowerCase());
 
     const matchesType =
       !selectedJobType || job.jobType === selectedJobType;

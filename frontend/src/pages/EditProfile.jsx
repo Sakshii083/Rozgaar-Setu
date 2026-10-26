@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { getProfile, updateProfile } from "../api/userApi";
+import { CITIES } from "../constants/cities";
 
 function EditProfile() {
   const navigate = useNavigate();
@@ -165,11 +166,18 @@ function EditProfile() {
                   <input
                     type="text"
                     name="city"
+                    list="edit-profile-cities"
                     required
                     value={formData.city}
                     onChange={handleChange}
+                    placeholder="e.g. Belagavi, Athani, Chikodi"
                     className="mt-1 w-full rounded-xl border border-[#E2E8F0] bg-[#F7F9FC] p-3 text-sm outline-none focus:border-[#0F9D8A] focus:bg-white"
                   />
+                  <datalist id="edit-profile-cities">
+                    {CITIES.map((c) => (
+                      <option key={c} value={c} />
+                    ))}
+                  </datalist>
                 </div>
               </div>
 

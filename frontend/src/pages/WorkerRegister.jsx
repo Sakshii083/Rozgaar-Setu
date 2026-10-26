@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import API from "../api/axios";
 import { useLanguage } from "../context/LanguageContext";
+import { CITIES } from "../constants/cities";
 
 function WorkerRegister() {
   const { t } = useLanguage();
@@ -198,12 +199,18 @@ function WorkerRegister() {
                   <input
                     type="text"
                     name="city"
+                    list="worker-city-options"
                     required
-                    placeholder="e.g. Pune, Bengaluru"
+                    placeholder="e.g. Belagavi, Athani, Chikodi"
                     value={formData.city}
                     onChange={handleChange}
                     className="mt-0.5 w-full rounded-lg border border-[#E2E8F0] bg-[#F7F9FC] px-2.5 py-1.5 text-xs outline-none focus:border-[#0F9D8A] focus:bg-white"
                   />
+                  <datalist id="worker-city-options">
+                    {CITIES.map((c) => (
+                      <option key={c} value={c} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div>

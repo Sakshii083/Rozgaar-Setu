@@ -64,7 +64,17 @@ const mr = {
       "bengaluru": "बेंगळुरू",
       "mumbai": "मुंबई",
       "hyderabad": "हैदराबाद",
-      "other": "इतर"
+      "other": "इतर",
+      "belagavi": "बेळगाव",
+      "athani": "अथणी",
+      "chikodi": "चिकोडी",
+      "gokak": "गोकाक",
+      "hukkeri": "हुक्केरी",
+      "nippani": "निप्पाणी",
+      "sankeshwar": "संकेश्वर",
+      "nagargali": "नागरगाळी",
+      "halsi": "हलसी",
+      "khanapur": "खानापूर"
     },
     "benefits": {
       "zeroCommission": "0% मध्यस्थ कपात",
